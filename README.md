@@ -25,7 +25,7 @@ Doumentation: https://miro.com/app/board/uXjVPDUhJLs=/?share_link_id=79362660542
     - Project skills needed
     
 
-- Get details of a project visitor (view 6.2)
+- Get details of a project member/owner (view 6.2)
   - Projects full description
   - Project owner
   - Project skills needed
