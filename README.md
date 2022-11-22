@@ -2,6 +2,10 @@
 
 Doumentation: https://miro.com/app/board/uXjVPDUhJLs=/?share_link_id=793626605427
 
+Server: 
+- ssh praktikum@msp-ws2223-5.dev.mobile.ifi.lmu.de -p 2416
+- Usgp$~}THj0zK)S#
+
 # Backend API
 
 ### Post requests:
