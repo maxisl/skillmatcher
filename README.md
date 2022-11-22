@@ -1,4 +1,4 @@
-# gruppe5
+# Gruppe5
 
 Doumentation: https://miro.com/app/board/uXjVPDUhJLs=/?share_link_id=793626605427
 
