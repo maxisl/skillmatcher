@@ -19,6 +19,7 @@ import com.example.skillmatcher.destinations.ProfileScreenDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
 
@@ -32,8 +33,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Destination(start = true)
+@RootNavGraph(start = true)
+@Destination()
 @Composable
 fun LoginScreen(
     navigator: DestinationsNavigator
@@ -46,13 +47,7 @@ fun LoginScreen(
         Text("Login Screen")
         Button(onClick = {
             navigator.navigate(
-                ProfileScreenDestination(
-                    User(
-                        name = "Chris P. Bacon",
-                        id = "userid",
-                        created = LocalDateTime.now()
-                    )
-                )
+                ProfileScreenDestination(id=1,User(name = "Chris P. Bacon", id = "userid", created = LocalDateTime.now()))
             )
         }) {
             Text("Go to Profile Screen")
@@ -63,8 +58,9 @@ fun LoginScreen(
 @Destination
 @Composable
 fun ProfileScreen(
-    navigator: DestinationsNavigator,
-    user: User
+    id: Int, // <-- required navigation argument
+    user: User,
+    navigator: DestinationsNavigator
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
