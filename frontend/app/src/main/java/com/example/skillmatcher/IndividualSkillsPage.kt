@@ -24,8 +24,8 @@ fun IndividualSkillsPage(
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
         Text("IndividualSkills: $user", textAlign = TextAlign.Center)
         Button(onClick = {
@@ -33,5 +33,12 @@ fun IndividualSkillsPage(
         }) {
             Text("Go to ProjectCreationPage")
         }
+    }
+}
+
+@Composable
+fun ClickCounter(clicks: Int, onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("I've been clicked $clicks times")
     }
 }
