@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dce019e1-5f59-46a6-b8fd-cb84fbd30ffc" name="Changes" comment="Added wokring MySQL backend">
-      <change beforePath="$PROJECT_DIR$/.idea/SkillMatch2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SkillMatch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="dce019e1-5f59-46a6-b8fd-cb84fbd30ffc" name="Changes" comment="Renaming">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,16 +39,16 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="SkillMatch" />
+    <configuration name="PlayersAPIApplication" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="src.main.kotlin.io.github.manuelernesto.playersapi.PlayersAPIApplication" />
+      <module name="backend" />
+      <shortenClasspath name="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="playersapi" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="src.main.kotlin.io.github.manuelernesto.playersapi" />
-      <module name="backend" />
-      <shortenClasspath name="NONE" />
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="SkillMatch" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -64,7 +62,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.playersapi" />
+        <item itemvalue="Kotlin.PlayersAPIApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -91,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669425057072</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Renaming">
+      <created>1669425458761</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1669425458761</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -108,6 +113,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Updated backend" />
     <MESSAGE value="Added wokring MySQL backend" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added wokring MySQL backend" />
+    <MESSAGE value="Renaming" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renaming" />
   </component>
 </project>

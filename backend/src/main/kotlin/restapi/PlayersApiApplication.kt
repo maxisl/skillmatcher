@@ -1,11 +1,11 @@
-package io.github.manuelernesto.playersapi
+package restapi
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PlayersApiApplication
+class UsersApiApplication
 
 fun main(args: Array<String>) {
-    runApplication<PlayersApiApplication>(*args)
+    runApplication<UsersApiApplication>(*args)
 }
