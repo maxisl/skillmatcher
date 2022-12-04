@@ -25,25 +25,25 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Preview
 fun IndividualSkillsPage(
     id: Int, // <-- required navigation argument
-    user: User,
-    navigator: DestinationsNavigator
+    user: User ?,
+    navigator: DestinationsNavigator ?
 ) {
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .background(Color.LightGray)
+            .background(Color.White)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Text("IndividualSkills: $user", textAlign = TextAlign.Center)
-        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 1") })
-        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 2") })
+        // OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 1") })
+        // OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 2") })
         Button(onClick = {}) {
             Text("Submit")
         }
         Button(onClick = {
-            navigator.navigate(ProjectCreationPageDestination())
+            navigator?.navigate(ProjectCreationPageDestination())
         }) {
             Text("Go to ProjectCreationPage")
         }
