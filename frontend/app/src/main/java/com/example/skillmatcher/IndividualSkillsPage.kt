@@ -2,6 +2,7 @@ package com.example.skillmatcher
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,11 +21,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import java.time.LocalDateTime
 
-@Preview(showBackground = true, widthDp = 320)
+@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     SkillMatcherTheme() {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+        Surface(color = Color.White) {
             IndividualSkillsPage(
                 id = 1,
                 User(name = "", id = "", created = LocalDateTime.now()),
@@ -39,34 +40,103 @@ fun DefaultPreview() {
 fun IndividualSkillsPage(
     id: Int, // <-- required navigation argument
     user: User?,
-    // TODO move navigator to dedicated function?
     navigator: DestinationsNavigator?
 ) {
-    SkillScreen()
-    Button(onClick = {
-        navigator?.navigate(ProjectCreationPageDestination())
-    }) {
-        Text("Go to ProjectCreationPage")
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .background(MaterialTheme.colors.primary),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            LogoBanner()
+        }
+        Row (modifier = Modifier.padding(top = 25.dp)) {
+            SkillScreen()
+        }
+        Row (modifier = Modifier.padding(top = 25.dp)) {
+            SkillScreen2()
+        }
+        Row {
+            Button(onClick = {
+                navigator?.navigate(ProjectCreationPageDestination())
+            }) {
+                Text("Go to ProjectCreationPage")
+            }
+        }
+    }
+}
+
+
+@Composable
+fun LogoBanner() {
+    Row(modifier = Modifier.padding(25.dp)) {
+        Text(
+            text = "Specify Your Individual Skills",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h5,
+            color = Color.White
+        )
+
     }
 }
 
 
 @Composable
 fun SkillScreen() {
+    /* TODO implement state?
+    var skill1State = remember { mutableStateOf("") }
+    val skill2State = remember { mutableStateOf("") }*/
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text("Primary Skills: User 1", textAlign = TextAlign.Center)
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Skill 1") },
+            shape = RoundedCornerShape(8.dp)
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Skill 2") },
+            shape = RoundedCornerShape(8.dp)
+        )
+        Button(onClick = {}) {
+            Text("Submit")
+        }
+        // SpecifySkill1(skill = skill1State.value, onSkillChange = { skill1State.value = it })
+    }
+}
+
+@Composable
+fun SkillScreen2() {
     var skill1State = remember { mutableStateOf("") }
     val skill2State = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .background(Color.White)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text("IndividualSkills: empty", textAlign = TextAlign.Center)
-        // OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 1") })
-        // OutlinedTextField(value = "", onValueChange = {}, label = { Text("Skill 2") })
+        Text("IndividualSkills: User 1", textAlign = TextAlign.Center)
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Skill 1") },
+            shape = RoundedCornerShape(8.dp)
+        )
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            label = { Text("Skill 2") },
+            shape = RoundedCornerShape(8.dp)
+        )
         Button(onClick = {}) {
             Text("Submit")
         }
