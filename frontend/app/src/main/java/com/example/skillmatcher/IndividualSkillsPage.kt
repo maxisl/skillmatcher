@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +26,10 @@ import java.time.LocalDateTime
 @Composable
 fun DefaultPreview() {
     SkillMatcherTheme() {
-        Surface(color = Color.White) {
+        Surface(
+            modifier = Modifier.fillMaxHeight(1f),
+            color = Color.White
+        ) {
             IndividualSkillsPage(
                 id = 1,
                 User(name = "", id = "", created = LocalDateTime.now()),
@@ -43,8 +47,9 @@ fun IndividualSkillsPage(
     navigator: DestinationsNavigator?
 ) {
     Column(
+        modifier = Modifier.fillMaxSize(1f),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             modifier = Modifier
@@ -54,13 +59,15 @@ fun IndividualSkillsPage(
         ) {
             LogoBanner()
         }
-        Row (modifier = Modifier.padding(top = 25.dp)) {
+        Row(modifier = Modifier.padding(top = 25.dp)) {
             SkillScreen()
         }
-        Row (modifier = Modifier.padding(top = 25.dp)) {
+        Row(modifier = Modifier.padding(top = 25.dp)) {
             SkillScreen2()
         }
-        Row {
+        Row(
+            verticalAlignment = Alignment.Bottom
+        ) {
             Button(onClick = {
                 navigator?.navigate(ProjectCreationPageDestination())
             }) {
@@ -70,7 +77,7 @@ fun IndividualSkillsPage(
     }
 }
 
-
+// TODO add logo right next to Text with link to profile
 @Composable
 fun LogoBanner() {
     Row(modifier = Modifier.padding(25.dp)) {
@@ -80,10 +87,8 @@ fun LogoBanner() {
             style = MaterialTheme.typography.h5,
             color = Color.White
         )
-
     }
 }
-
 
 @Composable
 fun SkillScreen() {
@@ -116,15 +121,13 @@ fun SkillScreen() {
 
 @Composable
 fun SkillScreen2() {
-    var skill1State = remember { mutableStateOf("") }
-    val skill2State = remember { mutableStateOf("") }
+    /*var skill1State = remember { mutableStateOf("") }
+    val skill2State = remember { mutableStateOf("") }*/
 
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("IndividualSkills: User 1", textAlign = TextAlign.Center)
+        Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
         OutlinedTextField(
             value = "",
             onValueChange = {},
