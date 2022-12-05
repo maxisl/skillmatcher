@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -80,12 +82,22 @@ fun IndividualSkillsPage(
 // TODO add logo right next to Text with link to profile
 @Composable
 fun LogoBanner() {
-    Row(modifier = Modifier.padding(25.dp)) {
+    Row(
+        modifier = Modifier.padding(25.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text(
             text = "Specify Your Individual Skills",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h5,
-            color = Color.White
+            color = Color.White,
+        )
+        // TODO add onclick functionality
+        Icon(
+            Icons.Rounded.AccountCircle,
+            contentDescription = stringResource(id = R.string.profile_icon_content_desc),
+            modifier = Modifier.padding(start=10.dp),
+            tint = Color.White
         )
     }
 }
