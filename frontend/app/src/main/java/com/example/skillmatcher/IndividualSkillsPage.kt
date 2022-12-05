@@ -160,12 +160,14 @@ fun SecondarySkills() {
 
 
 @Composable
-fun SpecifySkill() {
+fun SpecifySkill(skill: String, onSkillChange: (String)) {
+    var skill by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = skill,
+        onValueChange = { skill = it},
         label = { Text("Skill") },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
