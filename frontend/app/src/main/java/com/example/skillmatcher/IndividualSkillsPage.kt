@@ -2,13 +2,14 @@ package com.example.skillmatcher
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination.style
 import com.example.skillmatcher.destinations.LandingPageDestination
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
@@ -49,32 +49,34 @@ fun IndividualSkillsPage(
     user: User?,
     navigator: DestinationsNavigator?
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(1f),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .background(MaterialTheme.colors.primary),
-            horizontalArrangement = Arrangement.Center,
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            LogoBanner(navigator)
-        }
-        Row(modifier = Modifier.padding(top = 25.dp)) {
-            SkillScreen()
-        }
-        Row(modifier = Modifier.padding(top = 25.dp)) {
-            SkillScreen2()
-        }
-        Row(
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Button(onClick = {
-                navigator?.navigate(ProjectCreationPageDestination())
-            }) {
-                Text("Go to ProjectCreationPage")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .background(MaterialTheme.colors.primary),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                LogoBanner(navigator)
+            }
+            Row(modifier = Modifier.padding(top = 25.dp)) {
+                PrimarySkills()
+            }
+            Row(modifier = Modifier.padding(top = 25.dp)) {
+                SecondarySkills()
+            }
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Button(onClick = {
+                    navigator?.navigate(ProjectCreationPageDestination())
+                }) {
+                    Text("Go to ProjectCreationPage")
+                }
             }
         }
     }
@@ -92,7 +94,6 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
             style = MaterialTheme.typography.h5,
             color = Color.White,
         )
-        // TODO add onclick functionality
         IconButton(onClick = { navigator?.navigate(LandingPageDestination) }) {
             Icon(
                 Icons.Rounded.AccountCircle,
@@ -106,92 +107,81 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
 }
 
 @Composable
-fun SkillScreen() {
+fun PrimarySkills() {
     /* TODO implement state?
     var skill1State = remember { mutableStateOf("") }
     val skill2State = remember { mutableStateOf("") }*/
+    Surface() {
+        Column {
+            Text("Primary Skills: User 1", textAlign = TextAlign.Center)
+            /*var textFieldCount by rememberSaveable {
+                mutableStateOf(1)
+            }*/
+            var skill by remember { mutableStateOf("") }
+            val skills = remember { mutableStateListOf<String>() }
+            OutlinedTextField(
+                value = skill,
+                onValueChange = { skill = it },
+                label = { Text("Skill") },
+                shape = RoundedCornerShape(8.dp)
+            )
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text("Primary Skills: User 1", textAlign = TextAlign.Center)
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("Skill 1") },
-            shape = RoundedCornerShape(8.dp)
-        )
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("Skill 2") },
-            shape = RoundedCornerShape(8.dp)
-        )
-        Button(onClick = {}) {
-            Text("Submit")
+            Button(onClick = { skills.add(skill) }) {
+                Text("Add")
+            }
+
+            for (addedSkill in skills) {
+                Text(addedSkill)
+            }
+/*
+            // lazy to enable scrolling
+            LazyColumn {
+                items(textFieldCount) {
+                    SpecifySkill()
+                }
+            }
+            Button(onClick = {
+                textFieldCount++
+            }) {
+                Text("Add")
+            }*/
         }
-        // SpecifySkill1(skill = skill1State.value, onSkillChange = { skill1State.value = it })
     }
 }
 
 @Composable
-fun SkillScreen2() {
+fun SecondarySkills() {
     /*var skill1State = remember { mutableStateOf("") }
     val skill2State = remember { mutableStateOf("") }*/
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("Skill 1") },
-            shape = RoundedCornerShape(8.dp)
-        )
-        OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("Skill 2") },
-            shape = RoundedCornerShape(8.dp)
-        )
-        Button(onClick = {}) {
-            Text("Submit")
+    Surface() {
+        Column {
+            Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
+            var textFieldCount by rememberSaveable {
+                mutableStateOf(1)
+            }
+            // lazy to enable scrolling
+            LazyColumn {
+                items(textFieldCount) {
+                    SpecifySkill()
+                }
+            }
+            Button(onClick = {
+                textFieldCount++
+            }) {
+                Text("Add")
+            }
         }
-        // SpecifySkill1(skill = skill1State.value, onSkillChange = { skill1State.value = it })
     }
 }
 
 
 @Composable
-fun SpecifySkill1(skill: String, onSkillChange: (String) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Specified Skill: $skill",
-            style = MaterialTheme.typography.h5
-        )
-        OutlinedTextField(
-            value = skill,
-            onValueChange = onSkillChange,
-            label = { Text("Skill1") }
-        )
-    }
-}
-
-@Composable
-fun SpecifySkill2(skill: String, onSkillChange: (String) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = skill,
-            style = MaterialTheme.typography.h5
-        )
-        OutlinedTextField(value = skill, onValueChange = onSkillChange,
-            label = { Text("Skill1") })
-    }
+fun SpecifySkill() {
+    OutlinedTextField(
+        value = "",
+        onValueChange = {},
+        label = { Text("Skill") },
+        shape = RoundedCornerShape(8.dp)
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
