@@ -114,26 +114,9 @@ fun PrimarySkills() {
     Surface() {
         Column {
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
-            /*var textFieldCount by rememberSaveable {
+            var textFieldCount by rememberSaveable {
                 mutableStateOf(1)
-            }*/
-            var skill by remember { mutableStateOf("") }
-            val skills = remember { mutableStateListOf<String>() }
-            OutlinedTextField(
-                value = skill,
-                onValueChange = { skill = it },
-                label = { Text("Skill") },
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            Button(onClick = { skills.add(skill) }) {
-                Text("Add")
             }
-
-            for (addedSkill in skills) {
-                Text(addedSkill)
-            }
-/*
             // lazy to enable scrolling
             LazyColumn {
                 items(textFieldCount) {
@@ -144,10 +127,11 @@ fun PrimarySkills() {
                 textFieldCount++
             }) {
                 Text("Add")
-            }*/
+            }
         }
     }
 }
+
 
 @Composable
 fun SecondarySkills() {
