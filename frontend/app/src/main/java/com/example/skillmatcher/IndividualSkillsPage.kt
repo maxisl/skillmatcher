@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination.style
+import com.example.skillmatcher.destinations.LandingPageDestination
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.ramcosta.composedestinations.annotation.Destination
@@ -59,7 +60,7 @@ fun IndividualSkillsPage(
                 .background(MaterialTheme.colors.primary),
             horizontalArrangement = Arrangement.Center,
         ) {
-            LogoBanner()
+            LogoBanner(navigator)
         }
         Row(modifier = Modifier.padding(top = 25.dp)) {
             SkillScreen()
@@ -79,9 +80,8 @@ fun IndividualSkillsPage(
     }
 }
 
-// TODO add logo right next to Text with link to profile
 @Composable
-fun LogoBanner() {
+fun LogoBanner(navigator: DestinationsNavigator?) {
     Row(
         modifier = Modifier.padding(25.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -93,12 +93,15 @@ fun LogoBanner() {
             color = Color.White,
         )
         // TODO add onclick functionality
-        Icon(
-            Icons.Rounded.AccountCircle,
-            contentDescription = stringResource(id = R.string.profile_icon_content_desc),
-            modifier = Modifier.padding(start=10.dp),
-            tint = Color.White
-        )
+        IconButton(onClick = { navigator?.navigate(LandingPageDestination) }) {
+            Icon(
+                Icons.Rounded.AccountCircle,
+                contentDescription = stringResource(id = R.string.profile_icon_content_desc),
+                modifier = Modifier.padding(start = 10.dp),
+                tint = Color.White
+            )
+        }
+
     }
 }
 
