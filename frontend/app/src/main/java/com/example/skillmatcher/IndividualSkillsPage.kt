@@ -108,9 +108,6 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
 
 @Composable
 fun PrimarySkills() {
-    /* TODO implement state?
-    var skill1State = remember { mutableStateOf("") }
-    val skill2State = remember { mutableStateOf("") }*/
     Surface() {
         Column {
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
@@ -135,8 +132,6 @@ fun PrimarySkills() {
 
 @Composable
 fun SecondarySkills() {
-    /*var skill1State = remember { mutableStateOf("") }
-    val skill2State = remember { mutableStateOf("") }*/
     Surface() {
         Column {
             Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
