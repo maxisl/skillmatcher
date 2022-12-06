@@ -155,7 +155,7 @@ fun SecondarySkills() {
 
 
 @Composable
-fun SpecifySkill(skill: String, onSkillChange: (String)) {
+fun SpecifySkill(skill: String, onSkillChange: (String) -> Unit ) {
     var skill by remember { mutableStateOf("") }
     var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
