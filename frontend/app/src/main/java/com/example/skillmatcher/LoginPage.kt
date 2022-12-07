@@ -1,37 +1,92 @@
 package com.example.skillmatcher
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.material.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.skillmatcher.destinations.IndividualSkillsPageDestination
+import com.example.skillmatcher.ui.theme.Grey10
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
 @Destination()
 @Composable
-fun LoginPage(
-    navigator: DestinationsNavigator
-) {
-    Column(
+fun LoginPage(navigator: DestinationsNavigator) {
+
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        color = MaterialTheme.colorScheme.background
     ) {
-        Text("Login Screen")
-        Button(onClick = {
-            navigator.navigate(
-                IndividualSkillsPageDestination(id=1,User(name = "Chris P. Bacon", id = "userid", created = LocalDateTime.now()))
-             )
-        }) {
-            Text("Go to IndividualSkillsPage")
-        }
+
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                    Text(text = "Sign In")
+                            },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+               )
+            },
+            content = {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    val image: Painter = painterResource(id = R.drawable.lmulogo)
+                    Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
+
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Button(onClick = {
+                        navigator.navigate(
+                            IndividualSkillsPageDestination(
+                                id = 1,
+                                User(
+                                    name = "Chris P. Bacon",
+                                    id = "userid",
+                                    created = LocalDateTime.now()
+                                )
+                            )
+                        )
+                    }) {
+                        Text("Go to IndividualSkillsPage")
+                    }
+                }
+            }
+        )
     }
+}
+
+@Preview
+@Composable
+fun Welcome(){
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Grey10),
+        color = MaterialTheme.colorScheme.background
+    ) {
+    }
+
+
 }
