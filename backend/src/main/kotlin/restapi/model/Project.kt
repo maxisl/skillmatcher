@@ -20,10 +20,10 @@ data class Project(
     var id: Long,
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false) //LAZY
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "api_user_id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    var user: User?,
+    var apiUser: ApiUser?,
 
     val name: String,
 

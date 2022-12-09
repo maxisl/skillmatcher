@@ -25,7 +25,7 @@ class ProjectService(
 
     fun getAll(): MutableList<Project> = repository.findAll()
 
-    fun getAllByUser(userId: Long): MutableList<Project> = repository.findByUserId(userId);
+    fun getAllByUser(userId: Long): MutableList<Project> = repository.findByApiUserId(userId);
 
     fun getAllByName(id: String): MutableList<Project> = repository.findByNameContaining(id)
 
@@ -34,7 +34,7 @@ class ProjectService(
     fun create(userid: Long, project: Project): Project {
 
         var user = userRepository.findByIdOrNull(userid) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        project.user = user
+        project.apiUser = user
         return repository.save(project)
     }
 

@@ -1,6 +1,6 @@
 package restapi.controller
 
-import restapi.model.User
+import restapi.model.ApiUser
 import restapi.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -18,15 +18,11 @@ class UserController(val service: UserService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveUser(@RequestBody user: User): User = service.create(user)
+    fun saveUser(@RequestBody apiUser: ApiUser): ApiUser = service.create(apiUser)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable id: Long) = service.remove(id)
 
-    @PutMapping("/{id}")
-    fun updateUser(
-        @PathVariable id: Long, @RequestBody user: User
-    ) = service.update(id, user)
 }
 
