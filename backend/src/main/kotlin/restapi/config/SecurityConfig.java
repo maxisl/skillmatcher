@@ -3,6 +3,7 @@ package restapi.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +18,7 @@ import restapi.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix deprecated
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -52,8 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**")
+                .antMatchers(HttpMethod.POST, "/auth/**")
                 .permitAll()
+                //.antMatchers("/user/{email}")
+                //.access("@userSecurity.hasUserId(authentication,#email)")
                 .anyRequest()
                 .authenticated();
 

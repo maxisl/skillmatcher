@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 
-@RequestMapping("api/v1/projects")
+@RequestMapping("projects")
 @RestController
 class ProjectController(val service: ProjectService) {
 

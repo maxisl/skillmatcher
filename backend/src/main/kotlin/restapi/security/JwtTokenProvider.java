@@ -20,7 +20,7 @@ public class JwtTokenProvider {
 
     public String generateToken(String userEmail) {
         Instant now = Instant.now();
-        Instant expiration = now.plus(7, ChronoUnit.DAYS);
+        Instant expiration = now.plus(1, ChronoUnit.DAYS);
 
         return Jwts.builder()
                 .setSubject(userEmail)

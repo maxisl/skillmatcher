@@ -13,7 +13,7 @@ public class ApiUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id; //TODO: Rewrite services to java
 
     @Column(unique = true)
     private String email;
