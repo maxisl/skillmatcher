@@ -1,9 +1,9 @@
 package restapi.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.*
+import javax.validation.constraints.NotBlank
 
 // It is discouraged to use data classes for entities:
 // ------------------------------------------------------
@@ -19,15 +19,33 @@ data class Project(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long,
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false) //LAZY
-    @JoinColumn(name = "api_user_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    var apiUser: ApiUser?,
-
+    // TODO: NotBlank not working in Kotlin!
+    @NotBlank(message = "Name is mandatory")
     val name: String,
 
-    val age: Int,
+    @NotBlank(message = "Description is mandatory")
+    val description: String,
 
-    val nationality: String
+    @NotBlank(message = "MaxAttendees is mandatory")
+    val maxAttendees: String,
+
+    // val skillsNeeded: String,
+
+    // val startDate: Date,
+
+    // val endDate: Date,
+
+    // A User can be the owner of many projects
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "owner_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    var owner: ApiUser?,
+
+    // Many user attend many projects
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "project_attendees",
+        joinColumns = [JoinColumn(name = "project_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")])
+    var attendees: MutableList<ApiUser>?
 )

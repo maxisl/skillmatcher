@@ -1,11 +1,10 @@
 package restapi.model;
 
 import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AuthRequest {
+public class AuthRequest { //TODO: Replace AuthRequest with APIUser
 
     @NotBlank(message = "Email is mandatory")
     private String email;

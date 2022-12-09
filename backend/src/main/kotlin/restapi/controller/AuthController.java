@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.model.AuthRequest;
@@ -39,13 +41,11 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<ApiUser> register(@Valid @RequestBody  AuthRequest authRequest) {
+    public ResponseEntity<ApiUser> register(@Valid @RequestBody AuthRequest authRequest) {
 
-
-        Optional<ApiUser> userOptional = userRepository.findUserByEmail(authRequest.getEmail()); //ToDO: Use userserice
-
-        if (userOptional.isPresent()) {
-            return ResponseEntity.badRequest().build(); // .body("Either 'id' or 'name' must be set");
+        ApiUser userOptional = userRepository.findUserByEmail(authRequest.getEmail()); //ToDO: use userserice
+        if (userOptional != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this Email already exists!");
         }
 
         ApiUser user = new ApiUser();
@@ -59,13 +59,13 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(
+
+        Authentication authentication;
+        authentication = authenticationManager.authenticate( // TODO: Custom return if login fails
                 new UsernamePasswordAuthenticationToken(
                         authRequest.getEmail(),
                         authRequest.getPassword()
-                )
-        );
-
+                ));
         return ResponseEntity.ok(jwtTokenProvider.generateToken(authentication));
     }
 }

@@ -55,8 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix d
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth/**")
                 .permitAll()
-                //.antMatchers("/user/{email}")
-                //.access("@userSecurity.hasUserId(authentication,#email)")
+                .antMatchers("/user/{email}")
+                .access("@userSecurity.hasUserEmail(authentication,#email)") //Methode hasUserEmail wird bei jedem /user/{email} aufgerufen
                 .anyRequest()
                 .authenticated();
 

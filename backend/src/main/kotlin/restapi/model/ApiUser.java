@@ -6,6 +6,8 @@ import lombok.Data;
 
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,5 +22,9 @@ public class ApiUser {
 
     @JsonIgnore
     private String password;
+
+    @ManyToMany(mappedBy = "attendees")
+    @JsonIgnore
+    public List<Project> attends;
 
 }

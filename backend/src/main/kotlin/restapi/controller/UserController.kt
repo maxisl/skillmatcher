@@ -12,35 +12,22 @@ import java.security.Principal
 @RestController
 class UserController(val service: UserService) {
 
+    // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
+
     @GetMapping
     fun getAllUsers() = service.getAll()
 
     @GetMapping("/{email}")
-    fun getUser(@PathVariable email: String, principal: Principal): Any { //TODO: use: https://stackoverflow.com/questions/51712724/how-to-allow-a-user-only-access-their-own-data-in-spring-boot-spring-security
-        if (email != principal.getName()) {
-            return ResponseEntity.badRequest().body("Error SImon");
-        }
+    fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
 
-        return service.getByEmail(email)
-    }
+    @PutMapping("/{email}") // TODO: Not working yet
+    fun updateUser(@PathVariable email: String, @RequestBody user: ApiUser) = service.update(email, user)
 
-    @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: Long, @RequestBody user: ApiUser) = service.update(id, user)
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable id: Long) = service.remove(id)
-
-
-    // TODO: get all users of project
-
-
-    // Test
-    // https://docs.oracle.com/javase/7/docs/api/java/security/Principal.html
-    @GetMapping("/username")
-    @ResponseBody
-    fun currentUserName(principal: Principal): String? {
-        return principal.getName();
+    fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
+        service.remove(email)
+        return ResponseEntity.ok("User successfully deleted!")
     }
 }
 
