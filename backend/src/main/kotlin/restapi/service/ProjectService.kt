@@ -19,35 +19,42 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class ProjectService(
     @Autowired val repository: ProjectRepository,
-    @Autowired val userRepository: UserRepository
+    @Autowired val userService: UserService
     ) {
-
 
     fun getAll(): MutableList<Project> = repository.findAll()
 
-    fun getAllByUser(userId: Long): MutableList<Project> = repository.findByUserId(userId);
+    fun getAllByUser(userEmail: String): MutableList<Project> = repository.findByOwnerEmail(userEmail);
 
     fun getAllByName(id: String): MutableList<Project> = repository.findByNameContaining(id)
 
-    fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+    fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
 
-    fun create(userid: Long, project: Project): Project {
-
-        var user = userRepository.findByIdOrNull(userid) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        project.user = user
+    fun create(userEmail: String, project: Project): Project {
+        var user = userService.getByEmail(userEmail)
+        project.owner = user
+        project.attendees = mutableListOf(user)
         return repository.save(project)
     }
 
     fun remove(id: Long) {
         if (repository.existsById(id)) repository.deleteById(id)
-        else throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
     fun update(id: Long, project: Project): Project {
         return if (repository.existsById(id)) {
             project.id = id
             repository.save(project)
-        } else throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
+    fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
+        var project = this.getById(id) // TODO: Maybe this code belongs to the controller?
+        var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
+
+        project.attendees?.add(user)
+        repository.save(project)
+        return project
+    }
 }

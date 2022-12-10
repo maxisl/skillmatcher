@@ -1,8 +1,10 @@
 package restapi.repository
 
-import restapi.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import restapi.model.ApiUser
 
 @Repository
-interface UserRepository : JpaRepository<User, Long>
+interface UserRepository : JpaRepository<ApiUser, Long>{
+    fun findUserByEmail(email: String): ApiUser?
+}

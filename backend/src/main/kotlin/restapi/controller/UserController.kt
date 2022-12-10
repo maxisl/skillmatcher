@@ -1,32 +1,38 @@
 package restapi.controller
 
-import restapi.model.User
-import restapi.service.UserService
+import com.fasterxml.jackson.annotation.JsonView
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import restapi.jsonView.DataView
+import restapi.model.ApiUser
+import restapi.service.UserService
+import java.security.Principal
 
 
-@RequestMapping("api/v1/users")
+@RequestMapping("user")
 @RestController
 class UserController(val service: UserService) {
 
+    // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
+
+    @JsonView(DataView.User::class)
     @GetMapping
     fun getAllUsers() = service.getAll()
 
-    @GetMapping("/{id}")
-    fun getUser(@PathVariable id: Long) = service.getById(id)
+    @JsonView(DataView.UserWithProjects::class)
+    @GetMapping("/{email}")
+    fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun saveUser(@RequestBody user: User): User = service.create(user)
+    @JsonView(DataView.User::class)
+    @PutMapping("/{email}") // TODO: Not working yet
+    fun updateUser(@PathVariable email: String, @RequestBody user: ApiUser) = service.update(email, user)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable id: Long) = service.remove(id)
-
-    @PutMapping("/{id}")
-    fun updateUser(
-        @PathVariable id: Long, @RequestBody user: User
-    ) = service.update(id, user)
+    fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
+        service.remove(email)
+        return ResponseEntity.ok("User successfully deleted!")
+    }
 }
 

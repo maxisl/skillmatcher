@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long>{
     fun findByNameContaining(name: String): MutableList<Project>
-    fun findByUserId(id: Long): MutableList<Project>
+    fun findByOwnerEmail(userEmail: String): MutableList<Project>
 }
