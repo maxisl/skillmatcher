@@ -1,4 +1,4 @@
-package restapi.model;
+package restapi.data;
 
 import lombok.Data;
 import javax.validation.constraints.NotBlank;

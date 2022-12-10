@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.ApiUser
-import restapi.model.Project
 import restapi.repository.UserRepository
 
 

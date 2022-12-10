@@ -1,4 +1,4 @@
-package restapi.controller;
+package restapi.config;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import restapi.model.ErrorResult;
+import restapi.data.ErrorResult;
 
 import java.util.List;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -18,6 +18,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler {
+
+    //TODO: In anderen Ordner?
 
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody

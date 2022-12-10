@@ -9,8 +9,6 @@ import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.security.JwtTokenProvider;
 
-import java.util.logging.Logger;
-
 
 @SpringBootApplication
 public class ApiApplication implements CommandLineRunner {

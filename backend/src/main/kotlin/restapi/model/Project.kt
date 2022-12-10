@@ -1,7 +1,11 @@
 package restapi.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonView
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import restapi.jsonView.DataView
+import restapi.jsonView.DataView.UserWithProjects
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -12,20 +16,26 @@ import javax.validation.constraints.NotBlank
 // This is mostly because of the comple interactions between the JPA world and those
 // default implementations provided by the Kotlin compiler for each data class.
 
+
+// TODO: NotBlank not working in Kotlin!
+
 @Entity
 @Table(name = "tb_projects")
 data class Project(
+    @JsonView(DataView.Project::class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long,
 
-    // TODO: NotBlank not working in Kotlin!
+    @JsonView(DataView.Project::class)
     @NotBlank(message = "Name is mandatory")
     val name: String,
 
+    @JsonView(DataView.Project::class)
     @NotBlank(message = "Description is mandatory")
     val description: String,
 
+    @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
     val maxAttendees: String,
 
@@ -36,12 +46,14 @@ data class Project(
     // val endDate: Date,
 
     // A User can be the owner of many projects
+    @JsonView(DataView.ProjectWithOwner::class)
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "owner_id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     var owner: ApiUser?,
 
     // Many user attend many projects
+    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "project_attendees",
