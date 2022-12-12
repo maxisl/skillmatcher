@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix d
     return new BCryptPasswordEncoder();
   }
 
+  // Whitelist to enable swagger without authentication
   private static final String[] AUTH_WHITELIST = {
       // -- Swagger UI v2
       "/v2/api-docs",
