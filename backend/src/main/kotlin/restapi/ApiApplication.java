@@ -19,7 +19,6 @@ public class ApiApplication implements CommandLineRunner {
 
   @Autowired
   private UserRepository userRepository;
-
   @Autowired
   private JwtTokenProvider jwtTokenProvider;
 
@@ -32,7 +31,7 @@ public class ApiApplication implements CommandLineRunner {
 
     try {
       Random rand = new Random(); //instance of random class
-      int upperbound = 25;
+      int upperbound = 250;
       //generate random values from 0-24
       int int_random = rand.nextInt(upperbound);
       ApiUser user = new ApiUser();
