@@ -1,13 +1,13 @@
-package com.example.skillmatcher
+package com.example.skillmatcher.views
 
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import android.widget.NumberPicker
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,58 +23,47 @@ import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.sp
 import com.commandiron.wheel_picker_compose.WheelTextPicker
 import java.util.*
 
 
 @Destination
 @Composable
-fun ProjectCreationPage(navigator: DestinationsNavigator) {
-    Scaffold(
-        topBar = {
-            TopAppBar(title = {
-                Text(
-                    "Create Project",
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                )
-            })
-        }, //backgroundColor = Color(0xff0f9d58)
-        content = {
-            Column(modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,) {
-                Spacer(modifier = Modifier.height(4.dp))
-                textInput()
+fun ProjectCreationPage( ) { //openDrawer: () -> Unit
+    Column(modifier = Modifier.fillMaxSize()) {
+//        TopBar(
+//            title = "Home",
+//            buttonIcon = Icons.Filled.Menu,
+//            onButtonClicked = { openDrawer() }
+//        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(4.dp))
+            textInput()
 
-                Spacer(modifier = Modifier.height(7.dp))
-                Divider(thickness = 1.dp)
+            Spacer(modifier = Modifier.height(7.dp))
+            Divider(thickness = 1.dp)
 
-                startDate()
-                endDate()
+            startDate()
+            endDate()
 
-                Spacer(modifier = Modifier.height(7.dp))
-                Divider(thickness = 1.dp)
+            Spacer(modifier = Modifier.height(7.dp))
+            Divider(thickness = 1.dp)
 
-                Spacer(modifier = Modifier.height(7.dp))
-                numberInput()
+            Spacer(modifier = Modifier.height(7.dp))
+            numberInput()
 
-                Divider(thickness = 1.dp)
-                Spacer(modifier = Modifier.height(7.dp))
+            Divider(thickness = 1.dp)
+            Spacer(modifier = Modifier.height(7.dp))
 
 
-                Spacer(modifier = Modifier.height(200.dp))
-                Button(onClick = { navigator.navigate(AllProjectsOverViewPageDestination) }) {
-                    Text("Go to AllProjectsOverViewPage")
-                }
-
-            }
+            Spacer(modifier = Modifier.height(200.dp))
         }
-    )
+    }
 }
 
 

@@ -15,17 +15,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun AllProjectsOverViewPage(
-    navigator: DestinationsNavigator
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Post Screen")
-        Button(onClick = {
-            navigator.navigate(VisitorsProjectOverviewPageDestination)
-        }) {
-            Text("Go to VisitorsProjectOverviewPage")
-        }
+        Text(text = "Post Enis")
     }
 }
