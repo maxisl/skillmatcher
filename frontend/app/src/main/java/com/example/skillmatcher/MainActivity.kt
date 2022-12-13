@@ -65,6 +65,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         },
+                        drawerGesturesEnabled = true,
                         drawerContent = {
                             DrawerContent { itemLabel ->
                                 Toast
@@ -76,16 +77,44 @@ class MainActivity : ComponentActivity() {
                                     scaffoldState.drawerState.close()
                                 }
                             }
+                        },
+                        content = {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(text = "Rest of the App UI Here")
+                            }
+                        },
+                        floatingActionButton = {
+                            //Create a floating action button in floatingActionButton parameter of scaffold
+                            FloatingActionButton(
+
+                                onClick = {
+                                    //When clicked open Snackbar
+                                    coroutineScope.launch {
+                                        when (scaffoldState.snackbarHostState.showSnackbar(
+                                            message = "Snack Bar", //Message In the snackbar
+                                            actionLabel = "Dismiss"
+                                        )) {
+                                            SnackbarResult.Dismissed -> {
+                                                //do something when snack bar is dismissed
+                                            }
+
+                                            SnackbarResult.ActionPerformed -> {
+                                                //when it appears
+                                            }
+
+                                        }
+                                    }
+                                }) {
+
+                                //Simple Text inside FAB
+                                Text(text = "X")
+                            }
                         }
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(text = "Rest of the App UI Here")
-                        }
-                    }
+                    )
                 }
             }
         }

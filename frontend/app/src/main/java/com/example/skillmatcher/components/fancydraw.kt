@@ -158,45 +158,27 @@ private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.android_icon),
-            label = "Home"
+            label = "Home",
+            id = ScreensRoute.SCREEN_1,
+            textId = R.string.screen_1
         )
     )
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.android_icon),
             label = "Messages",
-            showUnreadBubble = true
+            showUnreadBubble = true,
+            id = ScreensRoute.SCREEN_2,
+            textId = R.string.screen_2
         )
     )
     itemsList.add(
         NavigationDrawerItem(
             image = painterResource(id = R.drawable.android_icon),
             label = "Notifications",
-            showUnreadBubble = true
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.android_icon),
-            label = "Profile"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.android_icon),
-            label = "Payments"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.android_icon),
-            label = "Settings"
-        )
-    )
-    itemsList.add(
-        NavigationDrawerItem(
-            image = painterResource(id = R.drawable.android_icon),
-            label = "Logout"
+            showUnreadBubble = true,
+            id = ScreensRoute.SCREEN_3,
+            textId = R.string.screen_3
         )
     )
 
@@ -206,5 +188,13 @@ private fun prepareNavigationDrawerItems(): List<NavigationDrawerItem> {
 data class NavigationDrawerItem(
     val image: Painter,
     val label: String,
-    val showUnreadBubble: Boolean = false
+    val showUnreadBubble: Boolean = false,
+
+    // Simons
+    val id: ScreensRoute,
+    val textId: Int
 )
+
+enum class ScreensRoute {
+    SCREEN_1, SCREEN_2, SCREEN_3
+}
