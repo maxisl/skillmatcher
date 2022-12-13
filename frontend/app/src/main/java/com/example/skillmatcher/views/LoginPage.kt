@@ -26,7 +26,7 @@ import com.example.skillmatcher.destinations.LandingPageDestination
 @RootNavGraph(start = true)
 @Destination()
 @Composable
-fun LoginPage(navigator: DestinationsNavigator) {
+fun LoginPage() {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -55,14 +55,6 @@ fun LoginPage(navigator: DestinationsNavigator) {
                     Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
 
                     Spacer(modifier = Modifier.height(4.dp))
-                    Button(onClick = {
-                        navigator.navigate(
-                            LandingPageDestination()
-
-                        )
-                    }) {
-                        Text("Go to IndividualSkillsPage")
-                    }
                 }
             }
         )

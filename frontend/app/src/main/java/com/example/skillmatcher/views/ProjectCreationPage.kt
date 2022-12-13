@@ -26,19 +26,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import com.commandiron.wheel_picker_compose.WheelTextPicker
-import com.walnash.navigationdrawer.TopBar
 import java.util.*
 
 
 @Destination
 @Composable
-fun ProjectCreationPage( openDrawer: () -> Unit) {
+fun ProjectCreationPage( ) { //openDrawer: () -> Unit
     Column(modifier = Modifier.fillMaxSize()) {
-        TopBar(
-            title = "Home",
-            buttonIcon = Icons.Filled.Menu,
-            onButtonClicked = { openDrawer() }
-        )
+//        TopBar(
+//            title = "Home",
+//            buttonIcon = Icons.Filled.Menu,
+//            onButtonClicked = { openDrawer() }
+//        )
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

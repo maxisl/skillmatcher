@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.R
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import kotlinx.coroutines.delay
@@ -52,29 +53,36 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val scaffoldState = rememberScaffoldState()
-                    val coroutineScope = rememberCoroutineScope()
-                    val contextForToast = LocalContext.current.applicationContext
+                    val scope = rememberCoroutineScope()
+                    val navController = rememberNavController()
 
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         scaffoldState = scaffoldState,
                         topBar = {
-                            MyTopAppBar {
-                                coroutineScope.launch {
-                                    scaffoldState.drawerState.open()
+                            TopBar(
+                                titleResId = R.string.app_name,
+                                openDrawer =
+                                {
+                                    scope.launch {
+                                        // Open the drawer with animation
+                                        // and suspend until it is fully
+                                        // opened or animation has been canceled
+                                        scaffoldState.drawerState.open()
+                                    }
                                 }
-                            }
+                            )
                         },
                         drawerGesturesEnabled = true,
                         drawerContent = {
-                            DrawerContent { itemLabel ->
-                                Toast
-                                    .makeText(contextForToast, itemLabel, Toast.LENGTH_SHORT)
-                                    .show()
-                                coroutineScope.launch {
-                                    // delay for the ripple effect
-                                    delay(timeMillis = 250)
-                                    scaffoldState.drawerState.close()
+                            DrawerBody(
+                                menuItems = navigationDrawerItemList(),
+                                scaffoldState,
+                                scope
+                            ) {
+                                navController.navigate(it.id.name) {
+                                    popUpTo = navController.graph.startDestinationId
+                                    launchSingleTop = true
                                 }
                             }
                         },
@@ -84,7 +92,7 @@ class MainActivity : ComponentActivity() {
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Rest of the App UI Here")
+                                NavHost(navController = navController) // !!!!!!!!!!!!!!!!!!!!!!!!!!!!
                             }
                         },
                         floatingActionButton = {
@@ -93,7 +101,7 @@ class MainActivity : ComponentActivity() {
 
                                 onClick = {
                                     //When clicked open Snackbar
-                                    coroutineScope.launch {
+                                    scope.launch {
                                         when (scaffoldState.snackbarHostState.showSnackbar(
                                             message = "Snack Bar", //Message In the snackbar
                                             actionLabel = "Dismiss"
@@ -111,7 +119,7 @@ class MainActivity : ComponentActivity() {
                                 }) {
 
                                 //Simple Text inside FAB
-                                Text(text = "X")
+                                Text(text = "Add")
                             }
                         }
                     )

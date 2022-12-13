@@ -1,18 +1,10 @@
 package com.example.skillmatcher.components
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItemDefaults.contentColor
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -20,14 +12,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.LandingPage
-import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-import com.ramcosta.composedestinations.DestinationsNavHost
+import com.example.skillmatcher.R
 
 @Composable
 fun TopBar(){
@@ -90,4 +79,10 @@ fun Navigation(navController: NavHostController){
             LandingPage()
         }
     }
+}
+
+sealed class NavigationItems(var route:String, var icon: Int, var title:String){
+    object List: NavigationItems("list", R.drawable.ic_list, "All Projects")
+    object Add: NavigationItems("add", R.drawable.ic_new, "New Project")
+    object Profile: NavigationItems("profile", R.drawable.ic_person, "Profile")
 }
