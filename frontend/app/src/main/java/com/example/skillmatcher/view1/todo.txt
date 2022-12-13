@@ -1,0 +1,1 @@
+Add view 1 code here and use components form components folder as well as from the theme folder to creat the view.
