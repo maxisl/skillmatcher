@@ -57,6 +57,9 @@ fun LoginPage(navigator: DestinationsNavigator) {
                     Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
 
                     Spacer(modifier = Modifier.height(4.dp))
+                    // to change color : colors = ButtonDefaults.buttonColors(Grey10)
+                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content COlor
+                    // In my case i define the Text Color by Text()
                     Button(onClick = {
                         navigator.navigate(
                             IndividualSkillsPageDestination(
@@ -69,6 +72,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
                             )
                         )
                     }) {
+                        // define here Text-Color  color = Grey99
                         Text("Go to IndividualSkillsPage")
                     }
                 }
