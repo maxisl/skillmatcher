@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.skillmatcher.data.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)

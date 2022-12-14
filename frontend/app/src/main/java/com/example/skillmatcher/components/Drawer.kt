@@ -23,16 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.skillmatcher.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.skillmatcher.LandingPage
-import com.example.skillmatcher.LoginPage
 import androidx.compose.material.Text
-import com.example.skillmatcher.AllProjectsOverViewPage
+import com.example.skillmatcher.*
+import com.example.skillmatcher.R
 import com.example.skillmatcher.views.ProjectCreationPage
+import com.ramcosta.composedestinations.DestinationsNavHost
 
 // TODO: Routen hier festlegen
 @Composable
@@ -42,7 +41,7 @@ fun NavHost(navController: NavHostController) {
         startDestination = ScreensRoute.SCREEN_1.name
     ) {
         composable(ScreensRoute.SCREEN_1.name) {
-            LoginPage()
+            DestinationsNavHost(navGraph = NavGraphs.root)
         }
         composable(ScreensRoute.SCREEN_2.name) {
             AllProjectsOverViewPage()
