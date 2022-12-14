@@ -1,4 +1,4 @@
-package com.example.skillmatcher
+package com.example.skillmatcher.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
