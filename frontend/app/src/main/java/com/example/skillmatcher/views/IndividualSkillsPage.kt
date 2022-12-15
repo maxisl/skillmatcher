@@ -16,6 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import com.example.skillmatcher.components.DrawerBody
+import com.example.skillmatcher.components.NavHost
+import com.example.skillmatcher.components.navigationDrawerItemList
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.LandingPageDestination
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
@@ -24,6 +28,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import java.time.LocalDateTime
+import com.example.skillmatcher.components.*
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -49,35 +55,83 @@ fun IndividualSkillsPage(
     user: User?,
     navigator: DestinationsNavigator?
 ) {
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(1f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+    SkillMatcherTheme() {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .background(MaterialTheme.colors.primary),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                LogoBanner(navigator)
-            }
-            Row(modifier = Modifier.padding(top = 25.dp)) {
-                PrimarySkills()
-            }
-            Row(modifier = Modifier.padding(top = 25.dp)) {
-                SecondarySkills()
-            }
-            Row(
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Button(onClick = {
-                    navigator?.navigate(ProjectCreationPageDestination())
-                }) {
-                    Text("Go to ProjectCreationPage")
-                }
-            }
+
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
+            val navController = rememberNavController()
+
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                scaffoldState = scaffoldState,
+                topBar = {
+                    TopBar(
+                        titleResId = R.string.app_name,
+                        openDrawer =
+                        {
+                            scope.launch {
+                                // Open the drawer with animation
+                                // and suspend until it is fully
+                                // opened or animation has been canceled
+                                scaffoldState.drawerState.open()
+                            }
+                        }
+                    )
+                },
+                drawerGesturesEnabled = true,
+                drawerContent = {
+                    DrawerBody(
+                        menuItems = navigationDrawerItemList(),
+                        scaffoldState,
+                        scope
+                    ) {
+                        navController.navigate(it.id.name) {
+                            popUpTo = navController.graph.startDestinationId
+                            launchSingleTop = true
+                        }
+                    }
+                },
+                content = {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        NavHost(navController = navController)
+                    }
+                },
+                /*floatingActionButton = {
+                    //Create a floating action button in floatingActionButton parameter of scaffold
+                    FloatingActionButton(
+
+                        onClick = {
+                            //When clicked open Snackbar
+                            scope.launch {
+                                when (scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Snack Bar", //Message In the snackbar
+                                    actionLabel = "Dismiss"
+                                )) {
+                                    SnackbarResult.Dismissed -> {
+                                        //do something when snack bar is dismissed
+                                    }
+
+                                    SnackbarResult.ActionPerformed -> {
+                                        //when it appears
+                                    }
+
+                                }
+                            }
+                        }) {
+
+                        //Simple Text inside FAB
+                        Text(text = "Add")
+                    }
+                }*/
+            )
         }
     }
 }
