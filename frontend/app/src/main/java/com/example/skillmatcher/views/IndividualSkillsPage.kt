@@ -29,30 +29,12 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import java.time.LocalDateTime
 import com.example.skillmatcher.components.*
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SkillMatcherTheme() {
-        Surface(
-            modifier = Modifier.fillMaxHeight(1f),
-            color = Color.White
-        ) {
-            IndividualSkillsPage(
-                id = 1,
-                User(name = "", id = "", created = LocalDateTime.now()),
-                navigator = EmptyDestinationsNavigator
-            )
-        }
-    }
-}
 
 @Destination
 @Composable
-fun IndividualSkillsPage(
-    id: Int, // <-- required navigation argument
-    user: User?,
+fun SideBar(
     navigator: DestinationsNavigator?
 ) {
     SkillMatcherTheme() {
@@ -101,7 +83,9 @@ fun IndividualSkillsPage(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        NavHost(navController = navController)
+                        if (navigator != null) {
+                            NavHost(navController = navController,navigator)
+                        }
                     }
                 },
                 /*floatingActionButton = {
@@ -132,6 +116,42 @@ fun IndividualSkillsPage(
                     }
                 }*/
             )
+        }
+    }
+}
+
+@Destination
+@Composable
+fun IndividualSkillsPage(,navigator: DestinationsNavigator){
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .background(MaterialTheme.colors.primary),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                LogoBanner(navigator)
+            }
+            Row(modifier = Modifier.padding(top = 25.dp)) {
+                PrimarySkills()
+            }
+            Row(modifier = Modifier.padding(top = 25.dp)) {
+                SecondarySkills()
+            }
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Button(onClick = {
+                    navigator?.navigate(ProjectCreationPageDestination())
+                }) {
+                    Text("Go to ProjectCreationPage")
+                }
+            }
         }
     }
 }
