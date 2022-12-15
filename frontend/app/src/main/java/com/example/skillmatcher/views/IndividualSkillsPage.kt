@@ -34,8 +34,9 @@ import kotlinx.coroutines.launch
 
 @Destination
 @Composable
-fun SideBar(
-    navigator: DestinationsNavigator?
+fun SideBar(id: Int, // <-- required navigation argument
+            user: User?,
+            navigator: DestinationsNavigator?
 ) {
     SkillMatcherTheme() {
         Surface(
@@ -122,7 +123,7 @@ fun SideBar(
 
 @Destination
 @Composable
-fun IndividualSkillsPage(,navigator: DestinationsNavigator){
+fun IndividualSkillsPage(navigator: DestinationsNavigator){
     Surface {
         Column(
             modifier = Modifier.fillMaxSize(1f),

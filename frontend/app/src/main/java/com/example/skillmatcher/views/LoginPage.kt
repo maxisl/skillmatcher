@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.destinations.SideBarDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
@@ -59,8 +60,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
                     // In my case i define the Text Color by Text()
                     Button(onClick = {
                         navigator.navigate(
-                            IndividualSkillsPageDestination(
-                                id = 1,
+                            SideBarDestination(id = 1,
                                 User(
                                     name = "Chris P. Bacon",
                                     id = "userid",
