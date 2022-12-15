@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.ApiUser
 import restapi.repository.UserRepository
+import java.util.*
 
 
 @Service
@@ -28,5 +29,7 @@ class UserService(val repository: UserRepository) {
         repository.deleteById(dbUser.id);
         return
     }
+
+
 }
 

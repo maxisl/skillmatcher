@@ -1,5 +1,6 @@
 package restapi;
 
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,32 +14,35 @@ import restapi.security.JwtTokenProvider;
 @SpringBootApplication
 public class ApiApplication implements CommandLineRunner {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+  public static void main(String[] args) {
+    SpringApplication.run(ApiApplication.class, args);
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(ApiApplication.class, args);
+  @Override
+  public void run(String... args) throws Exception {
+
+    try {
+      Random rand = new Random(); //instance of random class
+      int upperbound = 250;
+      //generate random values from 0-24
+      int int_random = rand.nextInt(upperbound);
+      ApiUser user = new ApiUser();
+      user.setEmail(int_random + "@noel.de");
+      user.setPassword(passwordEncoder.encode("1234"));
+
+      ApiUser saved = userRepository.save(user);
+
+      System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));
+    } catch (Exception e) {
+      //
     }
-
-    @Override
-    public void run(String... args) throws Exception {
-
-        try {
-            ApiUser user = new ApiUser();
-            user.setEmail("noel@noel.de");
-            user.setPassword(passwordEncoder.encode("1234"));
-
-            ApiUser saved = userRepository.save(user);
-
-            System.out.println(jwtTokenProvider.generateToken(saved.getEmail()));
-        } catch (Exception e) {
-            //
-        }
-    }
+  }
 }

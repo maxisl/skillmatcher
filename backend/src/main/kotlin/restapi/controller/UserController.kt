@@ -34,5 +34,11 @@ class UserController(val service: UserService) {
         service.remove(email)
         return ResponseEntity.ok("User successfully deleted!")
     }
+
+    /*@PostMapping("/")
+    // @RequestBody to be able to convert JSON (sent as HTTP body) into object
+    fun post(@RequestBody message: Message) {
+        fun updateUser(@PathVariable email: String, @RequestBody user: ApiUser) = service.update(email, user)
+    }*/
 }
 
