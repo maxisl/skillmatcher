@@ -30,31 +30,10 @@ import androidx.navigation.compose.composable
 import androidx.compose.material.Text
 import com.example.skillmatcher.*
 import com.example.skillmatcher.R
+import com.example.skillmatcher.ui.theme.Green30
+import com.example.skillmatcher.ui.theme.Grey99
 import com.example.skillmatcher.views.ProjectCreationPage
 import com.ramcosta.composedestinations.DestinationsNavHost
-
-// TODO: Routen hier festlegen
-@Composable
-fun NavHost(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = ScreensRoute.SCREEN_1.name
-    ) {
-        composable(ScreensRoute.SCREEN_1.name) {
-            DestinationsNavHost(navGraph = NavGraphs.root)
-        }
-        composable(ScreensRoute.SCREEN_2.name) {
-            AllProjectsOverViewPage()
-        }
-        composable(ScreensRoute.SCREEN_PROFILE.name) {
-            LandingPage()
-        }
-        composable(ScreensRoute.SCREEN_CREATE.name) {
-            ProjectCreationPage()
-        }
-    }
-}
-
 
 @Composable
 fun TopBar(
@@ -94,7 +73,7 @@ fun DrawerBody(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(brush = Brush.verticalGradient(colors = listOf(Color(0xFFF70A74), Color(0xFFF59118)))),
+            .background(brush = Brush.verticalGradient(colors = listOf(Color(Green30.value), Color(0xFFF59118)))),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(vertical = 36.dp)
     ) {
@@ -107,7 +86,7 @@ fun DrawerBody(
                 modifier = Modifier
                     .size(size = 120.dp)
                     .clip(shape = CircleShape),
-                painter = painterResource(id = R.drawable.android_icon),
+                painter = painterResource(id = R.drawable.lmulogo),
                 contentDescription = "Profile Image"
             )
 
@@ -198,18 +177,9 @@ fun DrawerItem(menuItem: MenuItem, modifier: Modifier = Modifier, onItemClick: (
     }
 }
 
-data class MenuItem(
-    val id: ScreensRoute,
-
-    val image: Painter,
-    val label: String,
-    val showUnreadBubble: Boolean = false,
-)
-
-
 // TODO: Add screen here
 enum class ScreensRoute {
-    SCREEN_1, SCREEN_2, SCREEN_PROFILE, SCREEN_CREATE;
+    SCREEN_HOME, SCREEN_ALL_PROJECTS, SCREEN_PROFILE, SCREEN_CREATE_PROJECT;
 }
 
 // TODO: Add Item here
@@ -221,7 +191,7 @@ fun navigationDrawerItemList(): List<MenuItem> {
         MenuItem(
             image = painterResource(id = R.drawable.android_icon),
             label = "Home",
-            id = ScreensRoute.SCREEN_1,
+            id = ScreensRoute.SCREEN_HOME,
         )
     )
     itemsList.add(
@@ -237,7 +207,7 @@ fun navigationDrawerItemList(): List<MenuItem> {
             image = painterResource(id = R.drawable.android_icon),
             label = "Create Project",
             showUnreadBubble = false,
-            id = ScreensRoute.SCREEN_CREATE,
+            id = ScreensRoute.SCREEN_CREATE_PROJECT,
         )
     )
     itemsList.add(
@@ -245,7 +215,7 @@ fun navigationDrawerItemList(): List<MenuItem> {
             image = painterResource(id = R.drawable.android_icon),
             label = "All Projects",
             showUnreadBubble = true,
-            id = ScreensRoute.SCREEN_2,
+            id = ScreensRoute.SCREEN_ALL_PROJECTS,
         )
     )
 
