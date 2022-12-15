@@ -89,7 +89,7 @@ fun SideBar(id: Int, // <-- required navigation argument
                         }
                     }
                 },
-                /*floatingActionButton = {
+                floatingActionButton = {
                     //Create a floating action button in floatingActionButton parameter of scaffold
                     FloatingActionButton(
 
@@ -115,7 +115,7 @@ fun SideBar(id: Int, // <-- required navigation argument
                         //Simple Text inside FAB
                         Text(text = "Add")
                     }
-                }*/
+                }
             )
         }
     }
