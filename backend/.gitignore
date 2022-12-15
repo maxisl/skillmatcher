@@ -89,3 +89,6 @@ gradle-app.setting
 
 # Windows clutter
 Thumbs.db
+
+# Hide db configuration from git
+env.properties
