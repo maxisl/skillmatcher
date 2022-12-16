@@ -32,6 +32,8 @@ import com.example.skillmatcher.*
 import com.example.skillmatcher.R
 import com.example.skillmatcher.ui.theme.Green30
 import com.example.skillmatcher.ui.theme.Grey99
+import com.example.skillmatcher.ui.theme.LMUGreen
+import com.example.skillmatcher.ui.theme.SecondSidebarColor
 import com.example.skillmatcher.views.ProjectCreationPage
 import com.ramcosta.composedestinations.DestinationsNavHost
 
@@ -73,7 +75,7 @@ fun DrawerBody(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(brush = Brush.verticalGradient(colors = listOf(Color(Green30.value), Color(0xFFF59118)))),
+            .background(brush = Brush.verticalGradient(colors = listOf(Color(LMUGreen.value), Color(SecondSidebarColor.value)))),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(vertical = 36.dp)
     ) {

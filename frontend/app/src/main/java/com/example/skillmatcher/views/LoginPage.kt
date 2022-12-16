@@ -15,12 +15,16 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.SideBarDestination
+import com.example.skillmatcher.ui.theme.Green30
+import com.example.skillmatcher.ui.theme.SecondSidebarColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
@@ -47,7 +51,11 @@ fun LoginPage(navigator: DestinationsNavigator) {
             },
             content = {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
+                        .background(brush = Brush.verticalGradient(colors = listOf(
+                            Color(Green30.value), Color(
+                                SecondSidebarColor.value)
+                        ))),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -56,7 +64,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
 
                     Spacer(modifier = Modifier.height(4.dp))
                     // to change color : colors = ButtonDefaults.buttonColors(Grey10)
-                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content COlor
+                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content Color
                     // In my case i define the Text Color by Text()
                     Button(onClick = {
                         navigator.navigate(
@@ -88,6 +96,4 @@ fun Welcome(){
         color = MaterialTheme.colorScheme.background
     ) {
     }
-
-
 }
