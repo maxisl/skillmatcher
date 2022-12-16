@@ -41,3 +41,5 @@ val GreenGrey50 = Color(0xFF52ad76)
 val GreenGrey60 = Color(0xFF74be92)
 val GreenGrey80 = Color(0xFFbadec8)
 val GreenGrey90 = Color(0xFFdcefe4)
+
+val SecondSidebarColor = Color(0xFFF59118)
