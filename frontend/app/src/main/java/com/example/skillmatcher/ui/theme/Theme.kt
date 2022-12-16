@@ -38,7 +38,7 @@ private val DarkColorPalette = darkColorScheme(
 )
 
 private val LightColorPalette = lightColorScheme(
-    primary = Green40,
+    primary = Green40,          //Button
     onPrimary = Color.White,
     primaryContainer = Green90,
     onPrimaryContainer = Green10,

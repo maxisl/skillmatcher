@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Preview
@@ -54,7 +55,7 @@ fun TopBar(
             overflow = TextOverflow.Ellipsis,
               fontWeight = FontWeight.Bold,
               fontSize = 60.sp,
-              color = Color.Blue
+              color = Color(LMUGreen.value)
           )}
     }
 @Composable
