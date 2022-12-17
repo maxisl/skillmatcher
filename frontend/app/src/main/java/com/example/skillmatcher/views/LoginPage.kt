@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.skillmatcher.destinations.IndividualSkillsPageDestination
-import com.example.skillmatcher.ui.theme.Grey10
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -23,8 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.SideBarDestination
-import com.example.skillmatcher.ui.theme.Green30
-import com.example.skillmatcher.ui.theme.SecondSidebarColor
+import com.example.skillmatcher.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph(start = true)
@@ -41,21 +39,18 @@ fun LoginPage(navigator: DestinationsNavigator) {
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
-                    Text(text = "Sign In")
+                    Text(text = "Sign In", modifier = Modifier
+                        .padding(10.dp))
                             },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        titleContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        containerColor = Color(Black.value),
+                        titleContentColor = Color(LMUGreen.value)
                     )
                )
             },
             content = {
                 Column(
-                    modifier = Modifier.fillMaxSize()
-                        .background(brush = Brush.verticalGradient(colors = listOf(
-                            Color(Green30.value), Color(
-                                SecondSidebarColor.value)
-                        ))),
+                    modifier = Modifier.fillMaxSize().background(Color(Black.value)),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Spacer(modifier = Modifier.height(4.dp))

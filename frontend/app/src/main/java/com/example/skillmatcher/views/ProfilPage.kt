@@ -1,5 +1,6 @@
 package com.example.skillmatcher
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,14 +17,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
+import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Preview
 @Destination()
 @Composable
 fun LandingPage() {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(Black.value))) {
     TopBar(name = "Profile", modifier = Modifier
         .padding(10.dp))
         Spacer(modifier = Modifier.height(4.dp))
@@ -122,17 +125,19 @@ fun ProfileStat(name:String,
         Text(text = name,
         fontWeight =FontWeight.Bold,
         fontSize = 50.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = studies,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            color = Color(White.value)
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = graduateLevel,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            color = Color(White.value)
 
         )
     }
@@ -175,6 +180,7 @@ fun SkillOverview(frontend:String,
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = frontend,
             fontWeight =FontWeight.Bold,
+            color=Color(LMUGreen.value),
             fontSize = 30.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
@@ -202,7 +208,7 @@ fun Skill(name:String,
         Text(text = name,
             fontWeight =FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
     }
 }
@@ -233,7 +239,7 @@ fun FrontendOverview(frontend:String,
         Text(text = frontend,
             fontWeight =FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
     }
     Column(verticalArrangement = Arrangement.Center,
@@ -241,6 +247,7 @@ fun FrontendOverview(frontend:String,
         modifier = modifier
     ){
         Text(text = text,
+            color = Color(White.value),
             fontSize = 25.sp
         )
     }
@@ -272,7 +279,7 @@ fun BackendOverview(backend:String,
         Text(text = backend,
             fontWeight =FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
     }
     Column(verticalArrangement = Arrangement.Center,
@@ -280,6 +287,7 @@ fun BackendOverview(backend:String,
         modifier = modifier
     ){
         Text(text = text,
+            color = Color(White.value),
             fontSize = 25.sp
         )
     }
@@ -313,7 +321,7 @@ fun DatenbankOverview(datenbank:String,
         Text(text = datenbank,
             fontWeight =FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
 
     }
@@ -323,6 +331,7 @@ fun DatenbankOverview(datenbank:String,
     ){
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = text,
+            color = Color(White.value),
             fontSize = 25.sp)
     }
 }
@@ -354,7 +363,7 @@ fun ProgrammiersprachenOverview(programmiersprache:String,
         Text(text = programmiersprache,
             fontWeight =FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
     }
     Column(verticalArrangement = Arrangement.Center,
@@ -362,6 +371,7 @@ fun ProgrammiersprachenOverview(programmiersprache:String,
         modifier = modifier
     ){
         Text(text = text,
+            color = Color(White.value),
             fontSize = 25.sp,
             )
     }

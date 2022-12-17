@@ -3,6 +3,7 @@ package com.example.skillmatcher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,6 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.destinations.LandingPageDestination
 import com.example.skillmatcher.destinations.VisitorsProjectOverviewPageDestination
+import com.example.skillmatcher.ui.theme.Black
+import com.example.skillmatcher.ui.theme.Green40
+import com.example.skillmatcher.ui.theme.LMUGreen
+import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -35,12 +40,12 @@ import java.time.format.TextStyle
 @Composable
 fun AllProjectsOverViewPage(
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(Black.value))) {
         HeadBar(
             name = "Create Project", modifier = Modifier
                 .padding(5.dp)
         )
-        Divider(color= Color.Black, thickness = 1.dp)
+        Divider(color= Color(White.value), thickness = 1.dp)
         Spacer(modifier = Modifier.height(4.dp))
         ProjectDetailsHeader()
 
@@ -61,7 +66,7 @@ fun HeadBar(
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue
+            color = Color(LMUGreen.value)
         )
 
     }
@@ -82,7 +87,7 @@ fun ProjectDetails(
             text = name,
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
-            color = Color.Blue,
+            color = Color(LMUGreen.value),
         )
     }
     Column(verticalArrangement = Arrangement.Center,
@@ -91,7 +96,8 @@ fun ProjectDetails(
     ){
         androidx.compose.material3.Text(
             text = description,
-            fontSize = 25.sp
+            fontSize = 25.sp,
+            color = Color(White.value),
         )
     }
 }
@@ -106,7 +112,6 @@ fun ProjectDetailsHeader(modifier: Modifier=Modifier){
     ){
         //hier muss die Datenbankverknüpfung her
         ProjectDetails("Project 1", "Datenbanksystem mit SQL entwickeln")
-        Divider(color= Color.Black, thickness = 1.dp)
 
     }
     Row(
