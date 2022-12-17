@@ -10,3 +10,15 @@ data class User(
     val id: String,
     val created: LocalDateTime
 ): Parcelable
+
+
+data class UserLoginModel(
+    var email: String,
+    var password: String,
+)
+
+data class UserModel(
+    var email: String,
+    var ytw: String,
+    var projects: String,
+)

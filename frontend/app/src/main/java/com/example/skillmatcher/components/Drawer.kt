@@ -75,7 +75,7 @@ fun DrawerBody(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(brush = Brush.verticalGradient(colors = listOf(Color(LMUGreen.value), Color(SecondSidebarColor.value)))),
+            .background(MaterialTheme.colors.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(vertical = 36.dp)
     ) {

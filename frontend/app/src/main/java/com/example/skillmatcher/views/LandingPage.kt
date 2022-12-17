@@ -1,4 +1,4 @@
-package com.example.skillmatcher
+package com.example.skillmatcher.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,11 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.example.skillmatcher.R
 import com.example.skillmatcher.components.DrawerBody
 import com.example.skillmatcher.components.NavHost
+import com.example.skillmatcher.components.TopBar
 import com.example.skillmatcher.components.navigationDrawerItemList
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.LandingPageDestination
@@ -26,19 +27,16 @@ import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import java.time.LocalDateTime
-import com.example.skillmatcher.components.*
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import kotlinx.coroutines.launch
 
 @Destination
 @Composable
-fun SideBar(id: Int, // <-- required navigation argument
-            user: User?,
-            navigator: DestinationsNavigator?
+fun SideBar(
+    id: Int, // <-- required navigation argument
+    user: User?,
+    navigator: DestinationsNavigator?
 ) {
-    SkillMatcherTheme() {
+    SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -85,7 +83,7 @@ fun SideBar(id: Int, // <-- required navigation argument
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (navigator != null) {
-                            NavHost(navController = navController,navigator)
+                            NavHost(navController = navController, navigator)
                         }
                     }
                 },
@@ -110,8 +108,9 @@ fun SideBar(id: Int, // <-- required navigation argument
 
                                 }
                             }
-                        }) {
-
+                        },
+                        backgroundColor = MaterialTheme.colors.primary,
+                    ) {
                         //Simple Text inside FAB
                         Text(text = "Add")
                     }
@@ -123,7 +122,7 @@ fun SideBar(id: Int, // <-- required navigation argument
 
 @Destination
 @Composable
-fun IndividualSkillsPage(navigator: DestinationsNavigator){
+fun IndividualSkillsPage(navigator: DestinationsNavigator) {
     Surface {
         Column(
             modifier = Modifier.fillMaxSize(1f),
@@ -148,7 +147,7 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator){
                 verticalAlignment = Alignment.Bottom
             ) {
                 Button(onClick = {
-                    navigator?.navigate(ProjectCreationPageDestination())
+                    navigator.navigate(ProjectCreationPageDestination())
                 }) {
                     Text("Go to ProjectCreationPage")
                 }
@@ -183,7 +182,7 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
 
 @Composable
 fun PrimarySkills() {
-    Surface() {
+    Surface {
         Column {
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
@@ -207,7 +206,7 @@ fun PrimarySkills() {
 
 @Composable
 fun SecondarySkills() {
-    Surface() {
+    Surface {
         Column {
             Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
@@ -235,7 +234,7 @@ fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
     var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
         value = skill,
-        onValueChange = { skill = it},
+        onValueChange = { skill = it },
         label = { Text("Skill") },
         shape = RoundedCornerShape(8.dp),
     )
