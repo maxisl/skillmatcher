@@ -28,6 +28,7 @@ import com.example.skillmatcher.ui.theme.*
 @RootNavGraph(start = true)
 @Destination()
 @Composable
+
 fun LoginPage(navigator: DestinationsNavigator) {
 
     Surface(
@@ -43,8 +44,8 @@ fun LoginPage(navigator: DestinationsNavigator) {
                         .padding(10.dp))
                             },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = Color(Black.value),
-                        titleContentColor = Color(LMUGreen.value)
+                        containerColor = Color(Grey100.value),
+                        titleContentColor = Color(White.value)
                     )
                )
             },
@@ -53,7 +54,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
                     modifier = Modifier.fillMaxSize().background(Color(Black.value)),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     val image: Painter = painterResource(id = R.drawable.lmulogo)
                     Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
 
