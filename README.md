@@ -8,6 +8,9 @@ Server:
 - ssh praktikum@msp-ws2223-5.dev.mobile.ifi.lmu.de -p 2416
 - Usgp$~}THj0zK)S#
 
+Swagger-UI:
+http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
+
 # How it works
 1. Post your project requirements to our platform.
 2. Our matching algorithm will find professionals with the skills and experience needed to bring your project to life.
