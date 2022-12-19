@@ -7,21 +7,25 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.UserLoginModel
 import com.example.skillmatcher.data.UserModel
+import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.PUT
+
 
 // TODO: Wie hier machen: https://stackoverflow.com/questions/30180957/send-post-request-with-params-using-retrofit
 // TODO: BACKEND liefer bei login dirc alle daten!
+// TODO: create retrofit instance (object) necessary?
+
 
 interface BackendAPI {
     @POST("auth/login")
+    // @Body annotation to pass JSON data
+    // add "suspend" in front of "func" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel?): Call<UserModel?>?
 }
 
@@ -34,7 +38,8 @@ fun postLoginUserData(
 
     Log.i("APIController", "Post login data!")
 
-    var url = "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    val url = "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+
     // on below line we are creating a retrofit
     // builder and passing our base url
     val retrofit = Retrofit.Builder()
@@ -53,12 +58,12 @@ fun postLoginUserData(
     // on below line we are executing our method.
     call!!.enqueue(object : Callback<UserModel?> {
         override fun onResponse(call: Call<UserModel?>?, response: Response<UserModel?>) {
+            Log.i("Executing call to function: ", "Post login user data ") // only executes with wrong login data?
             // this method is called when we get response from our api.
             Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
             // we are getting a response from our body and
-
             // passing it to our model class.
-            //val model: UserModel? = response.body()
+            // val model: UserModel? = response.body()
             // on below line we are getting our data from model class
             // and adding it to our string.
 
@@ -66,6 +71,7 @@ fun postLoginUserData(
                 "Http-Code:" + response.code() // +  "JWT : " + response.body() + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
             // below line we are setting our string to our response.
             result.value = resp
+            Log.i("Response: ", resp)
         }
 
         override fun onFailure(call: Call<UserModel?>?, t: Throwable) {
