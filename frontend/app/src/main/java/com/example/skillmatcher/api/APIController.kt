@@ -38,7 +38,9 @@ fun postLoginUserData(
 
     Log.i("APIController", "Post login data!")
 
-    val url = "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    // change URL for testing
+    val url = "http://10.0.2.2:8080/"
+    // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
 
     // on below line we are creating a retrofit
     // builder and passing our base url
