@@ -1,10 +1,32 @@
-# Gruppe5
+# Gruppe5 - Skill Matcher
 
-Doumentation: https://miro.com/app/board/uXjVPDUhJLs=/?share_link_id=793626605427
+Welcome to Skill Matcher! Skill Matcher is an app that helps you find the perfect team members for your projects.
+
+Wireframes: https://miro.com/app/board/uXjVPDUhJLs=/?share_link_id=793626605427
 
 Server: 
 - ssh praktikum@msp-ws2223-5.dev.mobile.ifi.lmu.de -p 2416
 - Usgp$~}THj0zK)S#
+
+Swagger-UI:
+http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
+
+# How it works
+1. Post your project requirements to our platform.
+2. Our matching algorithm will find professionals with the skills and experience needed to bring your project to life.
+3. Connect with potential team members and build your dream team.
+
+# Features
+* Easy to use interface for posting and finding projects
+* Advanced matching algorithm to find the best team members
+* Connect with professionals in your field
+
+# Getting started
+1. Download the app.
+2. Create a profile and fill out your project requirements or join an existing project based on your individual skill profile.
+3. Start connecting with potential team members.  
+
+--- 
 
 # Backend API
 
@@ -34,9 +56,7 @@ Server:
   - Project owner
   - Project skills needed
   - Project member
-  - Project progress    
-
-    
+  - Project progress      
 
 ---
 # Editing this README
