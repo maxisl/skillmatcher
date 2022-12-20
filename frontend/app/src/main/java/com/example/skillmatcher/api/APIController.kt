@@ -26,6 +26,7 @@ interface BackendAPI {
     @POST("auth/login")
     // @Body annotation to pass JSON data
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
+    // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
     fun loginUser(@Body userLoginModel: UserLoginModel?): Call<UserModel?>?
 }
 
