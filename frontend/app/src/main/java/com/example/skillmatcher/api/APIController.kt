@@ -21,7 +21,7 @@ import retrofit2.http.POST
 // TODO: BACKEND liefer bei login dirc alle daten!
 // TODO: create retrofit instance (object) necessary?
 
-
+// define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
     @POST("auth/login")
     // @Body annotation to pass JSON data
@@ -39,24 +39,23 @@ fun postLoginUserData(
 
     Log.i("APIController", "Post login data!")
 
-    // change URL for testing
+    // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
     val url = "http://10.0.2.2:8080/"
     // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
 
-    // on below line we are creating a retrofit
-    // builder and passing our base url
+
+    // create a retrofit builder and pass base url
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
-        // as we are sending data in json format so
-        // we have to add Gson converter factory
+        // sending data in json => add Gson converter factory
         .addConverterFactory(GsonConverterFactory.create())
-        // at last we are building our retrofit builder.
+        // build retrofit builder
         .build()
-    // below the line is to create an instance for our retrofit api class.
+    // create a "proxy" object that implements the BackendAPI interface
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
-    // passing data from our text fields to our model class.
+    // pass data from our text fields to our model class
     val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
-    // calling a method to create an update and passing our model class.
+    // call a method (asynchronously) to create an update and pass our model class
     val call: Call<UserModel?>? = retrofitAPI.loginUser(userLoginModel)
     // on below line we are executing our method.
     call!!.enqueue(object : Callback<UserModel?> {
@@ -77,6 +76,7 @@ fun postLoginUserData(
             Log.i("Response: ", resp)
         }
 
+        // error handling
         override fun onFailure(call: Call<UserModel?>?, t: Throwable) {
             // we get error response from API.
             result.value = "Error found is : " + t.message
