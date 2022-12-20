@@ -14,6 +14,8 @@ import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.data.AuthRequest;
 import restapi.security.JwtTokenProvider;
+// import gson to convert to JSON
+import com.google.gson.Gson;
 
 import javax.validation.Valid;
 
@@ -63,6 +65,14 @@ public class AuthController {
                         authRequest.getEmail(),
                         authRequest.getPassword()
                 ));
-        return ResponseEntity.ok(jwtTokenProvider.generateToken(authentication));
+
+        final Gson gson = new Gson();
+        // debug payload => transform to JSON
+        ResponseEntity<String> token = ResponseEntity.ok(gson.toJson(jwtTokenProvider.generateToken(authentication)));
+        String token_JSON = gson.toJson(token);
+        System.out.println(token);
+        // System.out.println(token2);
+
+        return ResponseEntity.ok(gson.toJson(jwtTokenProvider.generateToken(authentication)));
     }
 }

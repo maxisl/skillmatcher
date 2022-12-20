@@ -36,6 +36,7 @@ val Grey90 = Color(0xFFE0E3E3)
 val Grey95 = Color(0xFFEFF1F1)
 val Grey99 = Color(0xFFFBFDFD)
 
+
 val GreenGrey30 = Color(0xFF316847)
 val GreenGrey50 = Color(0xFF52ad76)
 val GreenGrey60 = Color(0xFF74be92)
@@ -44,3 +45,6 @@ val GreenGrey90 = Color(0xFFdcefe4)
 
 val SecondSidebarColor = Color(0xFFF59118)
 val LMUGreen = Color(	0xff0a9342)
+val Grey100= Color(0xff434242)
+val Black= Color(0xff000000)
+val White= Color(0xffffffff)
