@@ -3,6 +3,7 @@ package restapi.controller
 import com.fasterxml.jackson.annotation.JsonView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
 import restapi.model.ApiUser
@@ -17,6 +18,7 @@ class UserController(val service: UserService) {
     // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
 
     @JsonView(DataView.User::class)
+    @PreAuthorize("")
     @GetMapping
     fun getAllUsers() = service.getAll()
 

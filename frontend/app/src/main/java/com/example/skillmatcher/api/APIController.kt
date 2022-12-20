@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.data.UserLoginModel
 import com.example.skillmatcher.data.UserModel
 import com.google.gson.GsonBuilder
@@ -14,6 +15,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 
@@ -28,6 +30,9 @@ interface BackendAPI {
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
     // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
     fun loginUser(@Body userLoginModel: UserLoginModel?): Call<UserModel?>?
+
+    @GET("")
+    fun getAllUsers(): Call<List<User>>
 }
 
 fun postLoginUserData(
@@ -57,11 +62,12 @@ fun postLoginUserData(
     val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
     // call a method (asynchronously) to create an update and pass our model class
     val call: Call<UserModel?>? = retrofitAPI.loginUser(userLoginModel)
-    // on below line we are executing our method.
+    // execute request asynchronously
     call!!.enqueue(object : Callback<UserModel?> {
-        override fun onResponse(call: Call<UserModel?>?, response: Response<UserModel?>) {
+        // call onResponse when request succeeds
+        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
             Log.i("Executing call to function: ", "Post login user data ") // only executes with wrong login data?
-            // this method is called when we get response from our api.
+            // call when we get a response from our api
             Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
             // we are getting a response from our body and
             // passing it to our model class.
@@ -77,10 +83,12 @@ fun postLoginUserData(
         }
 
         // error handling
-        override fun onFailure(call: Call<UserModel?>?, t: Throwable) {
+        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
             // we get error response from API.
             result.value = "Error found is : " + t.message
         }
     })
 
 }
+
+fun getAllUsers() {}

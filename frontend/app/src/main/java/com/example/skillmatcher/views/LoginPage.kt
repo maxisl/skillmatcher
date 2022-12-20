@@ -226,5 +226,17 @@ fun postData() {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
+        // TODO remove after testing: Button to test function
+        Button(
+            onClick = {
+                getAllUsers()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
+        }
     }
 }
