@@ -11,6 +11,13 @@ data class User(
     val created: LocalDateTime
 ): Parcelable
 
+// for get all users in REST controller - this declaration fits the model defined in backend(model/ApiUser), above User does not!
+@Parcelize
+data class ApiUser(
+    val id: String,
+    val email: String
+): Parcelable
+
 
 data class UserLoginModel(
     var email: String,

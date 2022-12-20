@@ -5,7 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
-import com.example.skillmatcher.data.User
+import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.UserLoginModel
 import com.example.skillmatcher.data.UserModel
 import com.google.gson.GsonBuilder
@@ -31,8 +31,8 @@ interface BackendAPI {
     // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
     fun loginUser(@Body userLoginModel: UserLoginModel?): Call<UserModel?>?
 
-    @GET("")
-    fun getAllUsers(): Call<List<User>>
+    @GET("excluded")
+    fun getAllUsers(): Call<List<ApiUser>>
 }
 
 fun postLoginUserData(
@@ -91,4 +91,42 @@ fun postLoginUserData(
 
 }
 
-fun getAllUsers() {}
+fun getAllUsers() {
+    Log.i("APIController", "get user data!")
+
+    // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
+    val url = "http://10.0.2.2:8080/"
+    // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
+
+
+    // create a retrofit builder and pass base url
+    val retrofit = Retrofit.Builder()
+        .baseUrl(url)
+        // sending data in json => add Gson converter factory
+        .addConverterFactory(GsonConverterFactory.create())
+        // build retrofit builder
+        .build()
+    // create a "proxy" object that implements the BackendAPI interface
+    val retrofitAPI = retrofit.create(BackendAPI::class.java)
+    // call a method (asynchronously) to create an update and pass our model class
+    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
+    // execute request asynchronously
+    call!!.enqueue(object : Callback<List<ApiUser>> {
+        // call onResponse when request succeeds
+        override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
+            Log.i("Executing call to function: ", "get all users") // only executes with wrong login data?
+            val resp =
+                "Http-Code:" + response.code()
+            // below line we are setting our string to our response.
+            Log.i("Response: ", resp)
+            Log.d("Response: ", response.body().toString())
+        }
+
+        // error handling
+        override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
+            // log error response
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+
+    })
+}

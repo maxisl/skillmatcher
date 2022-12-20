@@ -18,7 +18,6 @@ class UserController(val service: UserService) {
     // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
 
     @JsonView(DataView.User::class)
-    @PreAuthorize("")
     @GetMapping
     fun getAllUsers() = service.getAll()
 
@@ -36,11 +35,14 @@ class UserController(val service: UserService) {
         service.remove(email)
         return ResponseEntity.ok("User successfully deleted!")
     }
+}
 
-    /*@PostMapping("/")
-    // @RequestBody to be able to convert JSON (sent as HTTP body) into object
-    fun post(@RequestBody message: Message) {
-        fun updateUser(@PathVariable email: String, @RequestBody user: ApiUser) = service.update(email, user)
-    }*/
+// TODO can be deleted after testing: test route that is unauthorized - does not require JWT
+@RequestMapping("excluded")
+@RestController
+class UserTestController(val service: UserService) {
+    @JsonView(DataView.User::class)
+    @GetMapping()
+    fun getUsers() = service.getAll()
 }
 
