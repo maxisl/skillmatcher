@@ -7,8 +7,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.UserLoginModel
-import com.example.skillmatcher.data.UserModel
-import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +19,6 @@ import retrofit2.http.POST
 
 // TODO: Wie hier machen: https://stackoverflow.com/questions/30180957/send-post-request-with-params-using-retrofit
 // TODO: BACKEND liefer bei login dirc alle daten!
-// TODO: create retrofit instance (object) necessary?
 
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
@@ -29,7 +26,7 @@ interface BackendAPI {
     // @Body annotation to pass JSON data
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
     // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
-    fun loginUser(@Body userLoginModel: UserLoginModel?): Call<UserModel?>?
+    fun loginUser(@Body userLoginModel: UserLoginModel?): Call<String?>?
 
     @GET("excluded")
     fun getAllUsers(): Call<List<ApiUser>>
@@ -45,8 +42,9 @@ fun postLoginUserData(
     Log.i("APIController", "Post login data!")
 
     // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
-    val url = "http://10.0.2.2:8080/"
-    // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
+    val url =
+        "http://10.0.2.2:8080/"
+    // "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
     // create a retrofit builder and pass base url
@@ -61,31 +59,37 @@ fun postLoginUserData(
     // pass data from our text fields to our model class
     val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
     // call a method (asynchronously) to create an update and pass our model class
-    val call: Call<UserModel?>? = retrofitAPI.loginUser(userLoginModel)
+    val call: Call<String?>? = retrofitAPI.loginUser(userLoginModel)
     // execute request asynchronously
-    call!!.enqueue(object : Callback<UserModel?> {
+    call!!.enqueue(object : Callback<String?> {
         // call onResponse when request succeeds
-        override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
+        override fun onResponse(call: Call<String?>, response: Response<String?>) {
             Log.i("Executing call to function: ", "Post login user data ") // only executes with wrong login data?
-            // call when we get a response from our api
+            // show button when we get a response from our api
             Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
-            // we are getting a response from our body and
-            // passing it to our model class.
-            // val model: UserModel? = response.body()
-            // on below line we are getting our data from model class
-            // and adding it to our string.
 
-            val resp =
+            val jwt = response.body()
+            if (jwt != null) {
+                Log.i("JWT: ", jwt)
+            }
+
+            val headers = response.headers()
+            Log.i("Headers: ", headers.toString())
+
+            val  statusCode=
                 "Http-Code:" + response.code() // +  "JWT : " + response.body() + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+            Log.i("Response: ", statusCode)
             // below line we are setting our string to our response.
-            result.value = resp
-            Log.i("Response: ", resp)
+            result.value = statusCode
+
+            Log.d("Response body: ", response.body().toString())
         }
 
         // error handling
-        override fun onFailure(call: Call<UserModel?>, t: Throwable) {
+        override fun onFailure(call: Call<String?>, t: Throwable) {
             // we get error response from API.
             result.value = "Error found is : " + t.message
+            t.message?.let { Log.d("Error: ", it) };
         }
     })
 

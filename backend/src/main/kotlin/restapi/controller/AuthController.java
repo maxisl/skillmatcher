@@ -1,6 +1,8 @@
 package restapi.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.gson.JsonObject;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +20,7 @@ import restapi.security.JwtTokenProvider;
 import com.google.gson.Gson;
 
 import javax.validation.Valid;
+import org.json.JSONObject;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) throws JSONException {
 
         Authentication authentication;
         authentication = authenticationManager.authenticate( // TODO: Custom return if login fails
@@ -65,14 +68,19 @@ public class AuthController {
                         authRequest.getEmail(),
                         authRequest.getPassword()
                 ));
+/*
+        // debug payload => transform to JSON
+        String token = jwtTokenProvider.generateToken(authentication);
 
         final Gson gson = new Gson();
-        // debug payload => transform to JSON
-        ResponseEntity<String> token = ResponseEntity.ok(gson.toJson(jwtTokenProvider.generateToken(authentication)));
-        String token_JSON = gson.toJson(token);
-        System.out.println(token);
-        // System.out.println(token2);
 
-        return ResponseEntity.ok(gson.toJson(jwtTokenProvider.generateToken(authentication)));
+        String jsonString = "{\"jwt\":\"" + token + "\"}";
+        System.out.println(jsonString);
+
+        return ResponseEntity.ok(token);
+        */
+
+
+        return ResponseEntity.ok((jwtTokenProvider.generateToken(authentication)));
     }
 }
