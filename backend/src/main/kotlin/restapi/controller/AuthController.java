@@ -60,7 +60,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) throws JSONException {
+    public ResponseEntity<String> login(@RequestBody AuthRequest authRequest) {
 
         Authentication authentication;
         authentication = authenticationManager.authenticate( // TODO: Custom return if login fails

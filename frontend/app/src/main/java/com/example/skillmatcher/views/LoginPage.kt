@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.R
 import com.example.skillmatcher.data.User
-import com.example.skillmatcher.destinations.SideBarDestination
+// import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 
@@ -64,8 +64,8 @@ fun LoginPage(navigator: DestinationsNavigator) {
 
                 content = {
                     postData()
-
-                    Button(onClick = {
+                    /*TODO deactivated due to error: "Multiple Destinations with 'individual_skills_page' as their route name"*/
+                    /*Button(onClick = {
                         navigator.navigate(
                             SideBarDestination(
                                 id = 1,
@@ -78,7 +78,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
                         )
                     }) {
                         Text("Go to IndividualSkillsPage")
-                    }
+                    }*/
 
                     /**
                     Column(
