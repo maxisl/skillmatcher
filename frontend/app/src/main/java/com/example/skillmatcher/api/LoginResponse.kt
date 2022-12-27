@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName
 import kotlin.String
 
 
-data class String (
+data class LoginResponse (
     @SerializedName("status_code")
     var statusCode: Int,
 
     @SerializedName("auth_token")
-    var authToken: String,
+    var jwt: String,
 
     @SerializedName("user")
     var user: User

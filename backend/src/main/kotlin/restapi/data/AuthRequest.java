@@ -1,5 +1,6 @@
 package restapi.data;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
@@ -7,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 public class AuthRequest { //TODO: Replace AuthRequest with APIUser
 
     @NotBlank(message = "Email is mandatory")
+    @SerializedName("email")
     private String email;
 
     @NotBlank(message = "Password is mandatory")
+    @SerializedName("password")
     private String password;
 
 }

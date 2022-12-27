@@ -80,7 +80,10 @@ public class AuthController {
         return ResponseEntity.ok(token);
         */
 
+        ResponseEntity<String> token = ResponseEntity.ok(
+            (jwtTokenProvider.generateToken(authentication)));
+        System.out.println(token);
+        return token;
 
-        return ResponseEntity.ok((jwtTokenProvider.generateToken(authentication)));
     }
 }

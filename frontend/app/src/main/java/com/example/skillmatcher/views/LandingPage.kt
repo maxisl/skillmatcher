@@ -1,3 +1,4 @@
+/*
 package com.example.skillmatcher.views
 
 import androidx.compose.foundation.background
@@ -229,7 +230,9 @@ fun SecondarySkills() {
 
 
 @Composable
-fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
+fun SpecifySkill(*/
+/*skill: String, onSkillChange: (String) -> Unit *//*
+) {
     var skill by remember { mutableStateOf("") }
     var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
@@ -240,3 +243,4 @@ fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
+*/

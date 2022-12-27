@@ -40,8 +40,9 @@ import com.example.skillmatcher.components.DrawerBody
 import com.example.skillmatcher.components.NavHost
 import com.example.skillmatcher.components.navigationDrawerItemList
 import com.example.skillmatcher.data.User
+/* TODO comment out destinations due to navigation errors
 import com.example.skillmatcher.destinations.LandingPageDestination
-import com.example.skillmatcher.destinations.ProjectCreationPageDestination
+import com.example.skillmatcher.destinations.ProjectCreationPageDestination*/
 // import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.ui.theme.*
 
@@ -171,9 +172,9 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
             ) {
                 // have to specify material3 explicitly as of now? - not sure why
                 Button(onClick = {
-                    navigator.navigate(
+                    /*navigator.navigate(
                         ProjectCreationPageDestination()
-                    )
+                    )*/
                 }) {
                     Text("Go to ProjectCreationPage")
                 }

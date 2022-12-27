@@ -238,5 +238,15 @@ fun postData() {
         ) {
             Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
         }
+        Button(
+            onClick = {
+                registerUser()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Register User", modifier = Modifier.padding(8.dp))
+        }
     }
 }
