@@ -36,6 +36,11 @@ interface BackendAPI {
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
 }
 
+// change URL for testing - has to be http://10.0.2.2:8080/ when running local server
+const val url =
+    //    "http://10.0.2.2:8080/"
+    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+
 fun postLoginUserData(
     ctx: Context,
     userName: MutableState<TextFieldValue>,
@@ -45,11 +50,6 @@ fun postLoginUserData(
 ) {
 
     Log.i("APIController", "Post login data!")
-
-    // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
-    val url =
-        "http://10.0.2.2:8080/"
-    // "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
     // enable creation of gson factory
     val gson = GsonBuilder()
@@ -106,46 +106,27 @@ fun postLoginUserData(
 }
 
 fun getAllUsers() {
-    Log.i("APIController", "get user data!")
-
-    // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
-    val url = "http://10.0.2.2:8080/"
-    // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
-
-    // enable creation of gson factory
     val gson = GsonBuilder()
         .setLenient()
         .create()
 
-    // create a retrofit builder and pass base url
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
-        // sending data in json => add Gson converter factory
         .addConverterFactory(GsonConverterFactory.create(gson))
-        // build retrofit builder
         .build()
-    // create a "proxy" object that implements the BackendAPI interface
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
-    // call a method (asynchronously) to create an update and pass our model class
     val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
-    // execute request asynchronously
     call!!.enqueue(object : Callback<List<ApiUser>> {
-        // call onResponse when request succeeds
         override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
             val resp =
                 "Http-Code:" + response.code()
-            // below line we are setting our string to our response.
             Log.i("Response: ", resp)
-            // log all users found
             Log.d("Response: ", response.body().toString())
         }
 
-        // error handling
         override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
-            // log error response
             t.message?.let { Log.i("Error found is : ", it) }
         }
-
     })
 }
 
@@ -156,11 +137,6 @@ fun registerUser(
     job: MutableState<TextFieldValue>,
     result: MutableState<String>
 ) {
-    // TODO deploy on server
-    // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
-    val url = "http://10.0.2.2:8080/"
-    // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
-
     val gson = GsonBuilder()
         .setLenient()
         .create()
@@ -184,10 +160,10 @@ fun registerUser(
                     "Executing call to function: ",
                     "register user"
                 )
-                if (response.code() == 400){
+                if (response.code() == 400) {
                     val resp = "User already exists"
                     result.value = resp
-                } else if (response.code() == 200){
+                } else if (response.code() == 200) {
                     val resp = "User created"
                     result.value = resp
                 }
