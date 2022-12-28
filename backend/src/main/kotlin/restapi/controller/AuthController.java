@@ -83,6 +83,7 @@ public class AuthController {
         ResponseEntity<String> token = ResponseEntity.ok(
             (jwtTokenProvider.generateToken(authentication)));
         System.out.println(token);
+        System.out.println("Type of Response: " + token.getClass().getName());
         return token;
 
     }

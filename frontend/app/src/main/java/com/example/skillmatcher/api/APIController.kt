@@ -30,13 +30,13 @@ interface BackendAPI {
     // @Body annotation to pass JSON data
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
     // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
-    fun loginUser(@Body userLoginModel: UserLoginModel): Call<LoginResponse?>?
+    fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
 
     @GET("excluded")
     fun getAllUsers(): Call<List<ApiUser>>
 
     @POST("auth/register")
-    fun registerUser(@Body request: JSONObject): Call<ApiUser>
+    fun registerUser(@Body request: JSONObject): Call<UserLoginModel>
 }
 
 fun postLoginUserData(
@@ -77,13 +77,13 @@ fun postLoginUserData(
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
         Log.d("User credentials:", userLoginModel.toString())
         // call a method (asynchronously) to create an update and pass our model class
-        val call: Call<LoginResponse?>? = retrofitAPI.loginUser(userLoginModel)
+        val call: Call<String>? = retrofitAPI.loginUser(userLoginModel)
         // execute request asynchronously
-        call!!.enqueue(object : Callback<LoginResponse?> {
+        call!!.enqueue(object : Callback<String> {
             // call onResponse when request succeeds
             override fun onResponse(
-                call: Call<LoginResponse?>,
-                response: Response<LoginResponse?>
+                call: Call<String>,
+                response: Response<String>
             ) {
                 Log.i(
                     "Executing call to function: ",
@@ -102,7 +102,7 @@ fun postLoginUserData(
             }
 
             // error handling
-            override fun onFailure(call: Call<LoginResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 // we get error response from API.
                 result.value = "Error found is: \n" + t.message
                 t.message?.let { Log.d("Error: ", it) };
@@ -159,6 +159,7 @@ fun getAllUsers() {
     })
 }
 
+// TODO bad request (400)
 fun registerUser() {
     // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
     val url = "http://10.0.2.2:8080/"
@@ -179,13 +180,13 @@ fun registerUser() {
         paramObject.put("email", "test13@test.de")
         paramObject.put("password", "test")
         // call a method (asynchronously) to create an update and pass our model class
-        val call: Call<ApiUser> = retrofitAPI.registerUser(paramObject)
-        call!!.enqueue(object : Callback<ApiUser> {
+        val call: Call<UserLoginModel> = retrofitAPI.registerUser(paramObject)
+        call!!.enqueue(object : Callback<UserLoginModel> {
             // call onResponse when request succeeds
-            override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            override fun onResponse(call: Call<UserLoginModel>, response: Response<UserLoginModel>) {
                 Log.i(
                     "Executing call to function: ",
-                    "get all users"
+                    "register user"
                 ) // only executes with wrong login data?
                 val resp =
                     "Http-Code:" + response.code()
@@ -195,7 +196,7 @@ fun registerUser() {
             }
 
             // error handling
-            override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            override fun onFailure(call: Call<UserLoginModel>, t: Throwable) {
                 // log error response
                 t.message?.let { Log.i("Error found is : ", it) }
             }
