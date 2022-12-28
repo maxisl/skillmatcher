@@ -27,9 +27,7 @@ import retrofit2.http.*
 interface BackendAPI {
     @Headers("Accept: application/json")
     @POST("auth/login")
-    // @Body annotation to pass JSON data
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
-    // add UserLoginModel (JSON) email + password is passed => UserModel is returned - error here?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
 
     @GET("excluded")
@@ -54,6 +52,7 @@ fun postLoginUserData(
         "http://10.0.2.2:8080/"
     // "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
+    // enable creation of gson factory
     val gson = GsonBuilder()
         .setLenient()
         .create()
@@ -69,10 +68,6 @@ fun postLoginUserData(
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
 
     try {
-        /*val paramObject = JSONObject()
-        paramObject.put("email", "test12@test.de")
-        paramObject.put("password", "test")
-        Log.d("JSONObject: ", paramObject.toString())*/
         // pass data from our text fields to our model class
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
         Log.d("User credentials:", userLoginModel.toString())
@@ -88,22 +83,22 @@ fun postLoginUserData(
                 Log.i(
                     "Executing call to function: ",
                     "Post login user data "
-                ) // only executes with wrong login data?
+                )
                 // show button when we get a response from our api
                 Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
 
+                // log received jwt
                 Log.d("RetroFit2.0: Login: ", response.body().toString())
 
                 val statusCode =
-                    "Http-Code:" + response.code() // +  "JWT : " + response.body() + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+                    "HTTP-Code: " + response.code()  +  "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
                 Log.i("Response: ", statusCode)
-                // below line we are setting our string to our response.
                 result.value = statusCode
             }
 
             // error handling
             override fun onFailure(call: Call<String>, t: Throwable) {
-                // we get error response from API.
+                // show error response from API in UI
                 result.value = "Error found is: \n" + t.message
                 t.message?.let { Log.d("Error: ", it) };
             }
@@ -183,7 +178,10 @@ fun registerUser() {
         val call: Call<UserLoginModel> = retrofitAPI.registerUser(paramObject)
         call!!.enqueue(object : Callback<UserLoginModel> {
             // call onResponse when request succeeds
-            override fun onResponse(call: Call<UserLoginModel>, response: Response<UserLoginModel>) {
+            override fun onResponse(
+                call: Call<UserLoginModel>,
+                response: Response<UserLoginModel>
+            ) {
                 Log.i(
                     "Executing call to function: ",
                     "register user"
