@@ -68,22 +68,9 @@ public class AuthController {
                         authRequest.getEmail(),
                         authRequest.getPassword()
                 ));
-/*
-        // debug payload => transform to JSON
-        String token = jwtTokenProvider.generateToken(authentication);
-
-        final Gson gson = new Gson();
-
-        String jsonString = "{\"jwt\":\"" + token + "\"}";
-        System.out.println(jsonString);
-
-        return ResponseEntity.ok(token);
-        */
 
         ResponseEntity<String> token = ResponseEntity.ok(
             (jwtTokenProvider.generateToken(authentication)));
-        System.out.println(token);
-        System.out.println("Type of Response: " + token.getClass().getName());
         return token;
 
     }

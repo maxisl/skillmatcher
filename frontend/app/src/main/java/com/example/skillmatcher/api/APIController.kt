@@ -25,7 +25,6 @@ import retrofit2.http.*
 
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
-    @Headers("Accept: application/json")
     @POST("auth/login")
     // add "suspend" in front of "func" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
@@ -34,7 +33,7 @@ interface BackendAPI {
     fun getAllUsers(): Call<List<ApiUser>>
 
     @POST("auth/register")
-    fun registerUser(@Body request: JSONObject): Call<UserLoginModel>
+    fun registerUser(@Body userLoginModel: UserLoginModel): Call<UserLoginModel>
 }
 
 fun postLoginUserData(
@@ -42,7 +41,7 @@ fun postLoginUserData(
     userName: MutableState<TextFieldValue>,
     // job = user password
     job: MutableState<TextFieldValue>,
-    result: MutableState<kotlin.String>
+    result: MutableState<String>
 ) {
 
     Log.i("APIController", "Post login data!")
@@ -68,9 +67,8 @@ fun postLoginUserData(
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
 
     try {
-        // pass data from our text fields to our model class
+        // pass data from text fields
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
-        Log.d("User credentials:", userLoginModel.toString())
         // call a method (asynchronously) to create an update and pass our model class
         val call: Call<String>? = retrofitAPI.loginUser(userLoginModel)
         // execute request asynchronously
@@ -80,19 +78,14 @@ fun postLoginUserData(
                 call: Call<String>,
                 response: Response<String>
             ) {
-                Log.i(
-                    "Executing call to function: ",
-                    "Post login user data "
-                )
                 // show button when we get a response from our api
                 Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
 
                 // log received jwt
-                Log.d("RetroFit2.0: Login: ", response.body().toString())
+                Log.d("Received JWT: ", response.body().toString())
 
                 val statusCode =
                     "HTTP-Code: " + response.code()  +  "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
-                Log.i("Response: ", statusCode)
                 result.value = statusCode
             }
 
@@ -100,6 +93,7 @@ fun postLoginUserData(
             override fun onFailure(call: Call<String>, t: Throwable) {
                 // show error response from API in UI
                 result.value = "Error found is: \n" + t.message
+                // show error in log
                 t.message?.let { Log.d("Error: ", it) };
             }
         })
@@ -118,12 +112,17 @@ fun getAllUsers() {
     val url = "http://10.0.2.2:8080/"
     // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
 
+    // enable creation of gson factory
+    val gson = GsonBuilder()
+        .setLenient()
+        .create()
+
 
     // create a retrofit builder and pass base url
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
         // sending data in json => add Gson converter factory
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         // build retrofit builder
         .build()
     // create a "proxy" object that implements the BackendAPI interface
@@ -134,14 +133,11 @@ fun getAllUsers() {
     call!!.enqueue(object : Callback<List<ApiUser>> {
         // call onResponse when request succeeds
         override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
-            Log.i(
-                "Executing call to function: ",
-                "get all users"
-            ) // only executes with wrong login data?
             val resp =
                 "Http-Code:" + response.code()
             // below line we are setting our string to our response.
             Log.i("Response: ", resp)
+            // log all users found
             Log.d("Response: ", response.body().toString())
         }
 

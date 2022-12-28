@@ -212,10 +212,8 @@ fun postData() {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = "Post Data", modifier = Modifier.padding(8.dp))
+            Text(text = "Login", modifier = Modifier.padding(8.dp))
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = response.value,
@@ -227,6 +225,19 @@ fun postData() {
             textAlign = TextAlign.Center
         )
 
+        Button(
+            onClick = {
+                registerUser()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Register", modifier = Modifier.padding(8.dp))
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         // TODO remove after testing: Button to test function
         Button(
             onClick = {
@@ -237,16 +248,6 @@ fun postData() {
                 .padding(16.dp)
         ) {
             Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
-        }
-        Button(
-            onClick = {
-                registerUser()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Register User", modifier = Modifier.padding(8.dp))
         }
     }
 }
