@@ -47,20 +47,20 @@ fun LoginPage(navigator: DestinationsNavigator) {
             Scaffold(
                 /**
                 topBar = {
-                    CenterAlignedTopAppBar(
-                        title = {
-                            Text(
-                                text = "Sign In", modifier = Modifier
-                                    .padding(10.dp)
-                            )
-                        }
-                        //colors = TopAppBarDefaults.smallTopAppBarColors(
-                        //containerColor = Color(Grey100.value),
-                        //titleContentColor = Color(White.value)
-                        //)
-                    )
+                CenterAlignedTopAppBar(
+                title = {
+                Text(
+                text = "Sign In", modifier = Modifier
+                .padding(10.dp)
+                )
+                }
+                //colors = TopAppBarDefaults.smallTopAppBarColors(
+                //containerColor = Color(Grey100.value),
+                //titleContentColor = Color(White.value)
+                //)
+                )
                 },
-                */
+                 */
 
                 content = {
                     postData()
@@ -161,6 +161,7 @@ fun postData() {
     val response = remember {
         mutableStateOf("")
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -178,7 +179,6 @@ fun postData() {
         Spacer(modifier = Modifier.height(15.dp))
 
         OutlinedTextField(
-
             value = userName.value,
             onValueChange = { userName.value = it },
             placeholder = { Text(text = "Enter Email") },
@@ -215,6 +215,17 @@ fun postData() {
             Text(text = "Login", modifier = Modifier.padding(8.dp))
         }
 
+        Button(
+            onClick = {
+                registerUser(ctx, userName, job, response)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Register", modifier = Modifier.padding(8.dp))
+        }
+
         Text(
             text = response.value,
             color = Color.Black,
@@ -224,17 +235,6 @@ fun postData() {
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-
-        Button(
-            onClick = {
-                registerUser()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Register", modifier = Modifier.padding(8.dp))
-        }
 
         Spacer(modifier = Modifier.height(20.dp))
 

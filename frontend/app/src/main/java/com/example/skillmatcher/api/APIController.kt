@@ -33,7 +33,7 @@ interface BackendAPI {
     fun getAllUsers(): Call<List<ApiUser>>
 
     @POST("auth/register")
-    fun registerUser(@Body userLoginModel: UserLoginModel): Call<UserLoginModel>
+    fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
 }
 
 fun postLoginUserData(
@@ -85,7 +85,7 @@ fun postLoginUserData(
                 Log.d("Received JWT: ", response.body().toString())
 
                 val statusCode =
-                    "HTTP-Code: " + response.code()  +  "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+                    "HTTP-Code: " + response.code() + "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
                 result.value = statusCode
             }
 
@@ -100,7 +100,7 @@ fun postLoginUserData(
 
     } catch (e: Exception) {
         val error = e.printStackTrace()
-        Log.d("Error stacktrace:", error.toString())
+        Log.d("Error stacktrace: ", error.toString())
     }
 
 }
@@ -116,7 +116,6 @@ fun getAllUsers() {
     val gson = GsonBuilder()
         .setLenient()
         .create()
-
 
     // create a retrofit builder and pass base url
     val retrofit = Retrofit.Builder()
@@ -150,54 +149,60 @@ fun getAllUsers() {
     })
 }
 
-// TODO bad request (400)
-fun registerUser() {
+fun registerUser(
+    ctx: Context,
+    userName: MutableState<TextFieldValue>,
+    // job = user password
+    job: MutableState<TextFieldValue>,
+    result: MutableState<String>
+) {
+    // TODO deploy on server
     // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
     val url = "http://10.0.2.2:8080/"
     // http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/
 
+    val gson = GsonBuilder()
+        .setLenient()
+        .create()
 
-    // create a retrofit builder and pass base url
     val retrofit = Retrofit.Builder()
         .baseUrl(url)
-        // sending data in json => add Gson converter factory
-        .addConverterFactory(GsonConverterFactory.create())
-        // build retrofit builder
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
-    // create a "proxy" object that implements the BackendAPI interface
+
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
+
     try {
-        val paramObject = JSONObject()
-        paramObject.put("email", "test13@test.de")
-        paramObject.put("password", "test")
-        // call a method (asynchronously) to create an update and pass our model class
-        val call: Call<UserLoginModel> = retrofitAPI.registerUser(paramObject)
-        call!!.enqueue(object : Callback<UserLoginModel> {
-            // call onResponse when request succeeds
+        val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
+        val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
+        call!!.enqueue(object : Callback<ApiUser> {
             override fun onResponse(
-                call: Call<UserLoginModel>,
-                response: Response<UserLoginModel>
+                call: Call<ApiUser>,
+                response: Response<ApiUser>
             ) {
                 Log.i(
                     "Executing call to function: ",
                     "register user"
-                ) // only executes with wrong login data?
-                val resp =
-                    "Http-Code:" + response.code()
-                // below line we are setting our string to our response.
-                Log.i("Response: ", resp)
+                )
+                if (response.code() == 400){
+                    val resp = "User already exists"
+                    result.value = resp
+                } else if (response.code() == 200){
+                    val resp = "User created"
+                    result.value = resp
+                }
                 Log.d("Response: ", response.body().toString())
             }
 
             // error handling
-            override fun onFailure(call: Call<UserLoginModel>, t: Throwable) {
-                // log error response
+            override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+                result.value = "Error found is: \n" + t.message
                 t.message?.let { Log.i("Error found is : ", it) }
             }
 
         })
-    } catch (e: JSONException) {
-        e.printStackTrace()
+    } catch (e: Exception) {
+        Log.d("Error: ", e.toString())
     }
 
 
