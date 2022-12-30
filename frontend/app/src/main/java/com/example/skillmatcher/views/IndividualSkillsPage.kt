@@ -130,14 +130,6 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator){
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(1f)
-                    .background(MaterialTheme.colors.primary),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                LogoBanner(navigator)
-            }
             Row(modifier = Modifier.padding(top = 25.dp)) {
                 PrimarySkills()
             }
