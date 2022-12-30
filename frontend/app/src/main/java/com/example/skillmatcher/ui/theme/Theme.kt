@@ -46,11 +46,11 @@ private val LightColorPalette = lightColorScheme(
     secondary = White,
     onSecondary = Color.White,
     secondaryContainer = Black,
-    onSecondaryContainer = DarkGreen10,
+    onSecondaryContainer = White,
     tertiary = Violet40,
     onTertiary = Color.White,
     tertiaryContainer = Violet90,
-    onTertiaryContainer = Violet10,
+    onTertiaryContainer = White,
     error = Red40,
     onError = Color.White,
     errorContainer = Red90,
@@ -59,10 +59,10 @@ private val LightColorPalette = lightColorScheme(
     onBackground = White,
     surface = LMUGreen,
     onSurface = White,
-    inverseSurface = Grey20,
-    inverseOnSurface = Grey95,
+    inverseSurface = White,
+    inverseOnSurface = White,
     surfaceVariant = DarkGreen40,
-    onSurfaceVariant = Grey99,
+    onSurfaceVariant = White,
     outline = GreenGrey50
 )
 
