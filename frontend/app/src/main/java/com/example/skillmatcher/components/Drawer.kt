@@ -7,49 +7,46 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.compose.material.Text
-import com.example.skillmatcher.*
 import com.example.skillmatcher.R
-import com.example.skillmatcher.ui.theme.Green30
-import com.example.skillmatcher.ui.theme.Grey99
-import com.example.skillmatcher.ui.theme.LMUGreen
-import com.example.skillmatcher.ui.theme.SecondSidebarColor
-import com.example.skillmatcher.views.ProjectCreationPage
-import com.ramcosta.composedestinations.DestinationsNavHost
 
+import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+
+
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+
+
+@ExperimentalMaterial3Api
 @Composable
 fun TopBar(
     titleResId: Int,
     modifier: Modifier = Modifier,
     openDrawer: () -> Unit
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
             Text(text = stringResource(id = titleResId))
         },
         navigationIcon = {
             Icon(
-                imageVector = Icons.Default.Menu,
+                imageVector = Icons.Filled.Menu,
                 modifier = Modifier
                     .padding(start = 8.dp)
                     .clickable {
@@ -75,7 +72,7 @@ fun DrawerBody(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary),
+            .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(vertical = 36.dp)
     ) {

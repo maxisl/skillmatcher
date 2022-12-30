@@ -6,20 +6,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -29,6 +24,7 @@ import com.example.skillmatcher.R
 import com.example.skillmatcher.data.User
 // import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
+import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 
 import com.example.skillmatcher.ui.theme.*
@@ -63,7 +59,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
                  */
 
                 content = {
-                    postData()
+                    postData(navigator)
                     /*TODO deactivated due to error: "Multiple Destinations with 'individual_skills_page' as their route name"*/
                     /*Button(onClick = {
                         navigator.navigate(
@@ -149,7 +145,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
 
 @OptIn(ExperimentalMaterial3Api::class) // TODO: Löschen wenn möglich
 @Composable
-fun postData() {
+fun postData(navigator: DestinationsNavigator) {
     val ctx = LocalContext.current
 
     val userName = remember {
@@ -166,7 +162,8 @@ fun postData() {
         modifier = Modifier
             .fillMaxSize()
             .fillMaxHeight()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background((Color(Black.value))),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -206,6 +203,16 @@ fun postData() {
             onClick = {
                 postLoginUserData(
                     ctx, userName, job, response
+                )
+                navigator.navigate(
+                    SideBarDestination(
+                        id = 1,
+                        User(
+                            name = "Chris P. Bacon",
+                            id = "userid",
+                            created = LocalDateTime.now()
+                        )
+                    )
                 )
             },
             modifier = Modifier

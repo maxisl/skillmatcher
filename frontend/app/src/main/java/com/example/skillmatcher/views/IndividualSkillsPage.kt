@@ -6,7 +6,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 
 
 import com.ramcosta.composedestinations.annotation.Destination
@@ -17,17 +16,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.components.DrawerBody
@@ -37,14 +33,11 @@ import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.LandingPageDestination
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import java.time.LocalDateTime
 import com.example.skillmatcher.components.*
-import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.example.skillmatcher.ui.theme.Black
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SideBar(id: Int, // <-- required navigation argument
@@ -54,7 +47,7 @@ fun SideBar(id: Int, // <-- required navigation argument
     SkillMatcherTheme() {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = androidx.compose.material3.MaterialTheme.colorScheme.background
         ) {
 
             val scaffoldState = rememberScaffoldState()
@@ -113,13 +106,7 @@ fun SideBar(id: Int, // <-- required navigation argument
                                     message = "Snack Bar", //Message In the snackbar
                                     actionLabel = "Dismiss"
                                 )) {
-                                    SnackbarResult.Dismissed -> {
-                                        //do something when snack bar is dismissed
-                                    }
 
-                                    SnackbarResult.ActionPerformed -> {
-                                        //when it appears
-                                    }
 
                                 }
                             }
@@ -139,7 +126,7 @@ fun SideBar(id: Int, // <-- required navigation argument
 fun IndividualSkillsPage(navigator: DestinationsNavigator){
     Surface {
         Column(
-            modifier = Modifier.fillMaxSize(1f),
+            modifier = Modifier.fillMaxSize(1f).background(Color(Black.value)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -180,7 +167,7 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
         Text(
             text = "Specify Your Individual Skills",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h5,
+            //style = MaterialTheme.typography.h5,
             color = Color.White,
         )
         IconButton(onClick = { navigator?.navigate(LandingPageDestination) }) {
@@ -198,7 +185,7 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
 @Composable
 fun PrimarySkills() {
     Surface() {
-        Column {
+        Column (modifier = Modifier.background((Color(Black.value)))){
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
                 mutableStateOf(1)
@@ -222,7 +209,7 @@ fun PrimarySkills() {
 @Composable
 fun SecondarySkills() {
     Surface() {
-        Column {
+        Column(modifier = Modifier.background((Color(Black.value)))) {
             Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
                 mutableStateOf(1)
@@ -243,6 +230,7 @@ fun SecondarySkills() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
     var skill by remember { mutableStateOf("") }
