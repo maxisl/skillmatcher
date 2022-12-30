@@ -31,8 +31,8 @@ public class ApiApplication implements CommandLineRunner {
 
     try {
       Random rand = new Random(); //instance of random class
-      int upperbound = 250;
-      //generate random values from 0-24
+      int upperbound = 2500;
+      //generate random values from 0-2499
       int int_random = rand.nextInt(upperbound);
       ApiUser user = new ApiUser();
       user.setEmail(int_random + "@noel.de");

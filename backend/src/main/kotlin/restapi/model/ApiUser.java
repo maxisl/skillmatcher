@@ -20,6 +20,7 @@ public class ApiUser {
     @Column(unique = true)
     private String email;
 
+    // do not show on request
     @JsonIgnore
     private String password;
 

@@ -9,7 +9,7 @@ import java.security.Principal;
 @Component("userSecurity")
 public class UserSecurity {
     public boolean hasUserEmail(Authentication authentication, String userMail) {
-        log.error("User: " + userMail + " try's to log in with token: " + authentication.getName());
+        log.error("User: " + userMail + " tries to log in with token: " + authentication.getName());
 
         if (userMail.equals(authentication.getName())) {
             return true;
