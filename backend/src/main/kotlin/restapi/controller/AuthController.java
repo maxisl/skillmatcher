@@ -1,6 +1,8 @@
 package restapi.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.google.gson.JsonObject;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,8 +16,11 @@ import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.data.AuthRequest;
 import restapi.security.JwtTokenProvider;
+// import gson to convert to JSON
+import com.google.gson.Gson;
 
 import javax.validation.Valid;
+import org.json.JSONObject;
 
 @RestController
 @RequestMapping("/auth")
@@ -63,6 +68,10 @@ public class AuthController {
                         authRequest.getEmail(),
                         authRequest.getPassword()
                 ));
-        return ResponseEntity.ok(jwtTokenProvider.generateToken(authentication));
+
+        ResponseEntity<String> token = ResponseEntity.ok(
+            (jwtTokenProvider.generateToken(authentication)));
+        return token;
+
     }
 }

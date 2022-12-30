@@ -1,36 +1,18 @@
+/*
 package com.example.skillmatcher.views
 
 import androidx.compose.foundation.background
-import androidx.compose.material.Scaffold
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-
-
-import com.ramcosta.composedestinations.annotation.Destination
-
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-
-
 import androidx.compose.foundation.layout.*
-
-import androidx.compose.ui.graphics.Color
-
-
-// import androidx.compose.material.*
-
-
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.rememberScaffoldState
-// import androidx.compose.material.MaterialTheme
-
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,19 +20,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.R
 import com.example.skillmatcher.components.DrawerBody
 import com.example.skillmatcher.components.NavHost
+import com.example.skillmatcher.components.TopBar
 import com.example.skillmatcher.components.navigationDrawerItemList
 import com.example.skillmatcher.data.User
-/* TODO comment out destinations due to navigation errors
 import com.example.skillmatcher.destinations.LandingPageDestination
-import com.example.skillmatcher.destinations.ProjectCreationPageDestination*/
-// import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-import com.example.skillmatcher.ui.theme.*
-
-import com.example.skillmatcher.components.*
+import com.example.skillmatcher.destinations.ProjectCreationPageDestination
+import com.example.skillmatcher.ui.theme.SkillMatcherTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
-/*
-@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SideBar(
@@ -58,11 +37,10 @@ fun SideBar(
     user: User?,
     navigator: DestinationsNavigator?
 ) {
-    SkillMatcherTheme() {
+    SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            // color = MaterialTheme.colors.background
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colors.background
         ) {
 
             val scaffoldState = rememberScaffoldState()
@@ -118,7 +96,7 @@ fun SideBar(
                             //When clicked open Snackbar
                             scope.launch {
                                 when (scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Clicked add button", //Message In the snackbar
+                                    message = "Snack Bar", //Message In the snackbar
                                     actionLabel = "Dismiss"
                                 )) {
                                     SnackbarResult.Dismissed -> {
@@ -131,8 +109,9 @@ fun SideBar(
 
                                 }
                             }
-                        }) {
-
+                        },
+                        backgroundColor = MaterialTheme.colors.primary,
+                    ) {
                         //Simple Text inside FAB
                         Text(text = "Add")
                     }
@@ -141,13 +120,11 @@ fun SideBar(
         }
     }
 }
-*/
+
 @Destination
 @Composable
 fun IndividualSkillsPage(navigator: DestinationsNavigator) {
-    Surface(
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Surface {
         Column(
             modifier = Modifier.fillMaxSize(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,10 +133,10 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(1f)
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(MaterialTheme.colors.primary),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                // LogoBanner(navigator)
+                LogoBanner(navigator)
             }
             Row(modifier = Modifier.padding(top = 25.dp)) {
                 PrimarySkills()
@@ -170,11 +147,8 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
-                // have to specify material3 explicitly as of now? - not sure why
                 Button(onClick = {
-                    /*navigator.navigate(
-                        ProjectCreationPageDestination()
-                    )*/
+                    navigator.navigate(ProjectCreationPageDestination())
                 }) {
                     Text("Go to ProjectCreationPage")
                 }
@@ -183,7 +157,7 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
     }
 }
 
-/*@Composable
+@Composable
 fun LogoBanner(navigator: DestinationsNavigator?) {
     Row(
         modifier = Modifier.padding(25.dp),
@@ -205,11 +179,11 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
         }
 
     }
-}*/
+}
 
 @Composable
 fun PrimarySkills() {
-    Surface() {
+    Surface {
         Column {
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
@@ -233,7 +207,7 @@ fun PrimarySkills() {
 
 @Composable
 fun SecondarySkills() {
-    Surface() {
+    Surface {
         Column {
             Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
@@ -254,10 +228,11 @@ fun SecondarySkills() {
     }
 }
 
-// OptIn to temporarily resolve error "This material API is experimental and is likely to change or to be removed in the future"
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
+fun SpecifySkill(*/
+/*skill: String, onSkillChange: (String) -> Unit *//*
+) {
     var skill by remember { mutableStateOf("") }
     var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
@@ -268,3 +243,4 @@ fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
     )
     Spacer(modifier = Modifier.height(16.dp))
 }
+*/
