@@ -10,7 +10,9 @@ import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.security.JwtTokenProvider;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootApplication
 public class ApiApplication implements CommandLineRunner {
 
@@ -42,7 +44,7 @@ public class ApiApplication implements CommandLineRunner {
 
       System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));
     } catch (Exception e) {
-      //
+      log.error("Error: ", e);
     }
   }
 }
