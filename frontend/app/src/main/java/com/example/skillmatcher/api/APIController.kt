@@ -28,9 +28,15 @@ interface BackendAPI {
     @POST("auth/register")
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
 
-    @GET("excluded")
-    fun getAllUsers(): Call<List<ApiUser>>
+    //@GET("excluded")
+    //fun getAllUsers(): Call<List<ApiUser>>
+
+    @GET("user")
+    fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
+
 }
+// only for testing - token should be safely stored in the future
+var token = ""
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
@@ -84,8 +90,10 @@ fun postLoginUserData(
                 // log received jwt
                 Log.d("Received JWT: ", response.body().toString())
 
+                token = response.body().toString()
+
                 val statusCode =
-                    "HTTP-Code: " + response.code() + "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+                    "HTTP-Code: " + response.code() + "\nJWT : " + token // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
                 result.value = statusCode
             }
 
@@ -150,8 +158,10 @@ fun registerUser(
 }
 
 fun getAllUsers() {
+    Log.d("Token: ", token)
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
+    // have to add "Bearer " in front of JWT in order to match pattern defined in backend
+    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers("Bearer $token")
     call!!.enqueue(object : Callback<List<ApiUser>> {
         override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
             val resp =
