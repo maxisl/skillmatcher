@@ -8,10 +8,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,31 +22,23 @@ import retrofit2.http.*
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
     @POST("auth/login")
-    // add "suspend" in front of "func" to run in co-routine instead of main thread?
+    // add "suspend" in front of "fun" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
-
-    @GET("excluded")
-    fun getAllUsers(): Call<List<ApiUser>>
 
     @POST("auth/register")
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
+
+    @GET("excluded")
+    fun getAllUsers(): Call<List<ApiUser>>
 }
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    //    "http://10.0.2.2:8080/"
-    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    "http://10.0.2.2:8080/"
+//"http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
-fun postLoginUserData(
-    ctx: Context,
-    userName: MutableState<TextFieldValue>,
-    // job = user password
-    job: MutableState<TextFieldValue>,
-    result: MutableState<String>
-) {
 
-    Log.i("APIController", "Post login data!")
-
+fun createRetrofitInstance(): BackendAPI {
     // enable creation of gson factory
     val gson = GsonBuilder()
         .setLenient()
@@ -64,7 +52,19 @@ fun postLoginUserData(
         // build retrofit builder
         .build()
     // create a "proxy" object that implements the BackendAPI interface
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
+    return retrofit.create(BackendAPI::class.java)
+}
+
+
+fun postLoginUserData(
+    ctx: Context,
+    userName: MutableState<TextFieldValue>,
+    job: MutableState<TextFieldValue>,          // job = user password
+    result: MutableState<String>
+) {
+    Log.i("APIController", "Post login data!")
+
+    val retrofitAPI = createRetrofitInstance()
 
     try {
         // pass data from text fields
@@ -102,32 +102,6 @@ fun postLoginUserData(
         val error = e.printStackTrace()
         Log.d("Error stacktrace: ", error.toString())
     }
-
-}
-
-fun getAllUsers() {
-    val gson = GsonBuilder()
-        .setLenient()
-        .create()
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
-    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
-    call!!.enqueue(object : Callback<List<ApiUser>> {
-        override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
-            val resp =
-                "Http-Code:" + response.code()
-            Log.i("Response: ", resp)
-            Log.d("Response: ", response.body().toString())
-        }
-
-        override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
-            t.message?.let { Log.i("Error found is : ", it) }
-        }
-    })
 }
 
 fun registerUser(
@@ -137,16 +111,7 @@ fun registerUser(
     job: MutableState<TextFieldValue>,
     result: MutableState<String>
 ) {
-    val gson = GsonBuilder()
-        .setLenient()
-        .create()
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
+    val retrofitAPI = createRetrofitInstance()
 
     try {
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
@@ -183,3 +148,21 @@ fun registerUser(
 
 
 }
+
+fun getAllUsers() {
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
+    call!!.enqueue(object : Callback<List<ApiUser>> {
+        override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
+            val resp =
+                "Http-Code:" + response.code()
+            Log.i("Response: ", resp)
+            Log.d("Response: ", response.body().toString())
+        }
+
+        override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}
+
