@@ -96,9 +96,14 @@ dependencies {
     implementation 'io.github.raamcosta.compose-destinations:core:1.5.27-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.27-beta'
 
-    // below dependency for using the retrofit
+    // dependency to enable retrofit REST API calls
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    // AndroidX Security library to enable EncryptedSharedPreferences in order to safely store JWT
+    implementation 'androidx.security:security-crypto:1.1.0-alpha02'
+
+
 
 
 

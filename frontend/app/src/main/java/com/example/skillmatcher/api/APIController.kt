@@ -35,8 +35,13 @@ interface BackendAPI {
     fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
 
 }
+
 // only for testing - token should be safely stored in the future
+// TODO use use EncryptedSharedPreferences in Android JetPack Security?
+// https://stackoverflow.com/questions/19669560/android-is-it-a-good-idea-to-store-authentication-token-in-shared-preferences
 var token = ""
+
+private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
@@ -84,9 +89,11 @@ fun postLoginUserData(
                 call: Call<String>,
                 response: Response<String>
             ) {
-                // show button when we get a response from our api
-                Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
-
+                if(response.body() != null) {
+                    Toast.makeText(ctx, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(ctx, "Error logging in", Toast.LENGTH_SHORT).show()
+                }
                 // log received jwt
                 Log.d("Received JWT: ", response.body().toString())
 
@@ -110,6 +117,9 @@ fun postLoginUserData(
         val error = e.printStackTrace()
         Log.d("Error stacktrace: ", error.toString())
     }
+
+    preferencesManager = PreferencesManager(ctx)
+    preferencesManager.saveJWT(token)
 }
 
 fun registerUser(
@@ -158,10 +168,11 @@ fun registerUser(
 }
 
 fun getAllUsers() {
-    Log.d("Token: ", token)
+
+    Log.d("Token: ", "${preferencesManager.getJWT()}")
     val retrofitAPI = createRetrofitInstance()
     // have to add "Bearer " in front of JWT in order to match pattern defined in backend
-    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers("Bearer $token")
+    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<ApiUser>> {
         override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
             val resp =
