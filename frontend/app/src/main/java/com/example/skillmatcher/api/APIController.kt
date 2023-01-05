@@ -98,10 +98,15 @@ fun postLoginUserData(
                 Log.d("Received JWT: ", response.body().toString())
 
                 token = response.body().toString()
+                Log.d("Token: ", token)
 
                 val statusCode =
                     "HTTP-Code: " + response.code() + "\nJWT : " + token // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
                 result.value = statusCode
+
+                // save the token to EncryptedSharedPreferences
+                preferencesManager = PreferencesManager(ctx)
+                preferencesManager.saveJWT(token)
             }
 
             // error handling
@@ -118,8 +123,6 @@ fun postLoginUserData(
         Log.d("Error stacktrace: ", error.toString())
     }
 
-    preferencesManager = PreferencesManager(ctx)
-    preferencesManager.saveJWT(token)
 }
 
 fun registerUser(
