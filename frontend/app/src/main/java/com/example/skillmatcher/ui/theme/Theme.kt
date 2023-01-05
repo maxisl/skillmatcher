@@ -43,26 +43,26 @@ private val LightColorPalette = lightColorScheme(
     primaryContainer = Green90,
     onPrimaryContainer = Green10,
     inversePrimary = Green80,
-    secondary = DarkGreen40,
+    secondary = White,
     onSecondary = Color.White,
-    secondaryContainer = DarkGreen90,
-    onSecondaryContainer = DarkGreen10,
+    secondaryContainer = Black,
+    onSecondaryContainer = White,
     tertiary = Violet40,
     onTertiary = Color.White,
     tertiaryContainer = Violet90,
-    onTertiaryContainer = Violet10,
+    onTertiaryContainer = White,
     error = Red40,
     onError = Color.White,
     errorContainer = Red90,
     onErrorContainer = Red10,
     background = Grey10,
-    onBackground = Grey10,
-    surface = GreenGrey90,
-    onSurface = GreenGrey30,
-    inverseSurface = Grey20,
-    inverseOnSurface = Grey95,
+    onBackground = White,
+    surface = LMUGreen,
+    onSurface = White,
+    inverseSurface = White,
+    inverseOnSurface = White,
     surfaceVariant = DarkGreen40,
-    onSurfaceVariant = Grey99,
+    onSurfaceVariant = White,
     outline = GreenGrey50
 )
 
@@ -78,7 +78,7 @@ fun SkillMatcherTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Comp
     }
 
     MaterialTheme(
-        //colorScheme = colors,
+        colorScheme = colors,
         typography = Typography,
         shapes = Shapes,
         content = content

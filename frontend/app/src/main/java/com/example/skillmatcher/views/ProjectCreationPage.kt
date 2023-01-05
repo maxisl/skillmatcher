@@ -3,9 +3,10 @@ package com.example.skillmatcher.views
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import android.widget.NumberPicker
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.getValue
@@ -26,13 +27,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import com.commandiron.wheel_picker_compose.WheelTextPicker
+import com.example.skillmatcher.ui.theme.White
 import java.util.*
 
 
 @Destination
 @Composable
 fun ProjectCreationPage( ) { //openDrawer: () -> Unit
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color(Color.Black.value))) {
 //        TopBar(
 //            title = "Home",
 //            buttonIcon = Icons.Filled.Menu,
@@ -67,6 +71,7 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun textInput() {
     Column()
@@ -95,6 +100,7 @@ fun textInput() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun startDate() {
     // Fetching the Local Context
@@ -139,10 +145,12 @@ fun startDate() {
             modifier = Modifier
                 .clickable { mDatePickerDialog.show() },
             enabled = false
+          //  colors = TextFieldDefaults.textFieldColors(textColor = White)
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun endDate() {
     // Fetching the Local Context

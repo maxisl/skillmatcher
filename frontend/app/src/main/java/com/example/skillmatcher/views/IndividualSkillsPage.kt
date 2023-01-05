@@ -1,4 +1,4 @@
-package com.example.skillmatcher.views
+package com.example.skillmatcher
 
 import androidx.compose.foundation.background
 import androidx.compose.material.Scaffold
@@ -6,7 +6,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 
 
 import com.ramcosta.composedestinations.annotation.Destination
@@ -15,54 +14,40 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
 import androidx.compose.foundation.layout.*
-
-import androidx.compose.ui.graphics.Color
-
-
-// import androidx.compose.material.*
-
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.rememberScaffoldState
-// import androidx.compose.material.MaterialTheme
-
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.example.skillmatcher.R
 import com.example.skillmatcher.components.DrawerBody
 import com.example.skillmatcher.components.NavHost
 import com.example.skillmatcher.components.navigationDrawerItemList
 import com.example.skillmatcher.data.User
-/* TODO comment out destinations due to navigation errors
 import com.example.skillmatcher.destinations.LandingPageDestination
-import com.example.skillmatcher.destinations.ProjectCreationPageDestination*/
-// import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-import com.example.skillmatcher.ui.theme.*
-
+import com.example.skillmatcher.destinations.ProjectCreationPageDestination
+import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.components.*
+import com.example.skillmatcher.ui.theme.Black
 import kotlinx.coroutines.launch
 
-/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
-fun SideBar(
-    id: Int, // <-- required navigation argument
-    user: User?,
-    navigator: DestinationsNavigator?
+fun SideBar(id: Int, // <-- required navigation argument
+            user: User?,
+            navigator: DestinationsNavigator?
 ) {
     SkillMatcherTheme() {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            // color = MaterialTheme.colors.background
-            color = MaterialTheme.colorScheme.background
+            color = androidx.compose.material3.MaterialTheme.colorScheme.background
         ) {
 
             val scaffoldState = rememberScaffoldState()
@@ -106,7 +91,7 @@ fun SideBar(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (navigator != null) {
-                            NavHost(navController = navController, navigator)
+                            NavHost(navController = navController,navigator)
                         }
                     }
                 },
@@ -118,16 +103,10 @@ fun SideBar(
                             //When clicked open Snackbar
                             scope.launch {
                                 when (scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Clicked add button", //Message In the snackbar
+                                    message = "Snack Bar", //Message In the snackbar
                                     actionLabel = "Dismiss"
                                 )) {
-                                    SnackbarResult.Dismissed -> {
-                                        //do something when snack bar is dismissed
-                                    }
 
-                                    SnackbarResult.ActionPerformed -> {
-                                        //when it appears
-                                    }
 
                                 }
                             }
@@ -141,15 +120,13 @@ fun SideBar(
         }
     }
 }
-*/
+
 @Destination
 @Composable
-fun IndividualSkillsPage(navigator: DestinationsNavigator) {
-    Surface(
-        color = MaterialTheme.colorScheme.background
-    ) {
+fun IndividualSkillsPage(navigator: DestinationsNavigator){
+    Surface {
         Column(
-            modifier = Modifier.fillMaxSize(1f),
+            modifier = Modifier.fillMaxSize(1f).background(Color(Black.value)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -172,9 +149,7 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
             ) {
                 // have to specify material3 explicitly as of now? - not sure why
                 Button(onClick = {
-                    /*navigator.navigate(
-                        ProjectCreationPageDestination()
-                    )*/
+                    navigator?.navigate(ProjectCreationPageDestination())
                 }) {
                     Text("Go to ProjectCreationPage")
                 }
@@ -183,7 +158,7 @@ fun IndividualSkillsPage(navigator: DestinationsNavigator) {
     }
 }
 
-/*@Composable
+@Composable
 fun LogoBanner(navigator: DestinationsNavigator?) {
     Row(
         modifier = Modifier.padding(25.dp),
@@ -192,7 +167,7 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
         Text(
             text = "Specify Your Individual Skills",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h5,
+            //style = MaterialTheme.typography.h5,
             color = Color.White,
         )
         IconButton(onClick = { navigator?.navigate(LandingPageDestination) }) {
@@ -205,12 +180,12 @@ fun LogoBanner(navigator: DestinationsNavigator?) {
         }
 
     }
-}*/
+}
 
 @Composable
 fun PrimarySkills() {
     Surface() {
-        Column {
+        Column (modifier = Modifier.background((Color(Black.value)))){
             Text("Primary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
                 mutableStateOf(1)
@@ -234,7 +209,7 @@ fun PrimarySkills() {
 @Composable
 fun SecondarySkills() {
     Surface() {
-        Column {
+        Column(modifier = Modifier.background((Color(Black.value)))) {
             Text("Secondary Skills: User 1", textAlign = TextAlign.Center)
             var textFieldCount by rememberSaveable {
                 mutableStateOf(1)
@@ -254,7 +229,7 @@ fun SecondarySkills() {
     }
 }
 
-// OptIn to temporarily resolve error "This material API is experimental and is likely to change or to be removed in the future"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
@@ -262,7 +237,7 @@ fun SpecifySkill(/*skill: String, onSkillChange: (String) -> Unit */) {
     var color by remember { mutableStateOf(Color.White) }
     OutlinedTextField(
         value = skill,
-        onValueChange = { skill = it },
+        onValueChange = { skill = it},
         label = { Text("Skill") },
         shape = RoundedCornerShape(8.dp),
     )
