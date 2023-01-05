@@ -171,7 +171,7 @@ fun registerUser(
 }
 
 fun getAllUsers() {
-
+    // TODO app crashes if login is not executed before getUsers => preferencesManager has not been initialized
     Log.d("Token: ", "${preferencesManager.getJWT()}")
     val retrofitAPI = createRetrofitInstance()
     // have to add "Bearer " in front of JWT in order to match pattern defined in backend
