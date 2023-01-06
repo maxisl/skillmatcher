@@ -34,11 +34,11 @@ interface BackendAPI {
     @GET("user")
     fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
 
-}
+    @GET("user/{email}")
+    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
 
-// only for testing - token should be safely stored in the future
-// TODO use use EncryptedSharedPreferences in Android JetPack Security?
-// https://stackoverflow.com/questions/19669560/android-is-it-a-good-idea-to-store-authentication-token-in-shared-preferences
+
+}
 var token = ""
 
 private lateinit var preferencesManager: PreferencesManager
@@ -188,5 +188,27 @@ fun getAllUsers() {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })
+}
+
+fun getUser() {
+    val retrofitAPI = createRetrofitInstance()
+    val email = "test12@test.de"
+    Log.d("Executed ", "getUser")
+
+    val call: Call<ApiUser> = retrofitAPI.getUser("Bearer ${preferencesManager.getJWT()}", email)
+    //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
+    call!!.enqueue(object: Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            val user = response.body()
+            Log.d("User Info", user.toString())
+        }
+
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+
+    })
+
+
 }
 
