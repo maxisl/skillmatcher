@@ -200,6 +200,7 @@ fun getUser() {
     call!!.enqueue(object: Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
             val user = response.body()
+            val user_mail = response.body()?.email
             Log.d("User Info", user.toString())
         }
 
@@ -208,7 +209,29 @@ fun getUser() {
         }
 
     })
+}
 
+fun getUserMail(result: MutableState<String>) {
+    val retrofitAPI = createRetrofitInstance()
+    val email = "test12@test.de"
+    Log.d("Executed ", "getUser")
 
+    val call: Call<ApiUser> = retrofitAPI.getUser("Bearer ${preferencesManager.getJWT()}", email)
+    //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
+    call!!.enqueue(object: Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            val user = response.body()
+            val userMail = response.body()?.email
+            Log.d("User Mail", userMail.toString())
+            if (userMail != null) {
+                result.value = userMail
+            }
+        }
+
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+
+    })
 }
 
