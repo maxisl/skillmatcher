@@ -26,7 +26,7 @@ class UserService(val repository: UserRepository) {
 
     fun remove(email: String) {
         val dbUser = this.getByEmail(email);
-        repository.deleteById(dbUser.id);
+        dbUser.id?.let { repository.deleteById(it) };
         return
     }
 

@@ -20,7 +20,6 @@ class UserController(val service: UserService) {
     @JsonView(DataView.User::class)
     @GetMapping
     fun getAllUsers() = service.getAll()
-
     @JsonView(DataView.UserWithProjects::class)
     @GetMapping("/{email}")
     fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
