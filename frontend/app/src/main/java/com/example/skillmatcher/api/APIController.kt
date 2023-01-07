@@ -222,22 +222,13 @@ fun getUser() {
 
 fun getUserMail(result: MutableState<String>) {
     val retrofitAPI = createRetrofitInstance()
-    val userToken = preferencesManager.getJWT()
-    val userEmail = preferencesManager.getMail()
-    Log.d("User ", "Mail: $userEmail")
-    Log.d("User ", "Token: $userToken")
-
-
     val call: Call<ApiUser> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
         "${preferencesManager.getMail()}"
     )
-    //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
     call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
-            val user = response.body()
             val userMail = response.body()?.email
-            //Log.d("User Mail", userMail.toString())
             if (userMail != null) {
                 result.value = userMail
             }
