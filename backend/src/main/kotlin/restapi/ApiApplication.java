@@ -18,7 +18,6 @@ public class ApiApplication implements CommandLineRunner {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-
   @Autowired
   private UserRepository userRepository;
   @Autowired

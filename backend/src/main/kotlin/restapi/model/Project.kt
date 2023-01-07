@@ -46,10 +46,10 @@ data class Project(
     // val endDate: Date,
 
     // A User can be the owner of many projects
-    @JsonView(DataView.ProjectWithOwner::class)
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "owner_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonView(DataView.ProjectWithOwner::class)             // specify which fields should be included in the JSON representation of the object
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)   // a single ApiUser object can be related to multiple Project objects
+    @JoinColumn(name = "owner_id", nullable = true)         // specifies the name of the column in the Project table to store the foreign key pointing to the ApiUser object
+    @OnDelete(action = OnDeleteAction.CASCADE)              // when an ApiUser object is deleted, any related Project objects should also be deleted
     var owner: ApiUser?,
 
     // Many user attend many projects
