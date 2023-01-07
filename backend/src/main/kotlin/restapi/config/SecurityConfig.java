@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix d
         .and()
         .authorizeRequests()
         .antMatchers(AUTH_WHITELIST).permitAll() // whitelist Swagger UI resources)
+        // require authentication for all routes with path /auth
         .antMatchers(HttpMethod.POST, "/auth/**")
         .permitAll()
         .antMatchers("/user/{email}")
