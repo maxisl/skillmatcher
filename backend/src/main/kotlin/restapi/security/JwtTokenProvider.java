@@ -28,7 +28,6 @@ public class JwtTokenProvider {
                 .setExpiration(Date.from(expiration))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-
     }
 
     public String generateToken(Authentication authentication) {
@@ -37,6 +36,8 @@ public class JwtTokenProvider {
     }
 
     public String getUserMailFromToken(String token) {
+        System.out.println("Token: "+ token);
+        System.out.println("Secret: "+ jwtSecret);
         Claims claims = Jwts
                 .parser()
                 .setSigningKey(jwtSecret)

@@ -8,6 +8,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +41,7 @@ interface BackendAPI {
 
 
 }
+
 var token = ""
 
 private lateinit var preferencesManager: PreferencesManager
@@ -77,6 +80,7 @@ fun postLoginUserData(
 
     val retrofitAPI = createRetrofitInstance()
 
+    var successfulLogin = false
     try {
         // pass data from text fields
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
@@ -89,24 +93,29 @@ fun postLoginUserData(
                 call: Call<String>,
                 response: Response<String>
             ) {
-                if(response.body() != null) {
+                if (response.body() != null) {
+                    successfulLogin = true
+                }
+                if (successfulLogin) {
                     Toast.makeText(ctx, "Logged in successfully", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(ctx, "Error logging in", Toast.LENGTH_SHORT).show()
                 }
-                // log received jwt
-                Log.d("Received JWT: ", response.body().toString())
-
                 token = response.body().toString()
-                Log.d("Token: ", token)
 
                 val statusCode =
-                    "HTTP-Code: " + response.code() + "\nJWT : " + token // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+                    "HTTP-Code: " + response.code() + "\nJWT : " + token
                 result.value = statusCode
 
-                // save the token to EncryptedSharedPreferences
+                // save token and mail of successfully logged in user to EncryptedSharedPreferences
                 preferencesManager = PreferencesManager(ctx)
                 preferencesManager.saveJWT(token)
+                if (successfulLogin) {
+                    preferencesManager.saveMail(userName.value.text)
+                } else {
+                    preferencesManager.saveMail("")
+                }
+
             }
 
             // error handling
@@ -197,7 +206,7 @@ fun getUser() {
 
     val call: Call<ApiUser> = retrofitAPI.getUser("Bearer ${preferencesManager.getJWT()}", email)
     //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
-    call!!.enqueue(object: Callback<ApiUser> {
+    call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
             val user = response.body()
             val user_mail = response.body()?.email
@@ -213,16 +222,22 @@ fun getUser() {
 
 fun getUserMail(result: MutableState<String>) {
     val retrofitAPI = createRetrofitInstance()
-    val email = "test12@test.de"
-    Log.d("Executed ", "getUser")
+    val userToken = preferencesManager.getJWT()
+    val userEmail = preferencesManager.getMail()
+    Log.d("User ", "Mail: $userEmail")
+    Log.d("User ", "Token: $userToken")
 
-    val call: Call<ApiUser> = retrofitAPI.getUser("Bearer ${preferencesManager.getJWT()}", email)
+
+    val call: Call<ApiUser> = retrofitAPI.getUser(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}"
+    )
     //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
-    call!!.enqueue(object: Callback<ApiUser> {
+    call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
             val user = response.body()
             val userMail = response.body()?.email
-            Log.d("User Mail", userMail.toString())
+            //Log.d("User Mail", userMail.toString())
             if (userMail != null) {
                 result.value = userMail
             }

@@ -29,4 +29,16 @@ class PreferencesManager(context: Context) {
     fun getJWT(): String? {
         return sharedPreferences.getString("jwt", null)
     }
+
+    // takes a JWT as an argument and writes it to the shared preferences file
+    fun saveMail(mail: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("mail", mail)
+        editor.apply()
+    }
+
+    // retrieves the JWT from the shared preferences file
+    fun getMail(): String? {
+        return sharedPreferences.getString("mail", null)
+    }
 }
