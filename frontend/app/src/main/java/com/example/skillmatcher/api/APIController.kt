@@ -201,15 +201,16 @@ fun getAllUsers() {
 
 fun getUser() {
     val retrofitAPI = createRetrofitInstance()
-    val email = "test12@test.de"
     Log.d("Executed ", "getUser")
 
-    val call: Call<ApiUser> = retrofitAPI.getUser("Bearer ${preferencesManager.getJWT()}", email)
+    val call: Call<ApiUser> = retrofitAPI.getUser(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}"
+    )
     //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
     call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
             val user = response.body()
-            val user_mail = response.body()?.email
             Log.d("User Info", user.toString())
         }
 
