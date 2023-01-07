@@ -56,6 +56,11 @@ class ApiUser {
     @ManyToMany(mappedBy = "attendees")
     var attends: MutableList<Project>? = null
 
+    // username
+    @JsonView(DataView.User::class)
+    @Column(unique = true)
+    var username: String? = null
+
     // TODO add a username that can be chosen by user
     // TODO add skills specified by user - additional column with category of skill mandatory?
 }

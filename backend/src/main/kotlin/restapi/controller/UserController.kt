@@ -24,8 +24,9 @@ class UserController(val service: UserService) {
     @GetMapping("/{email}")
     fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
 
+    // TODO: Not working yet
     @JsonView(DataView.User::class)
-    @PutMapping("/{email}") // TODO: Not working yet
+    @PutMapping("/{email}")
     fun updateUser(@PathVariable email: String, @RequestBody user: ApiUser) = service.update(email, user)
 
     @DeleteMapping("/{email}")

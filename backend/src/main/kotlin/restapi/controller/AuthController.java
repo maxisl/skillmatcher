@@ -53,6 +53,7 @@ public class AuthController {
         ApiUser user = new ApiUser();
         user.setEmail(authRequest.getEmail());
         user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        user.setUsername("Tester");
 
         ApiUser created = userRepository.save(user);
 
