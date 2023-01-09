@@ -48,8 +48,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    "http://10.0.2.2:8080/"
-//"http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    // "http://10.0.2.2:8080/"
+    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -201,7 +201,7 @@ fun getAllUsers() {
 
 fun getUser() {
     val retrofitAPI = createRetrofitInstance()
-    Log.d("Executed ", "getUser")
+    Log.d("getUser ", "Executed")
 
     val call: Call<ApiUser> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
@@ -229,7 +229,8 @@ fun getUserMail(result: MutableState<String>) {
     )
     call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
-            val userMail = response.body()?.email
+            val userMail = preferencesManager.getMail()
+            Log.d("User Mail: ", userMail.toString())
             if (userMail != null) {
                 result.value = userMail
             }

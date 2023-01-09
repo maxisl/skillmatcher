@@ -63,6 +63,8 @@ fun LandingPage() {
 
 }
 
+var userName = ""
+
 @Composable
 fun getMail() {
     val response = remember {
@@ -155,12 +157,19 @@ fun RoundImage(
 
 @Composable
 fun StatSection(modifier: Modifier = Modifier) {
+    val response = remember {
+        mutableStateOf("")
+    }
+    // dynamically retrieve mail of logged in user
+    getUserMail(response)
+    val userName = response.value
+    // show retrieved mail in profile
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier
     ) {
-        ProfileStat(name = "Navi", studies = "Computer Science", graduateLevel = "Masters")
+        ProfileStat(userName, studies = "Computer Science", graduateLevel = "Masters")
     }
 }
 
@@ -179,7 +188,7 @@ fun ProfileStat(
         Text(
             text = name,
             fontWeight = FontWeight.Bold,
-            fontSize = 50.sp,
+            fontSize = 25.sp,
             color = Color(LMUGreen.value)
         )
         Spacer(modifier = Modifier.height(4.dp))

@@ -62,7 +62,7 @@ class ApiUser {
     var username: String? = null
 
 
-
     // TODO add skills specified by user - additional column with category of skill mandatory?
+    // TODO add profile picture
 }
 
