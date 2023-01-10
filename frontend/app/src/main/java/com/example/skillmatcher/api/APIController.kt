@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
+import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
 import io.jsonwebtoken.JwtException
@@ -243,3 +244,28 @@ fun getUserMail(result: MutableState<String>) {
     })
 }
 
+fun createProject(
+    name: String,
+    description: String,
+    maxAttendees: Int,
+    // startDate: String, TODO add start / end date as soon as db schema is updated
+    // endDate: String,
+) {
+    val project = Project(name, description, maxAttendees)
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<Project> = retrofitAPI.createProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}",
+        project
+    )
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("createProject ", "Created $response")
+        }
+
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("Error: ", it) }
+        }
+
+    })
+}
