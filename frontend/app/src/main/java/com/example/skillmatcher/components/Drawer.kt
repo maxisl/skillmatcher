@@ -178,7 +178,7 @@ fun DrawerItem(menuItem: MenuItem, modifier: Modifier = Modifier, onItemClick: (
 
 // TODO: Add screen here
 enum class ScreensRoute {
-    SCREEN_HOME, SCREEN_ALL_PROJECTS, SCREEN_PROFILE, SCREEN_CREATE_PROJECT;
+    SCREEN_HOME, SCREEN_ALL_PROJECTS, SCREEN_PROFILE, SCREEN_CREATE_PROJECT, TEST;
 }
 
 // TODO: Add Item here
@@ -213,9 +213,17 @@ fun navigationDrawerItemList(): List<MenuItem> {
         MenuItem(
             image = painterResource(id = R.drawable.android_icon),
             label = "All Projects",
-            showUnreadBubble = true,
+            showUnreadBubble = false,
             id = ScreensRoute.SCREEN_ALL_PROJECTS,
         )
+    )
+    itemsList.add(
+            MenuItem(
+                    image = painterResource(id = R.drawable.android_icon),
+                    label = "Test",
+                    showUnreadBubble = true,
+                    id = ScreensRoute.TEST,
+            )
     )
 
     return itemsList

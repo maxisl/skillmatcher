@@ -235,7 +235,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Text(
             text = response.value,
-            color = Color.Black,
+            color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold, modifier = Modifier
                 .padding(10.dp)
