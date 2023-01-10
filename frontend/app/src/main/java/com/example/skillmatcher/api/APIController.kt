@@ -8,10 +8,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import org.json.JSONException
-import org.json.JSONObject
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,31 +24,35 @@ import retrofit2.http.*
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
     @POST("auth/login")
-    // add "suspend" in front of "func" to run in co-routine instead of main thread?
+    // add "suspend" in front of "fun" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
-
-    @GET("excluded")
-    fun getAllUsers(): Call<List<ApiUser>>
 
     @POST("auth/register")
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
+
+    //@GET("excluded")
+    //fun getAllUsers(): Call<List<ApiUser>>
+
+    @GET("user")
+    fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
+
+    @GET("user/{email}")
+    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
+
+
 }
+
+var token = ""
+
+private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    //    "http://10.0.2.2:8080/"
+    // "http://10.0.2.2:8080/"
     "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
-fun postLoginUserData(
-    ctx: Context,
-    userName: MutableState<TextFieldValue>,
-    // job = user password
-    job: MutableState<TextFieldValue>,
-    result: MutableState<String>
-) {
 
-    Log.i("APIController", "Post login data!")
-
+fun createRetrofitInstance(): BackendAPI {
     // enable creation of gson factory
     val gson = GsonBuilder()
         .setLenient()
@@ -64,8 +66,21 @@ fun postLoginUserData(
         // build retrofit builder
         .build()
     // create a "proxy" object that implements the BackendAPI interface
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
+    return retrofit.create(BackendAPI::class.java)
+}
 
+
+fun postLoginUserData(
+    ctx: Context,
+    userName: MutableState<TextFieldValue>,
+    job: MutableState<TextFieldValue>,          // job = user password
+    result: MutableState<String>
+) {
+    Log.i("APIController", "Post login data!")
+
+    val retrofitAPI = createRetrofitInstance()
+
+    var successfulLogin = false
     try {
         // pass data from text fields
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
@@ -78,15 +93,29 @@ fun postLoginUserData(
                 call: Call<String>,
                 response: Response<String>
             ) {
-                // show button when we get a response from our api
-                Toast.makeText(ctx, "Data posted to API", Toast.LENGTH_SHORT).show()
-
-                // log received jwt
-                Log.d("Received JWT: ", response.body().toString())
+                if (response.body() != null) {
+                    successfulLogin = true
+                }
+                if (successfulLogin) {
+                    Toast.makeText(ctx, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(ctx, "Error logging in", Toast.LENGTH_SHORT).show()
+                }
+                token = response.body().toString()
 
                 val statusCode =
-                    "HTTP-Code: " + response.code() + "\nJWT : " + response.body() // + "\n" + "User Name : " + model!!.email + "\n" + "Job : " + model!!.password
+                    "HTTP-Code: " + response.code() + "\nJWT : " + token
                 result.value = statusCode
+
+                // save token and mail of successfully logged in user to EncryptedSharedPreferences
+                preferencesManager = PreferencesManager(ctx)
+                preferencesManager.saveJWT(token)
+                if (successfulLogin) {
+                    preferencesManager.saveMail(userName.value.text)
+                } else {
+                    preferencesManager.saveMail("")
+                }
+
             }
 
             // error handling
@@ -105,31 +134,6 @@ fun postLoginUserData(
 
 }
 
-fun getAllUsers() {
-    val gson = GsonBuilder()
-        .setLenient()
-        .create()
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
-    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
-    call.enqueue(object : Callback<List<ApiUser>> {
-        override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
-            val resp =
-                "Http-Code:" + response.code()
-            Log.i("Response: ", resp)
-            Log.d("Response: ", response.body().toString())
-        }
-
-        override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
-            t.message?.let { Log.i("Error found is : ", it) }
-        }
-    })
-}
-
 fun registerUser(
     ctx: Context,
     userName: MutableState<TextFieldValue>,
@@ -137,16 +141,7 @@ fun registerUser(
     job: MutableState<TextFieldValue>,
     result: MutableState<String>
 ) {
-    val gson = GsonBuilder()
-        .setLenient()
-        .create()
-
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-
-    val retrofitAPI = retrofit.create(BackendAPI::class.java)
+    val retrofitAPI = createRetrofitInstance()
 
     try {
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
@@ -183,3 +178,68 @@ fun registerUser(
 
 
 }
+
+fun getAllUsers() {
+    // TODO app crashes if login is not executed before getUsers => preferencesManager has not been initialized
+    Log.d("Token: ", "${preferencesManager.getJWT()}")
+    val retrofitAPI = createRetrofitInstance()
+    // have to add "Bearer " in front of JWT in order to match pattern defined in backend
+    val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers("Bearer ${preferencesManager.getJWT()}")
+    call!!.enqueue(object : Callback<List<ApiUser>> {
+        override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
+            val resp =
+                "Http-Code:" + response.code()
+            Log.i("Response: ", resp)
+            Log.d("Response: ", response.body().toString())
+        }
+
+        override fun onFailure(call: Call<List<ApiUser>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}
+
+fun getUser() {
+    val retrofitAPI = createRetrofitInstance()
+    Log.d("getUser ", "Executed")
+
+    val call: Call<ApiUser> = retrofitAPI.getUser(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}"
+    )
+    //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
+    call!!.enqueue(object : Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            val user = response.body()
+            Log.d("User Info", user.toString())
+        }
+
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+
+    })
+}
+
+fun getUserMail(result: MutableState<String>) {
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<ApiUser> = retrofitAPI.getUser(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}"
+    )
+    call!!.enqueue(object : Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            val userMail = preferencesManager.getMail()
+            Log.d("User Mail: ", userMail.toString())
+            if (userMail != null) {
+                result.value = userMail
+            }
+        }
+
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+
+    })
+}
+

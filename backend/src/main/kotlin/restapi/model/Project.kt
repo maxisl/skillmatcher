@@ -46,18 +46,18 @@ data class Project(
     // val endDate: Date,
 
     // A User can be the owner of many projects
-    @JsonView(DataView.ProjectWithOwner::class)
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "owner_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonView(DataView.ProjectWithOwner::class)             // specify which fields should be included in the JSON representation of the object
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)   // a single ApiUser object can be related to multiple Project objects
+    @JoinColumn(name = "owner_id", nullable = true)         // specifies the name of the column in the Project table to store the foreign key pointing to the ApiUser object
+    @OnDelete(action = OnDeleteAction.CASCADE)              // when an ApiUser object is deleted, any related Project objects should also be deleted
     var owner: ApiUser?,
 
     // Many user attend many projects
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)             // a single Project object can be related to multiple ApiUser objects, and a single ApiUser object can be related to multiple Project objects
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)    // specifies the name of the join table that will be used to store the many-to-many relationship between Project and ApiUser objects
     @JoinTable(
-        name = "project_attendees",
-        joinColumns = [JoinColumn(name = "project_id")],
+        name = "project_attendees",                                     // name of the join table that will be used to store the many-to-many relationship between Project and ApiUser objects
+        joinColumns = [JoinColumn(name = "project_id")],                // names of the columns in the join table that will store the foreign keys to the Project and ApiUser tables
         inverseJoinColumns = [JoinColumn(name = "user_id")])
-    var attendees: MutableList<ApiUser>?
+    var attendees: MutableList<ApiUser>?                                // attendees field is a nullable list of ApiUser objects
 )

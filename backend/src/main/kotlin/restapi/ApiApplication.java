@@ -10,13 +10,14 @@ import restapi.model.ApiUser;
 import restapi.repository.UserRepository;
 import restapi.security.JwtTokenProvider;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @SpringBootApplication
 public class ApiApplication implements CommandLineRunner {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
-
   @Autowired
   private UserRepository userRepository;
   @Autowired
@@ -30,7 +31,7 @@ public class ApiApplication implements CommandLineRunner {
   public void run(String... args) throws Exception {
 
     try {
-      Random rand = new Random(); //instance of random class
+      /*Random rand = new Random(); //instance of random class
       int upperbound = 2500;
       //generate random values from 0-2499
       int int_random = rand.nextInt(upperbound);
@@ -40,9 +41,9 @@ public class ApiApplication implements CommandLineRunner {
 
       ApiUser saved = userRepository.save(user);
 
-      System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));
+      System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));*/
     } catch (Exception e) {
-      //
+      log.error("Error: ", e);
     }
   }
 }
