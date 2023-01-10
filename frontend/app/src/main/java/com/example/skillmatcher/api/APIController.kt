@@ -40,7 +40,15 @@ interface BackendAPI {
     @GET("user/{email}")
     fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
 
+    @POST("projects/{email}")
+    fun createProject(
+        @Header("Authorization") jwt: String,
+        @Path("email") email: String,
+        @Body project: Project
+    ): Call<Project>
 
+    @GET("projects")
+    fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
 }
 
 var token = ""
@@ -181,7 +189,6 @@ fun registerUser(
 }
 
 fun getAllUsers() {
-    // TODO app crashes if login is not executed before getUsers => preferencesManager has not been initialized
     Log.d("Token: ", "${preferencesManager.getJWT()}")
     val retrofitAPI = createRetrofitInstance()
     // have to add "Bearer " in front of JWT in order to match pattern defined in backend
@@ -260,12 +267,29 @@ fun createProject(
     )
     call!!.enqueue(object : Callback<Project> {
         override fun onResponse(call: Call<Project>, response: Response<Project>) {
-            Log.d("createProject ", "Created $response")
+            Log.d("createProject", "Created $response")
         }
 
         override fun onFailure(call: Call<Project>, t: Throwable) {
             t.message?.let { Log.d("Error: ", it) }
         }
 
+    })
+}
+
+fun getAllProjects() {
+    Log.d("getAllProjects: ","Executed")
+    val retrofitAPI = createRetrofitInstance()
+    // have to add "Bearer " in front of JWT in order to match pattern defined in backend
+    val call: Call<List<Project>> =
+        retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
+    call!!.enqueue(object : Callback<List<Project>> {
+        override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+            Log.d("getAllProjects","Http-Code: ${response.code()}")
+            Log.d("getAllProjects", response.body().toString())
+        }
+        override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
     })
 }
