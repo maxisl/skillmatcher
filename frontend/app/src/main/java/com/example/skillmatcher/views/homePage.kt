@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
+import androidx.compose.foundation.layout.Spacer
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,11 +21,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.ui.res.painterResource
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Preview
+
 @Destination
 @Composable
-fun AllProjectsOverViewPage(
+fun HomePage(navigator: DestinationsNavigator
 ) {
 
     LazyColumn(
@@ -32,19 +34,14 @@ fun AllProjectsOverViewPage(
             .background(Color(Color.Black.value)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            SlidingBanner()
-        }
-        item {
-            CategoryView()
-        }
+
         item {
             Row(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top=40.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Popular Projects",
+                    text = "Your Projects",
                     style = TextStyle(
                         fontSize = 18.sp,
                         //fontFamily = FontFamily(Font(R.font.helvetica_neue_bold))
@@ -57,11 +54,14 @@ fun AllProjectsOverViewPage(
             }
         }
         item {
-            PopularFlowersList()
+            ProjectsListHorizontal(cardIcon=R.drawable.mern_icon)
         }
+
+
+
         item {
             Row(
-                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top=40.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -78,79 +78,46 @@ fun AllProjectsOverViewPage(
             }
         }
         item {
-            PopularFlowersList()
+            ProjectsListHorizontal(cardIcon=R.drawable.java_icon)
         }
-    }
-}
-@Composable
-private fun SlidingBanner() {
-    Text(
-        text = "",
-        style = TextStyle(
-            //color = colorPrimary,
-            fontSize = 16.sp,
-            //fontFamily = FontFamily(Font(R.font.helvetica_neue_medium))
-        )
-    )
-
-
-}
-
-@Composable
-private fun CategoryView() {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(20.dp)) {
-        RoundedCornerIconButton(
-            modifier = Modifier.weight(1f),
-            1
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        RoundedCornerIconButton(
-            modifier = Modifier.weight(1f),
-            2
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        RoundedCornerIconButton(
-            modifier = Modifier.weight(1f),
-            3
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        RoundedCornerIconButton(
-            modifier = Modifier.weight(1f),
-            4
-        )
-    }
-}
-
-@Composable
-fun RoundedCornerIconButton(modifier: Modifier, icon: Int) {
-    Box {
-        IconButton(
-            onClick = { }, modifier = Modifier
-                .align(Alignment.Center)
-                .padding(14.dp)
-        ) {
-            Image(
-                //bitmap = ImageBitmap.imageResource(id = icon),
-                painter = painterResource(id = R.drawable.lmulogo),
-                contentDescription = "rounded_corner_icon_button"
-            )
+        item {
+            Row(
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top=40.dp),
+                    verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                        text = "Biggest Projects",
+                        style = TextStyle(
+                                fontSize = 18.sp,
+                                //fontFamily = FontFamily(Font(R.font.helvetica_neue_bold))
+                        ),
+                        modifier = Modifier.weight(1f)
+                )
+                Text(
+                        text = "View All",
+                )
+            }
+        }
+        item {
+            ProjectsListHorizontal(cardIcon=R.drawable.python_icon)
         }
     }
 }
 
+
 @Composable
-private fun PopularFlowersList() {
+private fun ProjectsListHorizontal(cardIcon: Int) {
     LazyRow(
         modifier = Modifier.fillMaxWidth()
     ) {
         items(10) {
-            FlowerCard()
+            ProjectCard(cardIcon)
         }
     }
 }
 
 @Composable
-private fun FlowerCard() { //flower: Flowers
+private fun ProjectCard(cardIcon:Int) { //Project: Projects
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
@@ -165,9 +132,9 @@ private fun FlowerCard() { //flower: Flowers
 
             Image(
                 modifier = Modifier.size(140.dp),
-                painter = painterResource(id = R.drawable.android_icon),
+                painter = painterResource(id = cardIcon),
                 // bitmap = ImageBitmap.imageResource(id = icon),
-                contentDescription = "flower_card"
+                contentDescription = "Project_card"
             )
             Row(modifier = Modifier.padding(top = 20.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -199,7 +166,7 @@ private fun FlowerCard() { //flower: Flowers
                         Icons.Default.Add,
                         tint = Color.White,
                         modifier = Modifier.padding(10.dp),
-                        contentDescription = "flower_card_icon"
+                        contentDescription = "Project_card_icon"
                     )
                 }
             }

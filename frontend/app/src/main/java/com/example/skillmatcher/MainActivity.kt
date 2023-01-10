@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SkillMatcherTheme() {
+            SkillMatcherTheme {
                 DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
