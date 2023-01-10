@@ -19,7 +19,7 @@ kotlin {
 
 android {
     namespace 'com.example.skillmatcher'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.skillmatcher"
