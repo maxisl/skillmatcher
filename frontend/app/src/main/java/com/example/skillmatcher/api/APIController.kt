@@ -94,7 +94,7 @@ fun postLoginUserData(
                 // show error response from API in UI
                 result.value = "Error found is: \n" + t.message
                 // show error in log
-                t.message?.let { Log.d("Error: ", it) };
+                t.message?.let { Log.d("Error: ", it) }
             }
         })
 
@@ -116,7 +116,7 @@ fun getAllUsers() {
         .build()
     val retrofitAPI = retrofit.create(BackendAPI::class.java)
     val call: Call<List<ApiUser>> = retrofitAPI.getAllUsers()
-    call!!.enqueue(object : Callback<List<ApiUser>> {
+    call.enqueue(object : Callback<List<ApiUser>> {
         override fun onResponse(call: Call<List<ApiUser>>, response: Response<List<ApiUser>>) {
             val resp =
                 "Http-Code:" + response.code()
@@ -151,7 +151,7 @@ fun registerUser(
     try {
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
         val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
-        call!!.enqueue(object : Callback<ApiUser> {
+        call.enqueue(object : Callback<ApiUser> {
             override fun onResponse(
                 call: Call<ApiUser>,
                 response: Response<ApiUser>

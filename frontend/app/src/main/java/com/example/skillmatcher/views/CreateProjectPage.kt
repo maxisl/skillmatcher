@@ -8,19 +8,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import com.commandiron.wheel_picker_compose.WheelTextPicker
+import com.example.skillmatcher.ui.theme.White
 import java.util.*
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.skillmatcher.data.ProjectModel
@@ -69,6 +77,8 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
             }
         }
 
+            Spacer(modifier = Modifier.height(200.dp))
+        }
     }
 }
 
@@ -103,6 +113,10 @@ fun projectDescription(): String {
             label = { Text("Description") },
             modifier = Modifier.defaultMinSize(minHeight = 200.dp)
         )
+
+        //Start Date
+        //End Data
+
     }
     return projectDescription
 }
@@ -262,5 +276,6 @@ fun saveButton(
         }
     }
 }
+
 
 
