@@ -32,66 +32,81 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
     Column(modifier = Modifier
             .fillMaxSize()
             .background(Color(Color.Black.value))) {
-//        TopBar(
-//            title = "Home",
-//            buttonIcon = Icons.Filled.Menu,
-//            onButtonClicked = { openDrawer() }
-//        )
-        Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Spacer(modifier = Modifier.height(4.dp))
 
-            textInput()
-
-            Spacer(modifier = Modifier.height(7.dp))
-
-            startDate()
-            endDate()
-
-            Spacer(modifier = Modifier.height(7.dp))
-
-            Column {
-                var projectName by rememberSaveable { mutableStateOf("") }
-                OutlinedTextField(
-                        value = projectName,
-                        onValueChange = { projectName = it },
-                        label = { Text("Max. Attendees") },
+        Row(
+                modifier = Modifier.padding(bottom = 20.dp, top = 20.dp),
+        ) {
+            Column( modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                Text(
+                        text = "Create Project:",
+                        style = TextStyle(
+                                fontSize = 18.sp,
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(7.dp))
+        Row {
+            Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Column {
-                var projectName by rememberSaveable { mutableStateOf("") }
-                OutlinedTextField(
-                        value = projectName,
-                        onValueChange = { projectName = it },
-                        label = { Text("Skills Needed") },
-                        modifier = Modifier.defaultMinSize(minHeight = 100.dp)
-                )
-            }
+                Spacer(modifier = Modifier.height(4.dp))
 
-            Spacer(modifier = Modifier.height(20.dp))
+                textInput()
 
-            Row(
-                    horizontalArrangement = Arrangement.Center) {
+                Spacer(modifier = Modifier.height(7.dp))
 
-                Button(
-                        onClick = {
-                            //your onclick code
-                        },
-                        border = BorderStroke(1.dp, Color.Green),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Green)
-                ) {
-                    Text(text = "Create Project", color = Color.White,
-                            style = TextStyle(
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
-                            )
+                startDate()
+                endDate()
+
+                Spacer(modifier = Modifier.height(7.dp))
+
+                Column {
+                    var projectName by rememberSaveable { mutableStateOf("") }
+                    OutlinedTextField(
+                            value = projectName,
+                            onValueChange = { projectName = it },
+                            label = { Text("Max. Attendees") },
                     )
+                }
+
+                Spacer(modifier = Modifier.height(7.dp))
+
+                Column {
+                    var projectName by rememberSaveable { mutableStateOf("") }
+                    OutlinedTextField(
+                            value = projectName,
+                            onValueChange = { projectName = it },
+                            label = { Text("Skills Needed") },
+                            modifier = Modifier.defaultMinSize(minHeight = 100.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                        horizontalArrangement = Arrangement.Center) {
+
+                    Button(
+                            onClick = {
+                                //your onclick code
+                            },
+                            border = BorderStroke(1.dp, Color.Green),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Green)
+                    ) {
+                        Text(text = "Create Project", color = Color.White,
+                                style = TextStyle(
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                )
+                        )
+                    }
                 }
             }
         }
