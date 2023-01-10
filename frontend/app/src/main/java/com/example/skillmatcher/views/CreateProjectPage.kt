@@ -25,6 +25,7 @@ import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import com.commandiron.wheel_picker_compose.WheelTextPicker
@@ -58,18 +59,15 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
                 val description = projectDescription()
 
                 Spacer(modifier = Modifier.height(7.dp))
-                Divider(thickness = 1.dp)
 
                 val startDate = startDate()
                 val endDate = endDate()
 
                 Spacer(modifier = Modifier.height(7.dp))
-                Divider(thickness = 1.dp)
 
                 Spacer(modifier = Modifier.height(7.dp))
                 val attendees = numberInput()
 
-                Divider(thickness = 1.dp)
                 Spacer(modifier = Modifier.height(7.dp))
 
                 // Spacer(modifier = Modifier.height(200.dp))
@@ -80,7 +78,7 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
             Spacer(modifier = Modifier.height(200.dp))
         }
     }
-}
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -230,7 +228,7 @@ fun numberInput(): Int {
         Column(
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Min. Attendees:", textAlign = TextAlign.Center)
+            Text("Max. Attendees:", textAlign = TextAlign.Center)
 
         }
         Column(
@@ -272,7 +270,7 @@ fun saveButton(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = "Save", modifier = Modifier.padding(8.dp))
+            Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }
     }
 }
