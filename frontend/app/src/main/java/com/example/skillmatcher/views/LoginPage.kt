@@ -41,22 +41,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
         ) {
 
             Scaffold(
-                /**
-                topBar = {
-                CenterAlignedTopAppBar(
-                title = {
-                Text(
-                text = "Sign In", modifier = Modifier
-                .padding(10.dp)
-                )
-                }
-                //colors = TopAppBarDefaults.smallTopAppBarColors(
-                //containerColor = Color(Grey100.value),
-                //titleContentColor = Color(White.value)
-                //)
-                )
-                },
-                 */
+
 
                 content = {
                     postData(navigator)
