@@ -252,13 +252,16 @@ fun getUserMail(result: MutableState<String>) {
 }
 
 fun createProject(
+    ctx: Context,
     name: String,
     description: String,
-    maxAttendees: Int,
+    maxAttendees: String,
     // startDate: String, TODO add start / end date as soon as db schema is updated
     // endDate: String,
 ) {
+    Log.d("createProject", "Executed")
     val project = Project(name, description, maxAttendees)
+    Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(
         "Bearer ${preferencesManager.getJWT()}",
@@ -268,26 +271,31 @@ fun createProject(
     call!!.enqueue(object : Callback<Project> {
         override fun onResponse(call: Call<Project>, response: Response<Project>) {
             Log.d("createProject", "Created $response")
+            if (response.code() == 201) {
+                Toast.makeText(ctx, "Project $name created", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(ctx, "Failed to create project", Toast.LENGTH_SHORT).show()
+            }
         }
 
         override fun onFailure(call: Call<Project>, t: Throwable) {
-            t.message?.let { Log.d("Error: ", it) }
+            t.message?.let { Log.d("createProject", "Error: $it") }
         }
 
     })
 }
 
 fun getAllProjects() {
-    Log.d("getAllProjects: ","Executed")
+    Log.d("getAllProjects: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
-    // have to add "Bearer " in front of JWT in order to match pattern defined in backend
     val call: Call<List<Project>> =
         retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<Project>> {
         override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
-            Log.d("getAllProjects","Http-Code: ${response.code()}")
+            Log.d("getAllProjects", "Http-Code: ${response.code()}")
             Log.d("getAllProjects", response.body().toString())
         }
+
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }

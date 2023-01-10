@@ -1,6 +1,7 @@
 package com.example.skillmatcher.views
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
 import androidx.compose.foundation.background
@@ -31,7 +32,10 @@ import com.commandiron.wheel_picker_compose.WheelTextPicker
 import com.example.skillmatcher.ui.theme.White
 import java.util.*
 import com.chargemap.compose.numberpicker.NumberPicker
+import com.example.skillmatcher.api.createProject
+import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.ProjectModel
+import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.LMUGreen
 
 
@@ -256,16 +260,21 @@ fun saveButton(
     endDate: String,
     attendees: Int
 ){
+    val ctx = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ){
         Button(
             onClick = {
+                // TODO id and owner_id generated in backend?
                 var id = UUID.randomUUID()
                 var owner_id = UUID.randomUUID()
                 var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
+                // duplicate to fit data type of Project (not ProjectModel)
+                createProject(ctx, name, description, attendees.toString())
+                getAllProjects()
             },
             modifier = Modifier
                 .fillMaxWidth()

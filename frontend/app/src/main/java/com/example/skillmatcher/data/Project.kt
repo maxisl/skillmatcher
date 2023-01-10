@@ -16,3 +16,9 @@ data class ProjectModel(
     var endDate: String,
     var owner_id: UUID
 )
+
+data class Project(
+    var name: String,
+    var description: String,
+    var maxAttendees: String,
+)

@@ -25,7 +25,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination
 @Composable
 fun ProjectPage() {
-    getAllProjects()
     SkillMatcherTheme {
         Surface(
                 modifier = Modifier.fillMaxSize(),
