@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.ui.platform.LocalContext
@@ -262,7 +261,9 @@ fun saveButton(
     ){
         Button(
             onClick = {
-                var newProject = ProjectModel(name,description,startDate,endDate,attendees)
+                var id = UUID.randomUUID()
+                var owner_id = UUID.randomUUID()
+                var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
             },
