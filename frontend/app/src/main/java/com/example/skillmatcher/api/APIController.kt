@@ -304,5 +304,5 @@ fun getAllProjects(): Response<List<Project>> {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })*/
-    Log.d("getAllProjects", "Projects before return: $projects")
+    // Log.d("getAllProjects", "Projects before return: $projects")
 }
