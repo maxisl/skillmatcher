@@ -13,11 +13,10 @@ import android.widget.NumberPicker
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -26,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
@@ -64,6 +64,8 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
             item{
                 Spacer(modifier = Modifier.height(4.dp))
                 val name = projectName()
+                Spacer(modifier = Modifier.height(7.dp))
+                var image = imagePicker()
                 val description = projectDescription()
 
                 Spacer(modifier = Modifier.height(7.dp))
@@ -77,7 +79,6 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
                 val attendees = numberInput()
 
                 Spacer(modifier = Modifier.height(7.dp))
-                var image = imagePicker()
 
                 // Spacer(modifier = Modifier.height(200.dp))
                 saveButton(name,description,startDate,endDate,attendees,image)
@@ -274,14 +275,13 @@ fun imagePicker(): Bitmap? {
     ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
-    Column() {
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
         Button(onClick = {
             launcher.launch("image/*")
         }) {
             Text(text = "Pick image")
         }
-
-        Spacer(modifier = Modifier.height(12.dp))
 
         imageUri?.let {
             if (Build.VERSION.SDK_INT < 28) {
@@ -294,10 +294,16 @@ fun imagePicker(): Bitmap? {
                 bitmap.value = ImageDecoder.decodeBitmap(source)
             }
 
+            val borderWidth = 4.dp
             bitmap.value?.let {  btm ->
                 Image(bitmap = btm.asImageBitmap(),
                     contentDescription =null,
-                    modifier = Modifier.size(400.dp))
+                    modifier = Modifier.size(150.dp).border(
+                        BorderStroke(borderWidth, LMUGreen),
+                        CircleShape
+                    )
+                        .padding(borderWidth)
+                        .clip(CircleShape))
             }
         }
 
