@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,8 +24,7 @@ import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.ramcosta.composedestinations.annotation.Destination
 
-// create empty list
-val projects = mutableListOf<Project>()
+val projects = getAllProjects()
 
 @Preview
 @Destination
@@ -39,7 +41,7 @@ fun AllProjectsListPage(
                 Row {
                     Button(
                         onClick = {
-                            //projects = getAllProjects()
+                            Log.d("getAllProjects", "List Page: $projects")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -48,9 +50,7 @@ fun AllProjectsListPage(
                         Text(text = "Get All Projects", modifier = Modifier.padding(8.dp))
                     }
                 }
-
-                    //getAllProjects()
-                Log.d("getAllProjects", "$projects")
+                //getAllProjects()
                 Row {
                     ProjectsList(cardIcon = R.drawable.mern_icon)
                 }

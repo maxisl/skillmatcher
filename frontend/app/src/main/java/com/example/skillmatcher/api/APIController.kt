@@ -4,13 +4,12 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
-import io.jsonwebtoken.JwtException
-import io.jsonwebtoken.Jwts
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +47,7 @@ interface BackendAPI {
     ): Call<Project>
 
     @GET("projects")
-    fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
+    fun getAllProjects(@Header("Authorization") jwt: String): Response<List<Project>>
 }
 
 var token = ""
@@ -285,20 +284,25 @@ fun createProject(
     })
 }
 
-fun getAllProjects(result: MutableList<Project>) {
+fun getAllProjects(): Response<List<Project>> {
     Log.d("getAllProjects: ", "Executed")
+    // var projects = listOf<Project>()
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<List<Project>> =
+    val projectList = retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
+    return projectList
+    /*val call: Call<List<Project>> =
         retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<Project>> {
         override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
-            Log.d("getAllProjects", "Http-Code: ${response.code()}")
+            // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
             Log.d("getAllProjects", response.body().toString())
-         //   result.value = response.body() as MutableList<Project>
+            projects = response.body()!!
+            Log.d("getAllProjects", "Projects as List: $projects")
+            return projects
         }
-
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
-    })
+    })*/
+    Log.d("getAllProjects", "Projects before return: $projects")
 }
