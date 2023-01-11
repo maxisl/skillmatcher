@@ -3,10 +3,7 @@ package com.example.skillmatcher.components
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.skillmatcher.AllProjectsListPage
-import com.example.skillmatcher.AllProjectsOverViewPage
-import com.example.skillmatcher.HomePage
-import com.example.skillmatcher.LandingPage
+import com.example.skillmatcher.*
 import com.example.skillmatcher.views.IndividualSkillsPage
 import com.example.skillmatcher.views.ProjectCreationPage
 import com.example.skillmatcher.views.ProjectPage
@@ -33,6 +30,9 @@ fun NavHost(navController: NavHostController, navigator: DestinationsNavigator) 
         }
         composable(ScreensRoute.TEST.name) {
             ProjectPage()
+        }
+        composable(ScreensRoute.SCREEN_OWN_PROJECT.name) {
+            OwnProjectOverviewPage(navigator = navigator)
         }
     }
 }
