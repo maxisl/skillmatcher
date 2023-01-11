@@ -24,6 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.registerUser
+import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
+import com.example.skillmatcher.destinations.LoginPageDestination
+import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
@@ -31,29 +34,24 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination
-@Preview
 @Composable
-fun OwnProjectOverviewPage(){
+fun OwnProjectOverviewPage(navigator: DestinationsNavigator?){
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color(Black.value))
+                    .fillMaxSize()
+                    .background(Color(Black.value))
         ) {
             HeadBar(
                 name = "Project Overview", modifier = Modifier
                     .padding(5.dp)
             )
             Divider(color = Color(White.value), thickness = 1.dp)
-            Spacer(modifier = Modifier.height(15.dp))
             LogoSection()
-            Spacer(modifier = Modifier.height(15.dp))
             NameSection()
-            Spacer(modifier = Modifier.height(15.dp))
             ExpandableCard(title = "Participants", description = "navi, jason")
-            Spacer(modifier = Modifier.height(15.dp))
             DescriptionSection()
-            Spacer(modifier = Modifier.height(30.dp))
             ChatButton()
+            LeaveProjectButton(navigator)
         }
     }
 
@@ -85,8 +83,8 @@ fun LogoSection(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
         ) {
             ProjectLogo(
                 image = painterResource(id = R.drawable.nice_cat), modifier = Modifier
@@ -104,14 +102,14 @@ fun ProjectLogo(
 ){
     Image(painter = image, contentDescription = null,
         modifier= modifier
-            .aspectRatio(1f, matchHeightConstraintsFirst = true)
-            .border(
-                width = 1.dp,
-                color = Color.LightGray,
-                shape = CircleShape
-            )
-            .padding(5.dp)
-            .clip(CircleShape)
+                .aspectRatio(1f, matchHeightConstraintsFirst = true)
+                .border(
+                        width = 1.dp,
+                        color = Color.LightGray,
+                        shape = CircleShape
+                )
+                .padding(5.dp)
+                .clip(CircleShape)
     )
 }
 @Composable
@@ -187,12 +185,27 @@ fun ChatButton() {
             //kommt man zur Chatseite
         },
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+                .fillMaxWidth()
+                .padding(16.dp)
     ) {
         androidx.compose.material3.Text(text = "GroupChat",  color = Color.White, modifier = Modifier.padding(8.dp))
     }
 }
+
+@Composable
+fun LeaveProjectButton(navigator: DestinationsNavigator?) {
+    Button(colors = ButtonDefaults.buttonColors(containerColor =Color(LMUGreen.value)),
+            onClick = {
+                navigator?.navigate(LoginPageDestination())
+            },
+            modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+    ) {
+        androidx.compose.material3.Text(text = "Logout",  color = Color.White, modifier = Modifier.padding(8.dp))
+    }
+}
+
 
 //, wer teilnehmer sind, Chat Button
 
