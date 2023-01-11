@@ -29,7 +29,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun AllProjectsListPage(
 ) {
-    val response = remember { mutableStateOf(listOf(Project("", "", "")))}
+    val response = remember { mutableStateOf(listOf(Project("", "", ""))) }
     getAllProjects(response)
     val projects = response.value
     SkillMatcherTheme {
@@ -40,20 +40,7 @@ fun AllProjectsListPage(
         ) {
             Column {
                 Row {
-                    Button(
-                        onClick = {
-                            Log.d("getAllProjects", "List Page: $projects")
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text(text = "Get All Projects", modifier = Modifier.padding(8.dp))
-                    }
-                }
-                //getAllProjects()
-                Row {
-                    ProjectsList(cardIcon = R.drawable.mern_icon)
+                    ProjectsList(cardIcon = R.drawable.mern_icon, projects)
                 }
             }
             /*Scaffold(
@@ -92,16 +79,17 @@ fun AllProjectsListPage(
 
 
 @Composable
-private fun ProjectsList(cardIcon: Int) {
+private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
     LazyColumn(
         modifier = Modifier
             // .weight(1f)
             .background(Color(Color.Black.value)),
     ) {
-        // TODO for loop
-        items(10) {
-            ProjectCard(cardIcon)
-            // ProjectCard(cardIcon)
+        items(1) {
+            projects.forEach { Project ->
+                ProjectCard(cardIcon, project = Project)
+                // ProjectCard(cardIcon)
+            }
         }
     }
 }
@@ -181,6 +169,10 @@ private fun ProjectCard(cardIcon: Int) { //Project: Projects
 
 @Composable
 fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
+    val projectName = project.name
+    val projectAttendees = project.maxAttendees
+    val projectDescription = project.description
+
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
@@ -205,13 +197,13 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Title: MERN Meme Generator",
+                            text = "Project: $projectName",
                             style = TextStyle(
                                 fontSize = 16.sp,
                             )
                         )
                         Text(
-                            text = "Member: 10",
+                            text = "Max. Attendees: $projectAttendees",
                             style = TextStyle(
                                 fontSize = 16.sp,
                             )
@@ -229,7 +221,7 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
             Row(modifier = Modifier.padding(top = 20.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Description: Build a meme Generator based on the MERN Stack. After the creation Memes should be saved on a Server",
+                        text = "Description: $projectDescription",
                         style = TextStyle(
                             fontSize = 16.sp,
                         )

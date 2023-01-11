@@ -284,30 +284,8 @@ fun createProject(
     })
 }
 
-/*fun getAllProjects(_result: MutableList<Project>) {
-    var result = _result
-    Log.d("getAllProjects: ", "Executed")
-    var projects = listOf<Project>()
-    val retrofitAPI = createRetrofitInstance()
-    val call: Call<List<Project>> =
-        retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
-    call!!.enqueue(object : Callback<List<Project>> {
-        override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
-            // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
-            Log.d("getAllProjects", response.body().toString())
-            result = response.body() as MutableList<Project>
-            Log.d("getAllProjects", "Projects as List: $result")
-        }
-        override fun onFailure(call: Call<List<Project>>, t: Throwable) {
-            t.message?.let { Log.i("Error found is : ", it) }
-        }
-    })
-    Log.d("getAllProjects", "Projects before return: $result")
-}*/
-
 fun getAllProjects(result: MutableState<List<Project>>) {
     Log.d("getAllProjects: ", "Executed")
-    var projects = listOf<Project>()
     val retrofitAPI = createRetrofitInstance()
     val call: Call<List<Project>> =
         retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
@@ -322,5 +300,4 @@ fun getAllProjects(result: MutableState<List<Project>>) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })
-    // Log.d("getAllProjects", "Projects before return: $result")
 }
