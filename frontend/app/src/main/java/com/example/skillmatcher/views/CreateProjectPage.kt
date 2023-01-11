@@ -63,9 +63,10 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
 
             item{
                 Spacer(modifier = Modifier.height(4.dp))
+                var image = imagePicker()
+                Spacer(modifier = Modifier.height(4.dp))
                 val name = projectName()
                 Spacer(modifier = Modifier.height(7.dp))
-                var image = imagePicker()
                 val description = projectDescription()
 
                 Spacer(modifier = Modifier.height(7.dp))
@@ -323,17 +324,16 @@ fun saveButton(
     Column(
         verticalArrangement = Arrangement.Center
     ){
-        Button(
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
             onClick = {
                 var id = UUID.randomUUID()
                 var owner_id = UUID.randomUUID()
                 var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            }
         ) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }
