@@ -274,7 +274,6 @@ fun saveButton(
                         + endDate + " Attendees: " + attendees.toString())
                 // duplicate to fit data type of Project (not ProjectModel)
                 createProject(ctx, name, description, attendees.toString())
-                getAllProjects()
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -117,7 +117,7 @@ private fun ProjectsListHorizontal(cardIcon: Int) {
 }
 
 @Composable
-private fun ProjectCard(cardIcon:Int) { //Project: Projects
+fun ProjectCard(cardIcon:Int) { //Project: Projects
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier

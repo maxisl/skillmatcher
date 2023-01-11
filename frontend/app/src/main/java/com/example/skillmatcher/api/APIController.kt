@@ -285,7 +285,7 @@ fun createProject(
     })
 }
 
-fun getAllProjects() {
+fun getAllProjects(result: MutableList<Project>) {
     Log.d("getAllProjects: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<List<Project>> =
@@ -294,6 +294,7 @@ fun getAllProjects() {
         override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
             Log.d("getAllProjects", "Http-Code: ${response.code()}")
             Log.d("getAllProjects", response.body().toString())
+         //   result.value = response.body() as MutableList<Project>
         }
 
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
