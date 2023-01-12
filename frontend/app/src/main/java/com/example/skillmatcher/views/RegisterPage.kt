@@ -187,14 +187,14 @@ fun drawSkill(name: String): Skill? {
 
                 OutlinedTextField(
                     value = skillTextField.value,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     onValueChange = { skillTextField.value = it },
-                    placeholder = { Text(text = "Skill Level") },
+                    placeholder = { Text(text = "Level") },
                     modifier = Modifier
                         .padding(16.dp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Black),
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
 
                 )
                 /* NumberPicker(
