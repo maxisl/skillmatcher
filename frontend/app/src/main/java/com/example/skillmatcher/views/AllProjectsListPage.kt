@@ -43,36 +43,6 @@ fun AllProjectsListPage(
                     ProjectsList(cardIcon = R.drawable.mern_icon, projects)
                 }
             }
-            /*Scaffold(
-                content = {
-                    Row(
-                        modifier = Modifier
-                            .padding(
-                                start = 20.dp,
-                                end = 20.dp,
-                                bottom = 20.dp,
-                                top = 40.dp
-                            )
-                            .background(Color(Color.Black.value))
-                            .fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "All Projects",
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                            ),
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = "Sort By",
-                        )
-                    }
-
-                        ProjectsList(cardIcon = R.drawable.mern_icon)
-
-                }
-            )*/
         }
     }
 }
