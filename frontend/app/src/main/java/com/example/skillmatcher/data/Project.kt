@@ -13,3 +13,10 @@ data class ProjectModel(
     var owner_id: UUID,
     var image: Bitmap?
 )
+
+// have to use this model for getAllProjects until backend contains all attributes from ProjectModel
+data class Project(
+    var name: String,
+    var description: String,
+    var maxAttendees: String,
+)

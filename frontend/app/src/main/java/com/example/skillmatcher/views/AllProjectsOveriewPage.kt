@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.ui.res.painterResource
+import com.example.skillmatcher.api.getAllProjects
 
 @Preview
 @Destination

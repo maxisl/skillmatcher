@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
+import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -37,7 +39,15 @@ interface BackendAPI {
     @GET("user/{email}")
     fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
 
+    @POST("projects/{email}")
+    fun createProject(
+        @Header("Authorization") jwt: String,
+        @Path("email") email: String,
+        @Body project: Project
+    ): Call<Project>
 
+    @GET("projects")
+    fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
 }
 
 var token = ""
@@ -178,7 +188,6 @@ fun registerUser(
 }
 
 fun getAllUsers() {
-    // TODO app crashes if login is not executed before getUsers => preferencesManager has not been initialized
     Log.d("Token: ", "${preferencesManager.getJWT()}")
     val retrofitAPI = createRetrofitInstance()
     // have to add "Bearer " in front of JWT in order to match pattern defined in backend
@@ -241,3 +250,54 @@ fun getUserMail(result: MutableState<String>) {
     })
 }
 
+fun createProject(
+    ctx: Context,
+    name: String,
+    description: String,
+    maxAttendees: String,
+    // startDate: String, TODO add start / end date as soon as db schema is updated
+    // endDate: String,
+) {
+    Log.d("createProject", "Executed")
+    val project = Project(name, description, maxAttendees)
+    Log.d("createProject", "Project: $project")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<Project> = retrofitAPI.createProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        "${preferencesManager.getMail()}",
+        project
+    )
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("createProject", "Created $response")
+            if (response.code() == 201) {
+                Toast.makeText(ctx, "Project $name created", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(ctx, "Failed to create project", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("createProject", "Error: $it") }
+        }
+
+    })
+}
+
+fun getAllProjects(result: MutableState<List<Project>>) {
+    Log.d("getAllProjects: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Project>> =
+        retrofitAPI.getAllProjects("Bearer ${preferencesManager.getJWT()}")
+    call!!.enqueue(object : Callback<List<Project>> {
+        override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+            // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
+            Log.d("getAllProjects", response.body().toString())
+            result.value = response.body() as MutableList<Project>
+            Log.d("getAllProjects", "Projects as List: $result")
+        }
+        override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}

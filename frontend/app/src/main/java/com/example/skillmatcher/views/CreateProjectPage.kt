@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import android.os.ext.SdkExtensions.getExtensionVersion
+// import android.os.ext.SdkExtensions.getExtensionVersion
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.DatePicker
@@ -39,7 +39,10 @@ import com.commandiron.wheel_picker_compose.WheelTextPicker
 import com.example.skillmatcher.ui.theme.White
 import java.util.*
 import com.chargemap.compose.numberpicker.NumberPicker
+import com.example.skillmatcher.api.createProject
+import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.ProjectModel
+import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.LMUGreen
 
 
@@ -321,6 +324,7 @@ fun saveButton(
     attendees: Int,
     image: Bitmap?
 ){
+    val ctx = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ){
@@ -328,13 +332,15 @@ fun saveButton(
             .fillMaxWidth()
             .padding(16.dp),
             onClick = {
+                // TODO id and owner_id generated in backend?
                 var id = UUID.randomUUID()
                 var owner_id = UUID.randomUUID()
                 var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
-            }
-        ) {
+                // duplicate to fit data type of Project (not ProjectModel)
+                createProject(ctx, name, description, attendees.toString())
+            }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }
     }
