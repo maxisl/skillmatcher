@@ -24,6 +24,7 @@ import com.example.skillmatcher.R
 import com.example.skillmatcher.data.User
 // import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
+import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 
@@ -128,7 +129,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class) // TODO: Löschen wenn möglich
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun postData(navigator: DestinationsNavigator) {
     val ctx = LocalContext.current
@@ -210,6 +211,12 @@ fun postData(navigator: DestinationsNavigator) {
         Button(
             onClick = {
                 registerUser(ctx, userName, job, response)
+
+                navigator.navigate(
+                    RegisterPageDestination(
+
+                    )
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

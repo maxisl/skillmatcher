@@ -196,13 +196,13 @@ fun ChatButton() {
 fun LeaveProjectButton(navigator: DestinationsNavigator?) {
     Button(colors = ButtonDefaults.buttonColors(containerColor =Color(LMUGreen.value)),
             onClick = {
-                navigator?.navigate(LoginPageDestination())
+                navigator?.navigate(AllProjectsOverViewPageDestination())
             },
             modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
     ) {
-        androidx.compose.material3.Text(text = "Logout",  color = Color.White, modifier = Modifier.padding(8.dp))
+        androidx.compose.material3.Text(text = "Leave Project",  color = Color.White, modifier = Modifier.padding(8.dp))
     }
 }
 

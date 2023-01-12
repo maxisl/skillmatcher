@@ -1,26 +1,33 @@
 package com.example.skillmatcher.views
 
 import android.app.DatePickerDialog
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+// import android.os.ext.SdkExtensions.getExtensionVersion
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -37,6 +44,7 @@ import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.ProjectModel
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.LMUGreen
+
 
 
 @Destination
@@ -58,7 +66,10 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
 
             item{
                 Spacer(modifier = Modifier.height(4.dp))
+                var image = imagePicker()
+                Spacer(modifier = Modifier.height(4.dp))
                 val name = projectName()
+                Spacer(modifier = Modifier.height(7.dp))
                 val description = projectDescription()
 
                 Spacer(modifier = Modifier.height(7.dp))
@@ -74,7 +85,7 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
                 Spacer(modifier = Modifier.height(7.dp))
 
                 // Spacer(modifier = Modifier.height(200.dp))
-                saveButton(name,description,startDate,endDate,attendees)
+                saveButton(name,description,startDate,endDate,attendees,image)
             }
         }
 
@@ -252,37 +263,87 @@ fun numberInput(): Int {
     return pickerValue
 }
 
+
+
+@Composable
+fun imagePicker(): Bitmap? {
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val context = LocalContext.current
+    val bitmap =  remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
+    val launcher = rememberLauncherForActivityResult(contract =
+    ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Button(onClick = {
+            launcher.launch("image/*")
+        }) {
+            Text(text = "Pick image")
+        }
+
+        imageUri?.let {
+            if (Build.VERSION.SDK_INT < 28) {
+                bitmap.value = MediaStore.Images
+                    .Media.getBitmap(context.contentResolver,it)
+
+            } else {
+                val source = ImageDecoder
+                    .createSource(context.contentResolver,it)
+                bitmap.value = ImageDecoder.decodeBitmap(source)
+            }
+
+            val borderWidth = 4.dp
+            bitmap.value?.let {  btm ->
+                Image(bitmap = btm.asImageBitmap(),
+                    contentDescription =null,
+                    modifier = Modifier.size(150.dp).border(
+                        BorderStroke(borderWidth, LMUGreen),
+                        CircleShape
+                    )
+                        .padding(borderWidth)
+                        .clip(CircleShape))
+            }
+        }
+
+    }
+    return bitmap.value
+}
+
 @Composable
 fun saveButton(
     name: String,
     description: String,
     startDate: String,
     endDate: String,
-    attendees: Int
+    attendees: Int,
+    image: Bitmap?
 ){
     val ctx = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ){
-        Button(
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
             onClick = {
                 // TODO id and owner_id generated in backend?
                 var id = UUID.randomUUID()
                 var owner_id = UUID.randomUUID()
-                var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id)
+                var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
                 // duplicate to fit data type of Project (not ProjectModel)
                 createProject(ctx, name, description, attendees.toString())
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+            }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }
     }
 }
-
 
 
