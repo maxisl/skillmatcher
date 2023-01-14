@@ -6,6 +6,11 @@ public class DataView {
     public interface User {}
     public interface UserWithProjects extends User, Project{}
     public interface Project {}
+    public interface Skill {}
+    public interface UserWithSkill extends User, Skill{}
+
+    public interface ProjectWithSkill extends Project, Skill{}
+
     public interface ProjectWithOwner extends Project, User {}
     public interface ProjectWithAttendeesAndOwner extends ProjectWithOwner, User {}
 }
