@@ -14,13 +14,13 @@ class ProjectSkill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var projectSkill_id: Long? = null
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name="Project_id")
     lateinit var project: Project
 
     @ManyToOne
     @JoinColumn(name="Skill_id")
-    lateinit var skill: Skill
+    lateinit var skill: Skill*/
 
     @Column(name ="Gewicht")
     var gewicht: Long? = null
