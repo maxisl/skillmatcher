@@ -32,8 +32,9 @@ class ProjectService(
 
     fun create(userEmail: String, project: Project): Project {
         var user = userService.getByEmail(userEmail)
-        project.owner = user
-        project.attendees = mutableListOf(user)
+        // TODO comment out because owner does not exist atm
+        /*project.owner = user
+        project.attendees = mutableListOf(user)*/
         return repository.save(project)
     }
 
@@ -52,8 +53,8 @@ class ProjectService(
     fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
         var project = this.getById(id) // TODO: Maybe this code belongs to the controller?
         var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
-
-        project.attendees?.add(user)
+        /*project.projectUser.add(user)*/ // TODO var user is ApiUser atm, projectUser is Set<ProjectUser>
+        /*project.attendees?.add(user)*/
         repository.save(project)
         return project
     }

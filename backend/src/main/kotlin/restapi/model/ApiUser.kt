@@ -68,6 +68,8 @@ class ApiUser {
     @OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill:Set<UserSkill>
 
+
+
     @OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var projectUser:Set<ProjectUser>
 
