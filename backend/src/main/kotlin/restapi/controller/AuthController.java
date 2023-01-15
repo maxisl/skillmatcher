@@ -1,8 +1,6 @@
 package restapi.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.google.gson.JsonObject;
-import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,15 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import restapi.jsonView.DataView;
-import restapi.model.ApiUser;
+import restapi.model.User;
 import restapi.repository.UserRepository;
 import restapi.data.AuthRequest;
 import restapi.security.JwtTokenProvider;
 // import gson to convert to JSON
-import com.google.gson.Gson;
 
 import javax.validation.Valid;
-import org.json.JSONObject;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,18 +39,18 @@ public class AuthController {
 
     @JsonView(DataView.User.class)
     @PostMapping(value = "/register")
-    public ResponseEntity<ApiUser> register(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<User> register(@Valid @RequestBody AuthRequest authRequest) {
 
-        ApiUser userOptional = userRepository.findUserByEmail(authRequest.getEmail()); //ToDO: use userserice
+        User userOptional = userRepository.findUserByEmail(authRequest.getEmail()); //ToDO: use userserice
         if (userOptional != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this Email already exists!");
         }
 
-        ApiUser user = new ApiUser();
+        User user = new User();
         user.setEmail(authRequest.getEmail());
         user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
 
-        ApiUser created = userRepository.save(user);
+        User created = userRepository.save(user);
 
         return ResponseEntity.ok(created);
     }

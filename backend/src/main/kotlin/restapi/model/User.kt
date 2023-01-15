@@ -32,9 +32,9 @@ public class ApiUser {
     public List<Project> attends;
 }*/
 
-@Entity(name = "ApiUser")         // @Entity to map to table
+@Entity(name = "User")         // @Entity to map to table
 @Data
-class ApiUser {
+class User {
 
     // user id
     @JsonView(DataView.User::class)
@@ -51,7 +51,7 @@ class ApiUser {
     @JsonIgnore // do not show on request
     var password: String? = null
 
-  /**  // user attends
+    /**  // user attends
     @JsonView(DataView.UserWithProjects::class)
     @ManyToMany(mappedBy = "attendees")
     var attends: MutableList<Project>? = null */
@@ -60,18 +60,16 @@ class ApiUser {
     @ManyToMany(mappedBy = "has_skill")
     var has_skill: MutableList<Project>? = null*/
 
-   /** // username
+    /** // username
     @JsonView(DataView.User::class)
     @Column(unique = true)
     var username: String? = null*/
 
-    /*@OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var userSkill:Set<UserSkill>
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    lateinit var userSkill: Set<UserSkill>
 
-
-
-    @OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var projectUser:Set<ProjectUser>*/
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    lateinit var projectUser: Set<ProjectUser>
 
 
     // TODO add skills specified by user - additional column with category of skill mandatory?

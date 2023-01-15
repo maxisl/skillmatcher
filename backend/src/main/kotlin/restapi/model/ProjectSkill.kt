@@ -22,6 +22,6 @@ class ProjectSkill {
     @JoinColumn(name="Skill_id")
     lateinit var skill: Skill*/
 
-    @Column(name ="Gewicht")
-    var gewicht: Long? = null
+    @Column(name ="Weight")
+    var weight: Long? = null
 }

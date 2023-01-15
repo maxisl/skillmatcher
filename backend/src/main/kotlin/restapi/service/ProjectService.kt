@@ -24,7 +24,7 @@ class ProjectService(
 
     fun getAll(): MutableList<Project> = repository.findAll()
 
-    fun getAllByUser(userEmail: String): MutableList<Project> = repository.findByOwnerEmail(userEmail);
+    // fun getAllByUser(userEmail: String): MutableList<Project> = repository.findByOwnerEmail(userEmail);
 
     fun getAllByName(id: String): MutableList<Project> = repository.findByNameContaining(id)
 

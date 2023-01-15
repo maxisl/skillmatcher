@@ -23,10 +23,10 @@ class ProjectController(val service: ProjectService) {
     @GetMapping("/{id}")
     fun getProject(@PathVariable id: Long) = service.getById(id)
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    /*@JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byUserEmail/{userEmail}")
     fun getAllProjectsFromUserEmail(@PathVariable userEmail: String) = service.getAllByUser(userEmail)
-
+*/
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byName/{name}")
     fun findByNameContaining(@PathVariable name: String) = service.getAllByName(name)

@@ -22,13 +22,13 @@ class Skill {
     lateinit var name: String
 
 
-    /*@OneToMany(mappedBy = "Skill", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill:Set<UserSkill>
 
-    @OneToMany(mappedBy = "Skill", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var projectSkill:Set<ProjectSkill>*/
+    @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
+    lateinit var projectSkill:Set<ProjectSkill>
 
-
+    // LEGACY
    /** @JsonView(DataView.UserWithSkill::class)
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
