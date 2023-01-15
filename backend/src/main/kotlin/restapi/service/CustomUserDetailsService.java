@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import restapi.model.ApiUser;
+import restapi.model.User;
 import restapi.repository.UserRepository;
 
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ApiUser user = userRepository.findUserByEmail(username);
+        User user = userRepository.findUserByEmail(username);
         if (user == null){
             throw new UsernameNotFoundException("User not found.");
         }

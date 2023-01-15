@@ -17,7 +17,7 @@ class ProjectUser {
 
     @ManyToOne
     @JoinColumn(name="User_id")
-    lateinit var user:ApiUser
+    lateinit var user:User
 
     @ManyToOne
     @JoinColumn(name="Project_id")

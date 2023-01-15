@@ -16,15 +16,14 @@ class UserSkill {
     var userskill_id: Long? = null
 
     @ManyToOne
-    @JoinColumn(name="User_id")
-    lateinit var user:ApiUser
+    @JoinColumn(name = "User_id")
+    lateinit var user: User
 
     @ManyToOne
-    @JoinColumn(name="Skill_id")
+    @JoinColumn(name = "Skill_id")
     lateinit var skill: Skill
 
-    @Column(name ="Gewicht")
-    var gewicht: Long? = null
-
+    @Column(name = "Weight")
+    var weight: Long? = null
 
 }
