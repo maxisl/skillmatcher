@@ -16,15 +16,16 @@ class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var skill_id: Long? = null
 
-    //skillname
+    //skill name
     @JsonView(DataView.Skill::class)
     @Column(unique = true)
     lateinit var name: String
 
-
+    // a user can have many skills
     @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill:Set<UserSkill>
 
+    // a project can require many skills
     @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var projectSkill:Set<ProjectSkill>
 
