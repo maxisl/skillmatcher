@@ -36,14 +36,16 @@ data class Project(
     val description: String,
 
     //Wie viele reindürfen
+    // TODO should be Int not String?
     @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
     val maxAttendees: String,
 
-    @OneToMany(mappedBy = "Project", cascade = [CascadeType.ALL], orphanRemoval = true)
+    // = attendees?
+    @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
     var projectUser:Set<ProjectUser>,
 
-    @OneToMany(mappedBy = "Project", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
     var projectSkill:Set<ProjectSkill>
 
 
