@@ -32,7 +32,7 @@ public class ApiUser {
     public List<Project> attends;
 }*/
 
-@Entity
+@Entity(name = "ApiUser")         // @Entity to map to table
 @Data
 class ApiUser {
 
@@ -65,13 +65,13 @@ class ApiUser {
     @Column(unique = true)
     var username: String? = null*/
 
-    @OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
+    /*@OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill:Set<UserSkill>
 
 
 
     @OneToMany(mappedBy = "ApiUser", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var projectUser:Set<ProjectUser>
+    lateinit var projectUser:Set<ProjectUser>*/
 
 
     // TODO add skills specified by user - additional column with category of skill mandatory?
