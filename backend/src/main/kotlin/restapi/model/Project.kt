@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank
 // TODO: NotBlank not working in Kotlin!
 
 @Entity
-@Table(name = "tb_projects")
+@Table(name = "Projects")
 data class Project(
     @JsonView(DataView.Project::class)
     @Id
@@ -40,7 +40,6 @@ data class Project(
     @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
     val maxAttendees: String,
-/*
 
     // = attendees?
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -48,7 +47,6 @@ data class Project(
 
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
     var projectSkill:Set<ProjectSkill>
-*/
 
 
         // val skillsNeeded: String,
