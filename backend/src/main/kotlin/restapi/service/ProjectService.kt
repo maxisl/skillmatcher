@@ -1,13 +1,15 @@
 package restapi.service
 
-import restapi.model.Project
-import restapi.repository.UserRepository
-import restapi.repository.ProjectRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import restapi.model.Project
+import restapi.model.ProjectUser
+import restapi.model.User
+import restapi.repository.ProjectRepository
+import restapi.repository.ProjectUserRepository
 
 /**
  * @author  Simon Burmer
@@ -19,7 +21,9 @@ import org.springframework.web.server.ResponseStatusException
 @Service
 class ProjectService(
     @Autowired val repository: ProjectRepository,
-    @Autowired val userService: UserService
+    @Autowired val projectUserRepository: ProjectUserRepository,
+    @Autowired val userService: UserService,
+    @Autowired val projectUserService: ProjectUserService
     ) {
 
     fun getAll(): MutableList<Project> = repository.findAll()
@@ -31,10 +35,16 @@ class ProjectService(
     fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
 
     fun create(userEmail: String, project: Project): Project {
-        var user = userService.getByEmail(userEmail)
-        // TODO comment out because owner does not exist atm
-        /*project.owner = user
-        project.attendees = mutableListOf(user)*/
+        // TODO need to retrieve userId to be able to look up ProjectUser by FK userId
+        val user = userService.getByEmail(userEmail)
+
+        // additionally save relationship
+        val projectUser = ProjectUser()
+        projectUser.user = user
+        projectUser.project = project
+
+        projectUserRepository.save<ProjectUser>(projectUser)
+
         return repository.save(project)
     }
 

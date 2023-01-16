@@ -6,6 +6,8 @@ import restapi.model.ProjectUser
 import restapi.model.User
 
 @Repository
-interface UserRepository : JpaRepository<User, Long>{
-    fun findUserByEmail(email: String): User?
+interface ProjectUserRepository : JpaRepository<ProjectUser, Long>{
+    // fun findProjectUserByProjectUser_id(id: Long): ProjectUser?
+    fun findByUser(user: User): Set<ProjectUser>
 }
+

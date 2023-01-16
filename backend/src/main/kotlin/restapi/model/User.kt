@@ -60,11 +60,6 @@ class User {
     @ManyToMany(mappedBy = "has_skill")
     var has_skill: MutableList<Project>? = null*/
 
-    /** // username
-    @JsonView(DataView.User::class)
-    @Column(unique = true)
-    var username: String? = null*/
-
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill: Set<UserSkill>
 
