@@ -34,8 +34,6 @@ class SkillService(val repository: SkillRepository) {
             )
         }
 
-        println("Name before save $name")
-
         val skill = Skill()
         skill.name = name
         println("Newly created Skill: $skill")
@@ -43,12 +41,28 @@ class SkillService(val repository: SkillRepository) {
         return repository.save(skill)
     }
 
-    /* TODO
-    fun update(email: String, user: User): User {
-        val dbUser = this.getByEmail(email);
-        user.id = dbUser.id;
-        return repository.save(user);
-    }*/
+
+    // TODO HttpRequestMethodNotSupportedException: Request method 'PUT' not supported
+    fun update(id: Long, name: String): ResponseEntity<String> {
+        val skillAvailable: Skill? =
+            repository.findSkillByName(name)
+
+        if (skillAvailable != null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Skill with this name already exists!"
+            )
+        }
+        val skill = repository.findById(id)
+        if (skill.isPresent) {
+            skill.get().name = name
+            repository.save(skill.get())
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+        return ResponseEntity.ok("Skill $id updated successfully: New name: \"$name\"")
+    }
+
 
     fun remove(id: Long): ResponseEntity<String> {
         val skillAvailable: Skill? =
