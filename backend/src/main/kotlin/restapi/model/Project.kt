@@ -41,9 +41,10 @@ data class Project(
     @NotBlank(message = "MaxAttendees is mandatory")
     val maxAttendees: String,
 
+    // TODO mappedBy really correct?
     // = attendees?
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var projectUser:Set<ProjectUser>,
+    var projectUser:MutableList<ProjectUser>,
 
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
     var projectSkill:Set<ProjectSkill>
