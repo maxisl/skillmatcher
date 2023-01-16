@@ -36,17 +36,17 @@ class SkillController(val service: SkillService) {
     // use Map to only extract name value and not pass whole JSON object to create()
     fun createSkill(@RequestBody requestBody: Map<String, String>, principal: Principal) =
         requestBody["name"]?.let { service.create(it) }
-    //fun createSkill(@PathVariable skillname: String,@Valid @RequestBody skillname: String): Project = service.create(userEmail,project)
 
-    /* TODO update
-    @JsonView(DataView.User::class)
-    @PutMapping("/{email}")
-    fun updateUser(@PathVariable email: String, @RequestBody user: User) = service.update(email, user)
-    */
+    @PutMapping("/{id}")
+    fun updateSkill(@PathVariable id: Long, @RequestBody requestBody: Map<String, String>): ResponseEntity<String> {
+        val name = requestBody["name"].toString()
+        return service.update(id, name)
+    }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteSkill(@PathVariable id: Long){
+    fun deleteSkill(@PathVariable id: Long) {
         service.remove(id)
     }
 }
