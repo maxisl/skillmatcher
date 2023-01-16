@@ -1,5 +1,6 @@
 package restapi.service
 
+import org.springdoc.core.converters.AdditionalModelsConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
 import restapi.model.ProjectUser
-import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.ProjectUserRepository
 
@@ -23,8 +23,9 @@ class ProjectService(
     @Autowired val repository: ProjectRepository,
     @Autowired val projectUserRepository: ProjectUserRepository,
     @Autowired val userService: UserService,
-    @Autowired val projectUserService: ProjectUserService
-    ) {
+    @Autowired val projectUserService: ProjectUserService,
+    private val additionalModelsConverter: AdditionalModelsConverter
+) {
 
     fun getAll(): MutableList<Project> = repository.findAll()
 
@@ -35,7 +36,7 @@ class ProjectService(
     fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
 
     fun create(userEmail: String, project: Project): Project {
-        // TODO need to retrieve userId to be able to look up ProjectUser by FK userId
+        // TODO https://stackoverflow.com/questions/1795649/jpa-persisting-a-one-to-many-relationship
         val user = userService.getByEmail(userEmail)
 
         // additionally save relationship
@@ -43,7 +44,7 @@ class ProjectService(
         projectUser.user = user
         projectUser.project = project
 
-        projectUserRepository.save<ProjectUser>(projectUser)
+        project.projectUser.add(projectUser)
 
         return repository.save(project)
     }

@@ -22,6 +22,7 @@ class ProjectSkill {
     @JoinColumn(name="Skill_id")
     lateinit var skill: Skill
 
+    // TODO restrict to value 1-5?
     @Column(name ="Weight")
     var weight: Long? = null
 }
