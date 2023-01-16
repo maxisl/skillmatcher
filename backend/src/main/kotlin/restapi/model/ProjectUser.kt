@@ -13,13 +13,13 @@ class ProjectUser {
     @JsonView(DataView.UserWithProjects::class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var projectUser_id: Long? = null
+    var projectUserId: Long? = null
 
     @ManyToOne
-    @JoinColumn(name="User_id")
-    lateinit var user:User
+    @JoinColumn(name = "User_id")
+    lateinit var user: User
 
     @ManyToOne
-    @JoinColumn(name="Project_id")
+    @JoinColumn(name = "Project_id")
     lateinit var project: Project
 }
