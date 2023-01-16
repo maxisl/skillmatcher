@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.registerUser
+import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.destinations.AllProjectsOverViewPageDestination
 import com.example.skillmatcher.destinations.LoginPageDestination
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
@@ -196,7 +197,7 @@ fun ChatButton() {
 fun LeaveProjectButton(navigator: DestinationsNavigator?) {
     Button(colors = ButtonDefaults.buttonColors(containerColor =Color(LMUGreen.value)),
             onClick = {
-                navigator?.navigate(AllProjectsOverViewPageDestination())
+                navigator?.navigate(AllProjectsListPageDestination())
             },
             modifier = Modifier
                     .fillMaxWidth()

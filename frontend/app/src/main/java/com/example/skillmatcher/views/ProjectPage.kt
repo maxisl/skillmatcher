@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.R
+import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.ramcosta.composedestinations.annotation.Destination
 

@@ -58,41 +58,9 @@ fun LandingPage() {
         Spacer(modifier = Modifier.height(4.dp))
         ProgrammiersprachenHeader()
         Spacer(modifier = Modifier.height(4.dp))
-        getMail()
     }
 
 }
-
-var userName = ""
-
-@Composable
-fun getMail() {
-    val response = remember {
-        mutableStateOf("")
-    }
-
-    Button(
-        onClick = {
-            getUserMail(response)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(text = "Get User Mail", modifier = Modifier.padding(8.dp))
-    }
-    Text(
-        text = response.value,
-        color = Color.White,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold, modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(),
-        textAlign = TextAlign.Center
-    )
-}
-
-
 
 @Composable
 fun TopBar(
