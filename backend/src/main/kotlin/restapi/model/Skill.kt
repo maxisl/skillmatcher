@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView
 import lombok.Data
 import restapi.jsonView.DataView
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Entity
 @Data
@@ -14,7 +13,7 @@ class Skill {
     @JsonView(DataView.Skill::class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var skill_id: Long? = null
+    var id: Long? = null
 
     //skill name
     @JsonView(DataView.Skill::class)
@@ -34,7 +33,7 @@ class Skill {
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
             name= "User_has_skill",
-            joinColumns = [JoinColumn(name = "skill_id")],                // names of the columns in the join table that will store the foreign keys to the Project and ApiUser tables
+            joinColumns = [JoinColumn(name = "id")],                // names of the columns in the join table that will store the foreign keys to the Project and ApiUser tables
             inverseJoinColumns = [JoinColumn(name = "user_id")])
     @OrderColumn(name = "id")
     val has_skill: MutableList<Skill>? = null*/

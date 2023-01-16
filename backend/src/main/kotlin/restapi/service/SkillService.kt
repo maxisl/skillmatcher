@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Skill
-import restapi.model.User
 import restapi.repository.SkillRepository
 
 
@@ -19,9 +18,12 @@ class SkillService(val repository: SkillRepository) {
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
     fun getByName(name: String): Skill =
-        repository.findSkillByName(name) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No skill with this name found!")
+        repository.findSkillByName(name) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No skill with this name found!"
+        )
 
-    fun create(name: String)/*: ResponseEntity<Skill> */: Skill{
+    fun create(name: String): Skill {
         val skillAvailable: Skill? =
             repository.findSkillByName(name)
 
@@ -31,6 +33,8 @@ class SkillService(val repository: SkillRepository) {
                 "Skill with this name already exists!"
             )
         }
+
+        println("Name before save $name")
 
         val skill = Skill()
         skill.name = name
@@ -46,10 +50,19 @@ class SkillService(val repository: SkillRepository) {
         return repository.save(user);
     }*/
 
-    fun remove(id: Long) {
-        val skill = this.getById(id);
-        skill.skill_id?.let { repository.deleteById(it) };
-        return
+    fun remove(id: Long): ResponseEntity<String> {
+        val skillAvailable: Skill? =
+            repository.findSkillById(id)
+
+        if (skillAvailable != null) {
+            val skill = this.getById(id);
+            skill.id?.let { repository.deleteById(it) };
+            return ResponseEntity.ok("Skill successfully deleted!")
+        }
+        throw ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Skill with this id doesn't exist!"
+        )
     }
 
 

@@ -26,14 +26,16 @@ class SkillController(val service: SkillService) {
     @GetMapping("/{id}")
     fun getSkill(@PathVariable id: Long, principal: Principal) = service.getById(id)
 
-    /*@JsonView(DataView.UserWithSkill::class)
-    @GetMapping("/{name}")
-    fun getSkillByName(@PathVariable name: String, principal: Principal) = service.getByName(name)*/
+    @JsonView(DataView.UserWithSkill::class)
+    @GetMapping("/byName/{name}")
+    fun getSkillByName(@PathVariable name: String, principal: Principal) = service.getByName(name)
 
     @JsonView(DataView.Skill::class)
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createSkill(@Valid @RequestBody name: String) = service.create(name)
+    // use Map to only extract name value and not pass whole JSON object to create()
+    fun createSkill(@RequestBody requestBody: Map<String, String>, principal: Principal) =
+        requestBody["name"]?.let { service.create(it) }
     //fun createSkill(@PathVariable skillname: String,@Valid @RequestBody skillname: String): Project = service.create(userEmail,project)
 
     /* TODO update
@@ -42,13 +44,11 @@ class SkillController(val service: SkillService) {
     fun updateUser(@PathVariable email: String, @RequestBody user: User) = service.update(email, user)
     */
 
-    /* TODO delete
-    @DeleteMapping("/{email}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
-        service.remove(email)
-        return ResponseEntity.ok("User successfully deleted!")
-    }*/
+    fun deleteSkill(@PathVariable id: Long){
+        service.remove(id)
+    }
 }
 
 
