@@ -65,6 +65,9 @@ public class AuthController {
                         authRequest.getPassword()
                 ));
 
+        ResponseEntity<String> token = ResponseEntity.ok(
+            (jwtTokenProvider.generateToken(authentication)));
+        return token;
 
     }
 }
