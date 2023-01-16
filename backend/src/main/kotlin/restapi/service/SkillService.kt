@@ -2,6 +2,7 @@ package restapi.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Skill
@@ -14,25 +15,27 @@ class SkillService(val repository: SkillRepository) {
 
     fun getAll(): MutableList<Skill> = repository.findAll()
 
-    fun getById(id: Long): Skill =
+    fun getById(id: Long) =
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
-    /* TODO (how to deal with multiple skills with same name? name != PK)
-    fun getByName(name: String): MutableList<Skill> =
+    fun getByName(name: String): Skill =
         repository.findSkillByName(name) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No skill with this name found!")
-    */
 
-    fun create(name: String): Skill {
+    fun create(name: String)/*: ResponseEntity<Skill> */: Skill{
         val skillAvailable: Skill? =
             repository.findSkillByName(name)
+
         if (skillAvailable != null) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Skill with this name already exists!"
             )
         }
+
         val skill = Skill()
         skill.name = name
+        println("Newly created Skill: $skill")
+
         return repository.save(skill)
     }
 

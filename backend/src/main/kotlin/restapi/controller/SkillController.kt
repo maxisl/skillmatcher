@@ -26,6 +26,10 @@ class SkillController(val service: SkillService) {
     @GetMapping("/{id}")
     fun getSkill(@PathVariable id: Long, principal: Principal) = service.getById(id)
 
+    /*@JsonView(DataView.UserWithSkill::class)
+    @GetMapping("/{name}")
+    fun getSkillByName(@PathVariable name: String, principal: Principal) = service.getByName(name)*/
+
     @JsonView(DataView.Skill::class)
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
