@@ -184,6 +184,7 @@ fun ChatButton() {
     Button(
         onClick = {
             //kommt man zur Chatseite
+
         },
         modifier = Modifier
                 .fillMaxWidth()
