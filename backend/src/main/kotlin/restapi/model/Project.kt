@@ -1,11 +1,8 @@
 package restapi.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonView
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
 import restapi.jsonView.DataView
-import restapi.jsonView.DataView.UserWithProjects
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -81,7 +78,7 @@ data class Project(
        @JsonView(DataView.Project::class)
        @Id
        @GeneratedValue(strategy = GenerationType.AUTO)
-       var id: Long,
+       var id: Long?,
 
        @JsonView(DataView.Project::class)
        @NotBlank(message = "Name is mandatory")
@@ -97,9 +94,12 @@ data class Project(
 
        @JsonView(DataView.Project::class)
        @ManyToMany(mappedBy = "projects")
+       // @JsonBackReference
        var users: Set<User>,
 
        @JsonView(DataView.Project::class)
        @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
        var projectSkill:Set<ProjectSkill>
    )
+
+data class ProjectRequest(val name: String, val description: String, val maxAttendees: String)

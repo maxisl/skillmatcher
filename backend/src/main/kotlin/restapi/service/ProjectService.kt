@@ -4,13 +4,9 @@ import org.springdoc.core.converters.AdditionalModelsConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
-import restapi.model.ProjectUser
-import restapi.model.Skill
-import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.ProjectUserRepository
 import restapi.repository.UserRepository
@@ -63,17 +59,22 @@ class ProjectService(
         // then store completed project
 
         val project = Project(
+            id = null,
             name = name,
             description = description,
             maxAttendees = maxAttendees,
-            users = emptySet(),
-            projectSkill = emptySet()
+            users = setOf(),
+            projectSkill = setOf()
         )
-        val user = userRepository.findByEmail(userEmail)
-        user.projects.add(project)
-        project.users.add(user)
-        projectRepository.save(project)
-        userRepository.save(user)
+        val user = userRepository.findUserByEmail(userEmail)
+        if(user != null) {
+            user.projects += project
+            project.users += user
+            repository.save(project)
+            userRepository.save(user)
+        } else {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
+        }
         return project
 
 
