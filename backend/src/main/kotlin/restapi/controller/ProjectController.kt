@@ -34,7 +34,9 @@ class ProjectController(val service: ProjectService) {
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PostMapping("/{userEmail}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProject(@PathVariable userEmail: String,@Valid @RequestBody project: Project): Project = service.create(userEmail,project)
+    fun createProject(@PathVariable userEmail: String,@Valid @RequestBody project: Project): Project {
+        val project = service.create(userEmail, project.name, )
+        return service.create(userEmail, project)}
 
     @DeleteMapping("/{id}") // TODO: Only owner can delete projects
     @ResponseStatus(HttpStatus.NO_CONTENT)
