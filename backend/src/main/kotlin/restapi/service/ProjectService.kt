@@ -4,12 +4,16 @@ import org.springdoc.core.converters.AdditionalModelsConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
 import restapi.model.ProjectUser
+import restapi.model.Skill
+import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.ProjectUserRepository
+import restapi.repository.UserRepository
 
 /**
  * @author  Simon Burmer
@@ -21,6 +25,7 @@ import restapi.repository.ProjectUserRepository
 @Service
 class ProjectService(
     @Autowired val repository: ProjectRepository,
+    @Autowired val userRepository: UserRepository,
     @Autowired val projectUserRepository: ProjectUserRepository,
     @Autowired val userService: UserService,
     @Autowired val projectUserService: ProjectUserService,
@@ -35,10 +40,9 @@ class ProjectService(
 
     fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
 
-    fun create(userEmail: String, project: Project): Project {
+    fun create(userEmail: String, name: String, description: String, maxAttendees: String): Project {
         // TODO https://stackoverflow.com/questions/1795649/jpa-persisting-a-one-to-many-relationship
-        val user = userService.getByEmail(userEmail)
-
+        /*
         // additionally save relationship
         val projectUser = ProjectUser()
         projectUser.user = user
@@ -46,7 +50,34 @@ class ProjectService(
 
         project.projectUser.add(projectUser)
 
-        return repository.save(project)
+        return repository.save(project)*/
+        /*val projectUser = ProjectUser(user)
+        project.projectUser = setOf(projectUser)
+        println("Project User: ${project.projectUser}")
+        println("Project: $project")
+        return repository.save(project)*/
+
+        // first create empty project to generate id
+        // then populate project with parameters from request
+        // then save current user to project <users> set
+        // then store completed project
+
+        val project = Project(
+            name = name,
+            description = description,
+            maxAttendees = maxAttendees,
+            users = emptySet(),
+            projectSkill = emptySet()
+        )
+        val user = userRepository.findByEmail(userEmail)
+        user.projects.add(project)
+        project.users.add(user)
+        projectRepository.save(project)
+        userRepository.save(user)
+        return project
+
+
+
     }
 
     fun remove(id: Long) {

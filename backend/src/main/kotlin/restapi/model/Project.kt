@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank
 
 
 // TODO: NotBlank not working in Kotlin!
-
+/*
 @Entity
 @Table(name = "Projects")
 data class Project(
@@ -42,12 +42,12 @@ data class Project(
     val maxAttendees: String,
 
     // TODO mappedBy really correct?
-    // = attendees?
+    // attendees
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var projectUser:MutableList<ProjectUser>,
+    var projectUser:Set<ProjectUser>,
 
     @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var projectSkill:Set<ProjectSkill>
+    var projectSkill:Set<ProjectSkill>*/
 
 
         // val skillsNeeded: String,
@@ -73,4 +73,33 @@ data class Project(
     @OrderColumn(name = "id")
     var attendees: MutableList<ApiUser>?                                // attendees field is a nullable list of ApiUser objects
      */
-)
+//)
+
+   @Entity
+   @Table(name = "Projects")
+   data class Project(
+       @JsonView(DataView.Project::class)
+       @Id
+       @GeneratedValue(strategy = GenerationType.AUTO)
+       var id: Long,
+
+       @JsonView(DataView.Project::class)
+       @NotBlank(message = "Name is mandatory")
+       val name: String,
+
+       @JsonView(DataView.Project::class)
+       @NotBlank(message = "Description is mandatory")
+       val description: String,
+
+       @JsonView(DataView.Project::class)
+       @NotBlank(message = "MaxAttendees is mandatory")
+       val maxAttendees: String,
+
+       @JsonView(DataView.Project::class)
+       @ManyToMany(mappedBy = "projects")
+       var users: Set<User>,
+
+       @JsonView(DataView.Project::class)
+       @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
+       var projectSkill:Set<ProjectSkill>
+   )

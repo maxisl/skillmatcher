@@ -31,6 +31,7 @@ public class ApiUser {
     @ManyToMany(mappedBy = "attendees")
     public List<Project> attends;
 }*/
+/*
 
 @Entity(name = "User")         // @Entity to map to table
 @Data
@@ -51,14 +52,18 @@ class User {
     @JsonIgnore // do not show on request
     var password: String? = null
 
-    /**  // user attends
+    */
+/**  // user attends
     @JsonView(DataView.UserWithProjects::class)
     @ManyToMany(mappedBy = "attendees")
-    var attends: MutableList<Project>? = null */
+    var attends: MutableList<Project>? = null *//*
 
-    /**@JsonView(DataView.UserWithSkill::class)
+
+    */
+/**@JsonView(DataView.UserWithSkill::class)
     @ManyToMany(mappedBy = "has_skill")
-    var has_skill: MutableList<Project>? = null*/
+    var has_skill: MutableList<Project>? = null*//*
+
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     lateinit var userSkill: Set<UserSkill>
@@ -70,4 +75,28 @@ class User {
     // TODO add skills specified by user - additional column with category of skill mandatory?
     // TODO add profile picture
 }
+*/
 
+@Entity(name = "Users")
+data class User(
+    @JsonView(DataView.User::class)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long,
+
+    // user email
+    @JsonView(DataView.User::class)
+    @Column(unique = true)
+    var email: String? = null,
+
+    // user password
+    @JsonIgnore // do not show on request
+    var password: String? = null,
+
+    @JsonView(DataView.User::class)
+    @ManyToMany(cascade = [CascadeType.ALL])
+    @JoinTable(name = "user_project",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")])
+    var projects: Set<Project>
+)
