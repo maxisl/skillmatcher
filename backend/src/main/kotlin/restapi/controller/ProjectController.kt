@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
+import restapi.model.ProjectRequest
 import java.security.Principal
 import javax.validation.Valid
 
@@ -34,9 +35,18 @@ class ProjectController(val service: ProjectService) {
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PostMapping("/{userEmail}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createProject(@PathVariable userEmail: String,@Valid @RequestBody project: Project): Project {
-        val project = service.create(userEmail, project.name, )
-        return service.create(userEmail, project)}
+    fun createProject(
+        @PathVariable userEmail: String,
+        @Valid @RequestBody projectRequest: ProjectRequest
+    ): ResponseEntity<Project> {
+        val project = service.create(
+            userEmail,
+            projectRequest.name,
+            projectRequest.description,
+            projectRequest.maxAttendees
+        )
+        return ResponseEntity.ok(project)
+    }
 
     @DeleteMapping("/{id}") // TODO: Only owner can delete projects
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -47,9 +57,11 @@ class ProjectController(val service: ProjectService) {
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PutMapping("/{id}") // TODO:Not Working Jet / Only owner should can alter project!
-    fun updateProject(@PathVariable id: Long, @RequestBody project: Project) = service.update(id, project)
+    fun updateProject(@PathVariable id: Long, @RequestBody project: Project) =
+        service.update(id, project)
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PutMapping("/attend/{id}")
-    fun attendProject(@PathVariable id: Long, principal: Principal) = service.attend(id,principal.getName())
+    fun attendProject(@PathVariable id: Long, principal: Principal) =
+        service.attend(id, principal.getName())
 }

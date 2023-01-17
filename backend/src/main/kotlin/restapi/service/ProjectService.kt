@@ -4,13 +4,9 @@ import org.springdoc.core.converters.AdditionalModelsConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
-import restapi.model.ProjectUser
-import restapi.model.Skill
-import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.ProjectUserRepository
 import restapi.repository.UserRepository
@@ -42,20 +38,6 @@ class ProjectService(
 
     fun create(userEmail: String, name: String, description: String, maxAttendees: String): Project {
         // TODO https://stackoverflow.com/questions/1795649/jpa-persisting-a-one-to-many-relationship
-        /*
-        // additionally save relationship
-        val projectUser = ProjectUser()
-        projectUser.user = user
-        projectUser.project = project
-
-        project.projectUser.add(projectUser)
-
-        return repository.save(project)*/
-        /*val projectUser = ProjectUser(user)
-        project.projectUser = setOf(projectUser)
-        println("Project User: ${project.projectUser}")
-        println("Project: $project")
-        return repository.save(project)*/
 
         // first create empty project to generate id
         // then populate project with parameters from request
@@ -63,21 +45,23 @@ class ProjectService(
         // then store completed project
 
         val project = Project(
+            id = null,
             name = name,
             description = description,
             maxAttendees = maxAttendees,
-            users = emptySet(),
-            projectSkill = emptySet()
+            users = mutableListOf(),
+            projectSkill = mutableListOf()
         )
-        val user = userRepository.findByEmail(userEmail)
-        user.projects.add(project)
-        project.users.add(user)
-        projectRepository.save(project)
-        userRepository.save(user)
+        val user = userRepository.findUserByEmail(userEmail)
+        if(user != null) {
+            user.projects += project
+            project.users.add(user)
+            repository.save(project)
+            userRepository.save(user)
+        } else {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
+        }
         return project
-
-
-
     }
 
     fun remove(id: Long) {
