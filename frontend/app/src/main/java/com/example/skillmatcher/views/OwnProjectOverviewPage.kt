@@ -181,7 +181,7 @@ fun ProjectDescription(fieldName:String, description:String,
 }
 @Composable
 fun ChatButton() {
-    Button(colors = ButtonDefaults.buttonColors(containerColor =Color(LMUGreen.value)),
+    Button(
         onClick = {
             //kommt man zur Chatseite
         },
@@ -195,7 +195,7 @@ fun ChatButton() {
 
 @Composable
 fun LeaveProjectButton(navigator: DestinationsNavigator?) {
-    Button(colors = ButtonDefaults.buttonColors(containerColor =Color(LMUGreen.value)),
+    Button(
             onClick = {
                 navigator?.navigate(AllProjectsListPageDestination())
             },

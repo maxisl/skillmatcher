@@ -118,6 +118,7 @@ fun RegisterPage() {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 createSKillCards()
+                registerUser()
             }
 
         }
@@ -215,6 +216,15 @@ fun drawSkill(name: String): Skill? {
     catch (e :NumberFormatException){
         return null;
     }
+}
+
+@Composable
+fun registerUser(){
+        Button(onClick = {
+
+        }) {
+            Text(text = "Register")
+        }
 }
 
 
