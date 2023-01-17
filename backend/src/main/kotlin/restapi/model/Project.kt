@@ -94,12 +94,12 @@ data class Project(
 
        @JsonView(DataView.Project::class)
        @ManyToMany(mappedBy = "projects")
-       // @JsonBackReference
-       var users: Set<User>,
+       @JsonBackReference
+       var users: MutableList<User>,
 
        @JsonView(DataView.Project::class)
        @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-       var projectSkill:Set<ProjectSkill>
+       var projectSkill:MutableList<ProjectSkill>
    )
 
 data class ProjectRequest(val name: String, val description: String, val maxAttendees: String)

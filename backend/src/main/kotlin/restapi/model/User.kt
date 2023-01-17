@@ -1,6 +1,7 @@
 package restapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import restapi.jsonView.DataView;
@@ -98,5 +99,6 @@ data class User(
     @JoinTable(name = "user_project",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")])
-    var projects: Set<Project>
+    @JsonManagedReference
+    var projects: MutableList<Project>
 )

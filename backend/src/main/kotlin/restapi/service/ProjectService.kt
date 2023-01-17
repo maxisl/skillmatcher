@@ -38,20 +38,6 @@ class ProjectService(
 
     fun create(userEmail: String, name: String, description: String, maxAttendees: String): Project {
         // TODO https://stackoverflow.com/questions/1795649/jpa-persisting-a-one-to-many-relationship
-        /*
-        // additionally save relationship
-        val projectUser = ProjectUser()
-        projectUser.user = user
-        projectUser.project = project
-
-        project.projectUser.add(projectUser)
-
-        return repository.save(project)*/
-        /*val projectUser = ProjectUser(user)
-        project.projectUser = setOf(projectUser)
-        println("Project User: ${project.projectUser}")
-        println("Project: $project")
-        return repository.save(project)*/
 
         // first create empty project to generate id
         // then populate project with parameters from request
@@ -63,8 +49,8 @@ class ProjectService(
             name = name,
             description = description,
             maxAttendees = maxAttendees,
-            users = setOf(),
-            projectSkill = setOf()
+            users = mutableListOf(),
+            projectSkill = mutableListOf()
         )
         val user = userRepository.findUserByEmail(userEmail)
         if(user != null) {
@@ -76,9 +62,6 @@ class ProjectService(
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
         }
         return project
-
-
-
     }
 
     fun remove(id: Long) {
