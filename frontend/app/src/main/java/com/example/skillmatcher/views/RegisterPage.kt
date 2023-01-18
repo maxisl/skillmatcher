@@ -9,20 +9,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
@@ -57,6 +65,12 @@ fun RegisterPage() {
         mutableStateOf("")
     }
 
+    var isWrongMail by rememberSaveable  { mutableStateOf(false)}
+
+    fun validate(text: String) {
+            isWrongMail = true
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,12 +98,25 @@ fun RegisterPage() {
 
                 OutlinedTextField(
                     value = eMail.value,
-                    onValueChange = { eMail.value = it },
+                    onValueChange = { eMail.value = it
+                                    isWrongMail},
                     placeholder = { Text(text = "Enter Email") },
                     modifier = Modifier
                         .padding(16.dp),
                     singleLine = true,
-                )
+                    trailingIcon = {
+                        if (isWrongMail)
+                            Icon(Icons.Filled.Warning,"error", tint = Color.Red)
+                    },
+                    keyboardActions = KeyboardActions { validate(eMail.value.text) },
+                    )
+                if (isWrongMail) {
+                    Text(
+                        text = "Error message",
+                        color = Color.Red,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -132,29 +159,18 @@ fun RegisterPage() {
 
                 var selectedSkills = createSKillCards()
 
-                var inputCheck: InputCheck? = registerUserButton(eMail.value.text,userName.value.text,
+                registerUserButton(eMail.value.text,userName.value.text,
                     pw.value.text,pwSecond.value.text,profileDescription, selectedSkills
                     ,profileImage,response)
 
-                if (inputCheck != null ) {
-                    if(inputCheck.error){
-                        val errorNoteification: String = inputCheck.notifications.joinToString(separator = " ")
-                        Text(
-                            text = errorNoteification,
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold, modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
             }
 
         }
     }
+
 }
+
+
 
 @Composable
 fun createSKillCards(): MutableList<Skill?> {
@@ -253,7 +269,7 @@ fun registerUserButton(
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
     response: MutableState<String>
-): InputCheck? {
+){
         var error: Boolean = false
         val notifications = mutableListOf<String>()
         var errorNotifications: InputCheck? = null
@@ -281,6 +297,8 @@ fun registerUserButton(
                 notifications.add("Please ad at least one Skill to your Profile")
             }
 
+
+
             if(error){
                 errorNotifications = InputCheck(error, notifications)
             }else{
@@ -292,7 +310,24 @@ fun registerUserButton(
             Text(text = "Register")
         }
 
-        return errorNotifications
+}
+
+@Composable
+fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) -> Unit) {
+    val eventHandler = rememberUpdatedState(onEvent)
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { owner, event ->
+            eventHandler.value(owner, event)
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 }
 
 @Composable
