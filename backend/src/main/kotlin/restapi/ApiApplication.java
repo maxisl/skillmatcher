@@ -1,10 +1,14 @@
 package restapi;
 
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import restapi.model.Skill;
+import restapi.repository.SkillRepository;
 import restapi.repository.UserRepository;
 import restapi.security.JwtTokenProvider;
 
@@ -13,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 public class ApiApplication implements CommandLineRunner {
+
+  @Autowired
+  private SkillRepository skillRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -40,6 +47,17 @@ public class ApiApplication implements CommandLineRunner {
       ApiUser saved = userRepository.save(user);
 
       System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));*/
+      List<String> Skills = Arrays.asList("Cloud", "AI", "React", "Java", "Python", "Project Management", "IoT", "R", "Blockchain", "C");
+
+      for(String name : Skills) {
+        // check if skills table is empty; if empty, insert predefined skills
+        if(skillRepository.count() == 0) {
+          Skill skill = new Skill();
+          skill.setName(name);
+          skillRepository.save(skill);
+        }
+      }
+
     } catch (Exception e) {
       log.error("Error: ", e);
     }

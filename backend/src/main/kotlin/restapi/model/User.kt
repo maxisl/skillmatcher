@@ -78,7 +78,7 @@ class User {
 }
 */
 
-@Entity(name = "Users")
+@Entity(name = "users")
 data class User(
     @JsonView(DataView.User::class)
     @Id

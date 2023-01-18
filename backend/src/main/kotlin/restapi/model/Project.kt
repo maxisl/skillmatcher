@@ -73,7 +73,7 @@ data class Project(
 //)
 
    @Entity
-   @Table(name = "Projects")
+   @Table(name = "projects")
    data class Project(
        @JsonView(DataView.Project::class)
        @Id

@@ -40,7 +40,7 @@ class ProjectController(val service: ProjectService) {
         return ResponseEntity.ok(project)
         }
 
-    @DeleteMapping("/{id}") // TODO: Only owner can delete projects
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
         service.remove(id)

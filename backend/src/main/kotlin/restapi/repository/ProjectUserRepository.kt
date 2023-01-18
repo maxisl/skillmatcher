@@ -1,3 +1,4 @@
+/*
 package restapi.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
@@ -11,3 +12,4 @@ interface ProjectUserRepository : JpaRepository<ProjectUser, Long>{
     fun findByUser(user: User): Set<ProjectUser>
 }
 
+*/

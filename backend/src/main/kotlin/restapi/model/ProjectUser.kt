@@ -6,9 +6,9 @@ import restapi.jsonView.DataView
 import java.io.Serializable
 import javax.persistence.*
 
-@Entity
+/*@Entity
 @Data
-@Table(name = "ProjectUser")
+@Table(name = "projectUser")
 class ProjectUser {
 
     @JsonView(DataView.UserWithProjects::class)
@@ -24,7 +24,7 @@ class ProjectUser {
     @ManyToOne
     @JoinColumn(name = "Project_id")
     lateinit var project: Project
-}
+}*/
 /*
 
 @Embeddable

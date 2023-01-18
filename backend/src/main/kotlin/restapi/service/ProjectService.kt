@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
 import restapi.repository.ProjectRepository
-import restapi.repository.ProjectUserRepository
 import restapi.repository.UserRepository
 
 /**
@@ -22,9 +21,7 @@ import restapi.repository.UserRepository
 class ProjectService(
     @Autowired val repository: ProjectRepository,
     @Autowired val userRepository: UserRepository,
-    @Autowired val projectUserRepository: ProjectUserRepository,
     @Autowired val userService: UserService,
-    @Autowired val projectUserService: ProjectUserService,
     private val additionalModelsConverter: AdditionalModelsConverter
 ) {
 
