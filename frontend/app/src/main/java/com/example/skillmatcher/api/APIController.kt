@@ -143,16 +143,16 @@ fun postLoginUserData(
 }
 
 fun registerUser(
-    ctx: Context,
-    userName: MutableState<TextFieldValue>,
+    //ctx: Context,  Todo: brauchen wir den context hier?
+    userName: String,
     // job = user password
-    job: MutableState<TextFieldValue>,
+    job: String,
     result: MutableState<String>
 ) {
     val retrofitAPI = createRetrofitInstance()
 
     try {
-        val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
+        val userLoginModel = UserLoginModel(userName, job)
         val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
         call.enqueue(object : Callback<ApiUser> {
             override fun onResponse(

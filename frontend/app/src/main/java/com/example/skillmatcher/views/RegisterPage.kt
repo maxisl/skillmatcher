@@ -1,5 +1,6 @@
 package com.example.skillmatcher.views
 
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
@@ -17,18 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.chargemap.compose.numberpicker.NumberPicker
+import com.example.skillmatcher.api.registerUser
+import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
+import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,12 +37,24 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun RegisterPage() {
 
+    val eMail = remember {
+        mutableStateOf(TextFieldValue())
+    }
+
     val userName = remember {
         mutableStateOf(TextFieldValue())
     }
 
     val pw = remember {
         mutableStateOf(TextFieldValue())
+    }
+
+    val pwSecond = remember {
+        mutableStateOf(TextFieldValue())
+    }
+
+    val response = remember {
+        mutableStateOf("")
     }
 
     Column(
@@ -65,13 +78,13 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                var profilImage = imagePicker()
+                var profileImage = imagePicker()
 
                 Spacer(modifier = Modifier.height(5.dp))
 
                 OutlinedTextField(
-                    value = userName.value,
-                    onValueChange = { userName.value = it },
+                    value = eMail.value,
+                    onValueChange = { eMail.value = it },
                     placeholder = { Text(text = "Enter Email") },
                     modifier = Modifier
                         .padding(16.dp),
@@ -81,8 +94,8 @@ fun RegisterPage() {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 OutlinedTextField(
-                    value = pw.value,
-                    onValueChange = { pw.value = it },
+                    value = userName.value,
+                    onValueChange = { userName.value = it },
                     placeholder = { Text(text = "Enter Username") },
                     modifier = Modifier
                         .padding(16.dp),
@@ -103,8 +116,8 @@ fun RegisterPage() {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 OutlinedTextField(
-                    value = pw.value,
-                    onValueChange = { pw.value = it },
+                    value = pwSecond.value,
+                    onValueChange = { pwSecond.value = it },
                     placeholder = { Text(text = "Repeat Password") },
                     modifier = Modifier
                         .padding(16.dp),
@@ -113,12 +126,30 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                var profilDescription = projectDescription()
+                var profileDescription = projectDescription()
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSKillCards()
-                registerUser()
+                var selectedSkills = createSKillCards()
+
+                var inputCheck: InputCheck? = registerUserButton(eMail.value.text,userName.value.text,
+                    pw.value.text,pwSecond.value.text,profileDescription, selectedSkills
+                    ,profileImage,response)
+
+                if (inputCheck != null ) {
+                    if(inputCheck.error){
+                        val errorNoteification: String = inputCheck.notifications.joinToString(separator = " ")
+                        Text(
+                            text = errorNoteification,
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold, modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
 
         }
@@ -126,16 +157,22 @@ fun RegisterPage() {
 }
 
 @Composable
-fun createSKillCards() {
+fun createSKillCards(): MutableList<Skill?> {
 
+    val listOfSelectedSkills = mutableListOf<Skill?>()
+    var selectedSkill:Skill?
     val listOfSkills = getSkills()
     LazyRow() {
         listOfSkills.iterator().forEach { skill ->
             item() {
-                drawSkill(skill.name)
+                selectedSkill = drawSkill(skill.name)
+                 if (selectedSkill != null) {
+                    listOfSelectedSkills.add(selectedSkill)
+                }
             }
         }
     }
+    return listOfSelectedSkills
 }
 
 fun getSkills(): MutableList<Skill> {
@@ -198,15 +235,6 @@ fun drawSkill(name: String): Skill? {
                     maxLines = 1,
 
                 )
-                /* NumberPicker(
-                    value = pickerValue,
-                    textStyle = TextStyle(Color.White),
-                    dividersColor = LMUGreen,
-                    range = 0..5,
-                    onValueChange = {
-                        pickerValue = it
-                    }
-                )*/
             }
 
         }
@@ -219,12 +247,80 @@ fun drawSkill(name: String): Skill? {
 }
 
 @Composable
-fun registerUser(){
+fun registerUserButton(
+    eMail: String, username: String, pw: String, pwSecond: String,
+    profileDescription: String,
+    selectedSkills: MutableList<Skill?>,
+    profileImage: Bitmap?,
+    response: MutableState<String>
+): InputCheck? {
+        var error: Boolean = false
+        val notifications = mutableListOf<String>()
+        var errorNotifications: InputCheck? = null
+
         Button(onClick = {
+
+            if(eMail.isEmpty()){
+                error = true
+                notifications.add("Please ad a E-Mail to your Profile")
+            }
+            if(username.isEmpty()){
+                error = true
+                notifications.add("Please ad a Username to your Profile")
+            }
+            if(pw.isEmpty()){
+                error = true
+                notifications.add("Please ad a Password to your Profile")
+            }
+            if(pwSecond.isEmpty() or (pw != pwSecond)){
+                error = true
+                notifications.add("Password is not identical to your Profile")
+            }
+            if(selectedSkills.size < 1){
+                error = true
+                notifications.add("Please ad at least one Skill to your Profile")
+            }
+
+            if(error){
+                errorNotifications = InputCheck(error, notifications)
+            }else{
+                errorNotifications = InputCheck(false, notifications)
+                createUser(eMail,username,pw,profileDescription,selectedSkills,profileImage,response)
+            }
 
         }) {
             Text(text = "Register")
         }
+
+        return errorNotifications
 }
+
+@Composable
+private fun errorMessage(){
+    Text(
+        text = "Register",
+        fontSize = 60.sp,
+        fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
+        color = Color.White
+    )
+}
+
+
+fun createUser(
+    eMail: String, username: String, pw: String,
+    profileDescription: String,
+    selectedSkills: MutableList<Skill?>,
+    profileImage: Bitmap?,
+    response: MutableState<String>
+){
+
+    val newUser = User(username,eMail,
+        created = LocalDateTime.now(),pw,profileDescription,selectedSkills,profileImage)
+
+    //registerUser(newUser.id,newUser.password,response) //Todo: restliche values hinzufügen
+}
+
+
+
 
 
