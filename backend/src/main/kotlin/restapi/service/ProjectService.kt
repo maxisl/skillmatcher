@@ -46,13 +46,13 @@ class ProjectService(
             name = name,
             description = description,
             maxAttendees = maxAttendees,
-            users = mutableListOf(),
-            projectSkill = mutableListOf()
+            attendees = mutableListOf(),
+            requiredSkills = mutableListOf()
         )
         val user = userRepository.findUserByEmail(userEmail)
         if(user != null) {
             user.projects += project
-            project.users += user
+            project.attendees += user
             repository.save(project)
             userRepository.save(user)
         } else {

@@ -2,6 +2,7 @@ package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonView
 import lombok.Data
+import org.apache.commons.lang3.mutable.Mutable
 import restapi.jsonView.DataView
 import javax.persistence.*
 
@@ -20,14 +21,14 @@ class Skill {
     @Column(unique = true)
     lateinit var name: String
 
-    // a user can have many skills
-    @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var userSkill:Set<UserSkill>
+    @JsonView(DataView.Skill::class)
+    @ManyToMany(mappedBy = "requiredSkills")
+    var requiredByProjects: MutableList<Project> = mutableListOf()
 
-    // a project can require many skills
-    @OneToMany(mappedBy = "skill", cascade = [CascadeType.ALL], orphanRemoval = true)
-    lateinit var projectSkill:Set<ProjectSkill>
-
+    @JsonView(DataView.Skill::class)
+    @ManyToMany(mappedBy = "skills")
+    var usersWithSkill: MutableList<User> = mutableListOf()
+}
     // LEGACY
    /** @JsonView(DataView.UserWithSkill::class)
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -37,5 +38,3 @@ class Skill {
             inverseJoinColumns = [JoinColumn(name = "user_id")])
     @OrderColumn(name = "id")
     val has_skill: MutableList<Skill>? = null*/
-
-}

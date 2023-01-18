@@ -55,15 +55,15 @@ class User {
 
     */
 /**  // user attends
-    @JsonView(DataView.UserWithProjects::class)
-    @ManyToMany(mappedBy = "attendees")
-    var attends: MutableList<Project>? = null *//*
+@JsonView(DataView.UserWithProjects::class)
+@ManyToMany(mappedBy = "attendees")
+var attends: MutableList<Project>? = null *//*
 
 
     */
 /**@JsonView(DataView.UserWithSkill::class)
-    @ManyToMany(mappedBy = "has_skill")
-    var has_skill: MutableList<Project>? = null*//*
+@ManyToMany(mappedBy = "has_skill")
+var has_skill: MutableList<Project>? = null*//*
 
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -96,9 +96,21 @@ data class User(
 
     @JsonView(DataView.User::class)
     @ManyToMany(cascade = [CascadeType.ALL])
-    @JoinTable(name = "user_project",
+    @JoinTable(
+        name = "user_project",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")])
+        inverseJoinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")]
+    )
     @JsonManagedReference
-    var projects: MutableList<Project>
+    var projects: MutableList<Project>,
+
+    @JsonView(DataView.User::class)
+    @ManyToMany
+    @JoinTable(
+        name = "user_skills",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
+    )
+    var skills: MutableList<Skill> = mutableListOf()
+
 )

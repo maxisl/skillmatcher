@@ -1,3 +1,4 @@
+/*
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonView
@@ -26,4 +27,4 @@ class UserSkill {
     @Column(name = "Weight")
     var weight: Long? = null
 
-}
+}*/

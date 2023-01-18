@@ -95,11 +95,18 @@ data class Project(
        @JsonView(DataView.Project::class)
        @ManyToMany(mappedBy = "projects")
        @JsonBackReference
-       var users: MutableList<User>,
+       var attendees: MutableList<User>,
 
-       @JsonView(DataView.Project::class)
-       @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-       var projectSkill:MutableList<ProjectSkill>
+       /*@JsonView(DataView.Project::class)
+       @OneToMany(mappedBy = "projectSkill", cascade = [CascadeType.ALL], orphanRemoval = true)
+       var projectSkill:MutableList<Skill>*/
+
+       @ManyToMany
+       @JoinTable(name = "project_required_skills",
+           joinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")],
+           inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")])
+       var requiredSkills: MutableList<Skill> = mutableListOf()
+
    )
 
 data class ProjectRequest(val name: String, val description: String, val maxAttendees: String)

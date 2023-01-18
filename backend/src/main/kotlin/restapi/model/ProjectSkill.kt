@@ -1,3 +1,4 @@
+/*
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonView
@@ -25,4 +26,4 @@ class ProjectSkill {
     // TODO restrict to value 1-5?
     @Column(name ="Weight")
     var weight: Long? = null
-}
+}*/
