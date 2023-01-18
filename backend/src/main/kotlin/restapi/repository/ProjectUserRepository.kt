@@ -1,7 +1,7 @@
 /*
-package restapi.repository
+package restapi.projectRepository
 
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.projectRepository.JpaRepository
 import org.springframework.stereotype.Repository
 import restapi.model.ProjectUser
 import restapi.model.User

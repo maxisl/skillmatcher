@@ -31,11 +31,15 @@ class ProjectController(
 
     /*@JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byUserEmail/{userEmail}")
-    fun getAllProjectsFromUserEmail(@PathVariable userEmail: String) = projectService.getAllByUser(userEmail)
-*/
+    fun getAllProjectsByUserEmail(@PathVariable userEmail: String) = projectService.getAllByUser(userEmail)
+    */
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byName/{name}")
     fun findByNameContaining(@PathVariable name: String) = projectService.getAllByName(name)
+
+    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @GetMapping("/attendees/{projectId}")
+    fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PostMapping("/{userEmail}")
@@ -48,6 +52,7 @@ class ProjectController(
         val project = projectService.create(projectRequest)
         if (user != null) {
             project.attendees.add(user)
+            user.projects.add(project)
         }
         return ResponseEntity.ok(projectRepository.save(project))
     }

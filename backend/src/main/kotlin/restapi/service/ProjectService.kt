@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
+import restapi.model.ProjectAttendeesDTO
 import restapi.model.ProjectRequest
+import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.UserRepository
 
@@ -20,19 +22,29 @@ import restapi.repository.UserRepository
 
 @Service
 class ProjectService(
-    @Autowired val repository: ProjectRepository,
+    @Autowired val projectRepository: ProjectRepository,
     @Autowired val userRepository: UserRepository,
     @Autowired val userService: UserService,
     private val additionalModelsConverter: AdditionalModelsConverter
 ) {
 
-    fun getAll(): MutableList<Project> = repository.findAll()
+    fun getAll(): MutableList<Project>{
+        val projects = projectRepository.findAll()
+        projects.forEach {
+            it.attendees.size
+        }
+        return projects
+    }
 
-    // fun getAllByUser(userEmail: String): MutableList<Project> = repository.findByOwnerEmail(userEmail);
+    fun getAllByName(id: String): MutableList<Project> = projectRepository.findByNameContaining(id)
 
-    fun getAllByName(id: String): MutableList<Project> = repository.findByNameContaining(id)
+    // fun getAllByUser(userEmail: String): MutableList<Project> = userRepository.findByEmail(userEmail);
 
-    fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
+    fun getById(id: Long): Project = projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
+
+    fun getAttendeesById(id: Long): List<User> {
+        return projectRepository.findProjectAttendeesById(id)
+    }
 
     fun create(projectRequest: ProjectRequest): Project {
         val project = Project(
@@ -42,18 +54,18 @@ class ProjectService(
             maxAttendees = projectRequest.maxAttendees,
             attendees = mutableListOf()
         )
-        return repository.save(project)
+        return projectRepository.save(project)
     }
 
     fun remove(id: Long) {
-        if (repository.existsById(id)) repository.deleteById(id)
+        if (projectRepository.existsById(id)) projectRepository.deleteById(id)
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
     fun update(id: Long, project: Project): Project {
-        return if (repository.existsById(id)) {
+        return if (projectRepository.existsById(id)) {
             project.id = id
-            repository.save(project)
+            projectRepository.save(project)
         } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
@@ -62,7 +74,7 @@ class ProjectService(
         var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
         /*project.projectUser.add(user)*/ // TODO var user is ApiUser atm, projectUser is Set<ProjectUser>
         /*project.attendees?.add(user)*/
-        repository.save(project)
+        projectRepository.save(project)
         return project
     }
 }
