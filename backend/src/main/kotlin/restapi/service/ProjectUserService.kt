@@ -1,5 +1,5 @@
 /*
-package restapi.service
+package restapi.projectService
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull

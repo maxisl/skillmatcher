@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Project
+import restapi.model.ProjectRequest
 import restapi.repository.ProjectRepository
 import restapi.repository.UserRepository
 
@@ -33,32 +34,15 @@ class ProjectService(
 
     fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
 
-    fun create(userEmail: String, name: String, description: String, maxAttendees: String): Project {
-        // TODO https://stackoverflow.com/questions/1795649/jpa-persisting-a-one-to-many-relationship
-
-        // first create empty project to generate id
-        // then populate project with parameters from request
-        // then save current user to project <users> set
-        // then store completed project
-
+    fun create(projectRequest: ProjectRequest): Project {
         val project = Project(
             id = null,
-            name = name,
-            description = description,
-            maxAttendees = maxAttendees,
-            attendees = mutableListOf(),
-            requiredSkills = mutableListOf()
+            name = projectRequest.name,
+            description = projectRequest.description,
+            maxAttendees = projectRequest.maxAttendees,
+            attendees = mutableListOf()
         )
-        val user = userRepository.findUserByEmail(userEmail)
-        if(user != null) {
-            user.projects += project
-            project.attendees += user
-            repository.save(project)
-            userRepository.save(user)
-        } else {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
-        }
-        return project
+        return repository.save(project)
     }
 
     fun remove(id: Long) {
