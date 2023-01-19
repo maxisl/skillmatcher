@@ -12,26 +12,29 @@ import java.security.Principal
 
 @RequestMapping("user")
 @RestController
-class UserController(val service: UserService) {
-
-    // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
+class UserController(val userService: UserService) {
 
     @JsonView(DataView.User::class)
     @GetMapping
-    fun getAllUsers() = service.getAll()
+    fun getAllUsers() = userService.getAll()
+
     @JsonView(DataView.UserWithProjects::class)
-    @GetMapping("/{email}")
-    fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
+    @GetMapping("/byMail/{email}")
+    fun getUser(@PathVariable email: String, principal: Principal) = userService.getByEmail(email)
+
+    @JsonView(DataView.UserWithProjects::class)
+    @GetMapping("/byId/{id}")
+    fun getUserById(@PathVariable id: Long, principal: Principal) = userService.getById(id)
 
     // TODO: Not working yet
     @JsonView(DataView.User::class)
-    @PutMapping("/{email}")
-    fun updateUser(@PathVariable email: String, @RequestBody user: User) = service.update(email, user)
+    @PutMapping("/byMail/{email}")
+    fun updateUser(@PathVariable email: String, @RequestBody user: User) = userService.update(email, user)
 
-    @DeleteMapping("/{email}")
+    @DeleteMapping("/byMail/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
-        service.remove(email)
+        userService.remove(email)
         return ResponseEntity.ok("User successfully deleted!")
     }
 }

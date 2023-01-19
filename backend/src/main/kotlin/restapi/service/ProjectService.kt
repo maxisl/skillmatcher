@@ -6,6 +6,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import org.webjars.NotFoundException
 import restapi.model.Project
 import restapi.model.ProjectAttendeesDTO
 import restapi.model.ProjectRequest
@@ -28,7 +29,7 @@ class ProjectService(
     private val additionalModelsConverter: AdditionalModelsConverter
 ) {
 
-    fun getAll(): MutableList<Project>{
+    fun getAll(): MutableList<Project> {
         val projects = projectRepository.findAll()
         projects.forEach {
             it.attendees.size
@@ -40,7 +41,11 @@ class ProjectService(
 
     // fun getAllByUser(userEmail: String): MutableList<Project> = userRepository.findByEmail(userEmail);
 
-    fun getById(id: Long): Project = projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
+    fun getById(id: Long): Project =
+        projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No project with this Id found!"
+        )
 
     fun getAttendeesById(id: Long): List<User> {
         return projectRepository.findProjectAttendeesById(id)
@@ -69,12 +74,25 @@ class ProjectService(
         } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
-    fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
+    /*fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
         var project = this.getById(id) // TODO: Maybe this code belongs to the controller?
         var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
-        /*project.projectUser.add(user)*/ // TODO var user is ApiUser atm, projectUser is Set<ProjectUser>
-        /*project.attendees?.add(user)*/
+        *//*project.projectUser.add(user)*//* // TODO var user is ApiUser atm, projectUser is Set<ProjectUser>
+        *//*project.attendees?.add(user)*//*
         projectRepository.save(project)
         return project
+    }*/
+
+    fun attendProject(userId: Long, projectId: Long) {
+        val user =
+            userRepository.findById(userId)
+                .orElseThrow { NotFoundException("User not found") }
+        val project =
+            projectRepository.findById(projectId)
+                .orElseThrow { NotFoundException("Project not found") }
+        project.attendees.add(user)
+        user.projects.add(project)
+        projectRepository.save(project)
+        userRepository.save(user)
     }
 }

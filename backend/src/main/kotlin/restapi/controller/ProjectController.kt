@@ -69,8 +69,13 @@ class ProjectController(
     fun updateProject(@PathVariable id: Long, @RequestBody project: Project) =
         projectService.update(id, project)
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    /*@JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PutMapping("/attend/{id}")
     fun attendProject(@PathVariable id: Long, principal: Principal) =
-        projectService.attend(id, principal.getName())
+        projectService.attend(id, principal.getName())*/
+
+    @PostMapping("/{projectId}/attendees/{userId}")
+    fun attendProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
+        projectService.attendProject(userId, projectId)
+    }
 }
