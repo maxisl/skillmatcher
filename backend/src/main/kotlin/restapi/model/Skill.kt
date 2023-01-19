@@ -1,5 +1,6 @@
 package restapi.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import lombok.Data
 import org.apache.commons.lang3.mutable.Mutable
@@ -27,14 +28,8 @@ class Skill {
 
     @JsonView(DataView.Skill::class)
     @ManyToMany(mappedBy = "skills")
+    @JsonManagedReference
     var usersWithSkill: MutableList<User> = mutableListOf()
 }
-    // LEGACY
-   /** @JsonView(DataView.UserWithSkill::class)
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinTable(
-            name= "User_has_skill",
-            joinColumns = [JoinColumn(name = "id")],                // names of the columns in the join table that will store the foreign keys to the Project and ApiUser tables
-            inverseJoinColumns = [JoinColumn(name = "user_id")])
-    @OrderColumn(name = "id")
-    val has_skill: MutableList<Skill>? = null*/
+
+data class SkillDTO(val id: Long?, val name: String)

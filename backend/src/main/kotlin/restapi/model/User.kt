@@ -1,5 +1,6 @@
 package restapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView;
@@ -111,6 +112,7 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
     )
+    @JsonBackReference
     var skills: MutableList<Skill> = mutableListOf()
 
 )
