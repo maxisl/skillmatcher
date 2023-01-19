@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
 import restapi.model.ProjectRequest
+import restapi.model.Skill
+import restapi.model.SkillDTO
 import restapi.repository.ProjectRepository
 import restapi.repository.UserRepository
 import java.security.Principal
@@ -45,6 +47,12 @@ class ProjectController(
     @GetMapping("/attendees/{projectId}")
     fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
 
+    @GetMapping("/{id}/requiredSkills")
+    fun getRequiredSkills(@PathVariable id: Long) : ResponseEntity<List<SkillDTO>> {
+        val project = projectService.getById(id)
+        val requiredSkills = projectService.getRequiredSkills(project)
+        return ResponseEntity.ok(requiredSkills)
+    }
 /*
 ********************************** POST **********************************
  */

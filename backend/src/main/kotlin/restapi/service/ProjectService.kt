@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
-import restapi.model.Project
-import restapi.model.ProjectRequest
-import restapi.model.User
+import restapi.model.*
 import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
@@ -86,5 +84,9 @@ class ProjectService(
             it.requiredSkills.addAll(skills)
             projectRepository.save(it)
         }
+    }
+
+    fun getRequiredSkills(project: Project) : List<SkillDTO> {
+        return project.requiredSkills.map { skill -> SkillDTO(skill.id!!, skill.name) }
     }
 }

@@ -1,6 +1,7 @@
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
 import javax.persistence.*
@@ -97,16 +98,13 @@ data class Project(
     @JsonBackReference
     var attendees: MutableList<User>,
 
-    /*@JsonView(DataView.Project::class)
-    @OneToMany(mappedBy = "projectSkill", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var projectSkill:MutableList<Skill>*/
-
     @ManyToMany
     @JoinTable(
         name = "project_required_skills",
         joinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
     )
+    @JsonBackReference
     var requiredSkills: MutableList<Skill> = mutableListOf()
 
 )

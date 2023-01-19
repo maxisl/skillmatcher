@@ -1,5 +1,6 @@
 package restapi.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import lombok.Data
@@ -24,6 +25,7 @@ class Skill {
 
     @JsonView(DataView.Skill::class)
     @ManyToMany(mappedBy = "requiredSkills")
+    @JsonManagedReference
     var requiredByProjects: MutableList<Project> = mutableListOf()
 
     @JsonView(DataView.Skill::class)
