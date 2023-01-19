@@ -189,11 +189,11 @@ fun postData(navigator: DestinationsNavigator) {
                 postLoginUserData(
                     ctx, userName, job, response
                 )
-                /*navigator.navigate(
+                navigator.navigate(
                     SideBarDestination(
                         id = 1,
                     )
-                )*/
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

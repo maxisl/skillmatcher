@@ -1,10 +1,12 @@
 package com.example.skillmatcher.views
 
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
@@ -40,10 +43,14 @@ import com.ramcosta.composedestinations.annotation.Destination
 import java.time.LocalDateTime
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun RegisterPage() {
+
+    val interactionSource = remember { MutableInteractionSource() }
+    val interactions = remember { mutableStateListOf<Interaction>() }
 
     val eMail = remember {
         mutableStateOf(TextFieldValue())
@@ -159,17 +166,42 @@ fun RegisterPage() {
 
                 var selectedSkills = createSKillCards()
 
-                registerUserButton(eMail.value.text,userName.value.text,
+                registerUserButton(interactionSource = interactionSource,eMail.value.text,userName.value.text,
                     pw.value.text,pwSecond.value.text,profileDescription, selectedSkills
                     ,profileImage,response)
 
+                LaunchedEffect(interactionSource) {
+                    interactionSource.interactions.collect { interaction ->
+                        when (interaction) {
+                            is PressInteraction.Press -> {
+                                interactions.add(interaction)
+                            }
+                        }
+                    }
+                }
+
+                val lastInteraction = when (interactions.lastOrNull()) {
+                    is PressInteraction.Press -> "Pressed"
+                    else -> "No state"
+                }
+                var errorNotifications: InputCheck = checkIfInputIsCorrect(eMail.value.text,userName.value.text,
+                    pw.value.text,pwSecond.value.text, selectedSkills)
+                if(lastInteraction.equals("Pressed") and errorNotifications.error){
+                    Text(
+                        text = errorNotifications.notifications.joinToString(separator = " "),
+                        color = Color.Red,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold, modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
         }
     }
-
 }
-
 
 
 @Composable
@@ -264,6 +296,7 @@ fun drawSkill(name: String): Skill? {
 
 @Composable
 fun registerUserButton(
+    interactionSource: MutableInteractionSource,
     eMail: String, username: String, pw: String, pwSecond: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
@@ -271,38 +304,12 @@ fun registerUserButton(
     response: MutableState<String>
 ){
         var error: Boolean = false
-        val notifications = mutableListOf<String>()
-        var errorNotifications: InputCheck? = null
 
-        Button(onClick = {
+        Button(interactionSource = interactionSource,onClick = {
 
-            if(eMail.isEmpty()){
-                error = true
-                notifications.add("Please ad a E-Mail to your Profile")
-            }
-            if(username.isEmpty()){
-                error = true
-                notifications.add("Please ad a Username to your Profile")
-            }
-            if(pw.isEmpty()){
-                error = true
-                notifications.add("Please ad a Password to your Profile")
-            }
-            if(pwSecond.isEmpty() or (pw != pwSecond)){
-                error = true
-                notifications.add("Password is not identical to your Profile")
-            }
-            if(selectedSkills.size < 1){
-                error = true
-                notifications.add("Please ad at least one Skill to your Profile")
-            }
-
-
-
-            if(error){
-                errorNotifications = InputCheck(error, notifications)
-            }else{
-                errorNotifications = InputCheck(false, notifications)
+            var errorNotifications: InputCheck = checkIfInputIsCorrect(eMail,username,pw,pwSecond,selectedSkills)
+            error = errorNotifications.error
+            if(!error){
                 createUser(eMail,username,pw,profileDescription,selectedSkills,profileImage,response)
             }
 
@@ -312,34 +319,42 @@ fun registerUserButton(
 
 }
 
-@Composable
-fun OnLifecycleEvent(onEvent: (owner: LifecycleOwner, event: Lifecycle.Event) -> Unit) {
-    val eventHandler = rememberUpdatedState(onEvent)
-    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+fun checkIfInputIsCorrect( eMail: String, username: String, pw: String, pwSecond: String,
+                           selectedSkills: MutableList<Skill?>,): InputCheck {
 
-    DisposableEffect(lifecycleOwner.value) {
-        val lifecycle = lifecycleOwner.value.lifecycle
-        val observer = LifecycleEventObserver { owner, event ->
-            eventHandler.value(owner, event)
-        }
+    var error: Boolean = false
+    val notifications = mutableListOf<String>()
+    var errorNotifications: InputCheck
 
-        lifecycle.addObserver(observer)
-        onDispose {
-            lifecycle.removeObserver(observer)
-        }
+    if(eMail.isEmpty()){
+        error = true
+        notifications.add("Please ad a E-Mail to your Profile")
     }
-}
+    if(username.isEmpty()){
+        error = true
+        notifications.add("Please ad a Username to your Profile")
+    }
+    if(pw.isEmpty()){
+        error = true
+        notifications.add("Please ad a Password to your Profile")
+    }
+    if(pwSecond.isEmpty() or (pw != pwSecond)){
+        error = true
+        notifications.add("Password is not identical")
+    }
+    if(selectedSkills.size < 1){
+        error = true
+        notifications.add("Please ad at least one Skill to your Profile")
+    }
 
-@Composable
-private fun errorMessage(){
-    Text(
-        text = "Register",
-        fontSize = 60.sp,
-        fontWeight = FontWeight.Bold, textAlign = TextAlign.Center,
-        color = Color.White
-    )
-}
+    if(error){
+        errorNotifications = InputCheck(error, notifications)
+    }else{
+        errorNotifications = InputCheck(false, notifications)
+    }
 
+    return errorNotifications
+}
 
 fun createUser(
     eMail: String, username: String, pw: String,
