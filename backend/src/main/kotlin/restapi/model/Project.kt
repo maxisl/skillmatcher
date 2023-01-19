@@ -113,10 +113,3 @@ data class Project(
 
 data class ProjectRequest(val name: String, val description: String, val maxAttendees: String)
 
-data class ProjectAttendeesDTO(
-    val id: Long,
-    val name: String,
-    val description: String,
-    val maxAttendees: String,
-    val attendees: List<User>
-)

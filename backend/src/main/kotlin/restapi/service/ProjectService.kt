@@ -1,6 +1,5 @@
 package restapi.service
 
-import org.springdoc.core.converters.AdditionalModelsConverter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -8,25 +7,18 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
 import restapi.model.Project
-import restapi.model.ProjectAttendeesDTO
 import restapi.model.ProjectRequest
 import restapi.model.User
 import restapi.repository.ProjectRepository
+import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
-
-/**
- * @author  Simon Burmer
- * @date  02/12/22
- * @version 1.0
- */
 
 
 @Service
 class ProjectService(
     @Autowired val projectRepository: ProjectRepository,
     @Autowired val userRepository: UserRepository,
-    @Autowired val userService: UserService,
-    private val additionalModelsConverter: AdditionalModelsConverter
+    private val skillRepository: SkillRepository,
 ) {
 
     fun getAll(): MutableList<Project> {
@@ -85,5 +77,14 @@ class ProjectService(
         user.projects.add(project)
         projectRepository.save(project)
         userRepository.save(user)
+    }
+
+    fun addRequiredSkillsToProject(projectId: Long, skillIds: List<Long>) {
+        val project = projectRepository.findById(projectId)
+        val skills = skillRepository.findAllById(skillIds)
+        project.ifPresent {
+            it.requiredSkills.addAll(skills)
+            projectRepository.save(it)
+        }
     }
 }

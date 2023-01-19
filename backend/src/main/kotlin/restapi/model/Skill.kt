@@ -32,4 +32,5 @@ class Skill {
     var usersWithSkill: MutableList<User> = mutableListOf()
 }
 
+// only return skill id and name from getUserSkillsByEmail()
 data class SkillDTO(val id: Long?, val name: String)

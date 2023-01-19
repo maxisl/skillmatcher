@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Skill
+import restapi.model.SkillDTO
 import restapi.repository.SkillRepository
 
 
@@ -14,7 +15,7 @@ class SkillService(val repository: SkillRepository) {
 
     fun getAll(): MutableList<Skill> = repository.findAll()
 
-    fun getById(id: Long) =
+    fun getById(id: Long): Skill =
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
     fun getByName(name: String): Skill =
