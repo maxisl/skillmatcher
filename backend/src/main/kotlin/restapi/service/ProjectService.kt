@@ -74,15 +74,6 @@ class ProjectService(
         } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
-    /*fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
-        var project = this.getById(id) // TODO: Maybe this code belongs to the controller?
-        var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
-        *//*project.projectUser.add(user)*//* // TODO var user is ApiUser atm, projectUser is Set<ProjectUser>
-        *//*project.attendees?.add(user)*//*
-        projectRepository.save(project)
-        return project
-    }*/
-
     fun attendProject(userId: Long, projectId: Long) {
         val user =
             userRepository.findById(userId)

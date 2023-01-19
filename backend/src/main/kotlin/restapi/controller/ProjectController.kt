@@ -41,7 +41,8 @@ class ProjectController(
     @GetMapping("/attendees/{projectId}")
     fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    // TODO adapt JSON View? old interface
+    @JsonView(DataView.ProjectWithOwner::class)
     @PostMapping("/{userEmail}")
     @ResponseStatus(HttpStatus.CREATED)
     fun createProject(

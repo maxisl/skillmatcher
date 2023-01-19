@@ -31,6 +31,11 @@ class UserController(val userService: UserService) {
     @PutMapping("/byMail/{email}")
     fun updateUser(@PathVariable email: String, @RequestBody user: User) = userService.update(email, user)
 
+    @PostMapping("/{userId}/skill/{skillId}")
+    fun addSkill(@PathVariable userId: Long, @PathVariable skillId: Long) {
+        userService.addSkill(userId, skillId)
+    }
+
     @DeleteMapping("/byMail/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
