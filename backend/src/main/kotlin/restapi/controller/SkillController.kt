@@ -16,6 +16,10 @@ import javax.validation.Valid
 @RestController
 class SkillController(val skillService: SkillService) {
 
+/*
+    ********************************** GET **********************************
+    */
+
     @JsonView(DataView.Skill::class)
     @GetMapping
     fun getAllSkills() = skillService.getAll()
@@ -28,6 +32,10 @@ class SkillController(val skillService: SkillService) {
     @GetMapping("/byName/{name}")
     fun getSkillByName(@PathVariable name: String, principal: Principal) = skillService.getByName(name)
 
+/*
+    ********************************** POST **********************************
+     */
+
     @JsonView(DataView.Skill::class)
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,17 +43,24 @@ class SkillController(val skillService: SkillService) {
     fun createSkill(@RequestBody requestBody: Map<String, String>, principal: Principal) =
         requestBody["name"]?.let { skillService.create(it) }
 
+/*
+********************************** PUT **********************************
+*/
+
     @PutMapping("/{id}")
     fun updateSkill(@PathVariable id: Long, @RequestBody requestBody: Map<String, String>): ResponseEntity<String> {
         val name = requestBody["name"].toString()
         return skillService.update(id, name)
     }
 
+/*
+    ********************************** DELETE **********************************
+    */
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteSkill(@PathVariable id: Long) {
-        skillService.remove(id)
+    fun deleteSkill(@PathVariable id: Long): ResponseEntity<String> {
+        return skillService.remove(id)
     }
 }
 

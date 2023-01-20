@@ -98,6 +98,17 @@ data class Project(
     @JsonBackReference
     var attendees: MutableList<User>,
 
+    @JsonView(DataView.Project::class)
+    @NotBlank(message = "Start date is mandatory")
+    val startDate: String,
+
+    @JsonView(DataView.Project::class)
+    @NotBlank(message = "End date is mandatory")
+    val endDate: String,
+
+    @JsonView(DataView.Project::class)
+    val imageLink: String,
+
     @ManyToMany
     @JoinTable(
         name = "project_required_skills",
@@ -109,5 +120,12 @@ data class Project(
 
 )
 
-data class ProjectRequest(val name: String, val description: String, val maxAttendees: String)
+data class ProjectRequest(
+    val name: String,
+    val description: String,
+    val maxAttendees: String,
+    val startDate: String,
+    val endDate: String,
+    val imageLink: String
+)
 

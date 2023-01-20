@@ -72,7 +72,7 @@ class SkillService(val repository: SkillRepository) {
         if (skillAvailable != null) {
             val skill = this.getById(id);
             skill.id?.let { repository.deleteById(it) };
-            return ResponseEntity.ok("Skill successfully deleted!")
+            return ResponseEntity.ok("Skill successfully deleted")
         }
         throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,

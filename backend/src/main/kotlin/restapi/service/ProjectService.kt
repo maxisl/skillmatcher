@@ -47,7 +47,10 @@ class ProjectService(
             name = projectRequest.name,
             description = projectRequest.description,
             maxAttendees = projectRequest.maxAttendees,
-            attendees = mutableListOf()
+            attendees = mutableListOf(),
+            startDate = projectRequest.startDate,
+            endDate = projectRequest.endDate,
+            imageLink = projectRequest.imageLink
         )
         return projectRepository.save(project)
     }
@@ -57,6 +60,7 @@ class ProjectService(
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
+    // TODO check if works
     fun update(id: Long, project: Project): Project {
         return if (projectRepository.existsById(id)) {
             project.id = id

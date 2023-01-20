@@ -114,5 +114,6 @@ data class User(
     )
     @JsonBackReference
     var skills: MutableList<Skill> = mutableListOf()
-
 )
+
+data class UserDTO(val id: Long, val email: String?)
