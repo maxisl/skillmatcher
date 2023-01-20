@@ -63,24 +63,6 @@ class ProjectController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createProject(
         @PathVariable userEmail: String,
-<<<<<<< HEAD
-        @Valid @RequestBody projectRequest: ProjectRequest
-    ): ResponseEntity<Project> {
-        val project = service.create(
-            userEmail,
-            projectRequest.name,
-            projectRequest.description,
-            projectRequest.maxAttendees
-        )
-        return ResponseEntity.ok(project)
-    }
-
-    @DeleteMapping("/{id}") // TODO: Only owner can delete projects
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
-        service.remove(id)
-        return ResponseEntity.ok("Project successfully deleted!")
-=======
         @RequestBody projectRequest: ProjectRequest
     ): ResponseEntity<Project> {
         val user = userRepository.findUserByEmail(userEmail)
@@ -90,7 +72,6 @@ class ProjectController(
             user.projects.add(project)
         }
         return ResponseEntity.ok(projectRepository.save(project))
->>>>>>> new-db-schema
     }
 
     @PostMapping("/{projectId}/attendees/{userId}")
@@ -110,14 +91,6 @@ class ProjectController(
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @PutMapping("/{id}") // TODO:Not Working Jet / Only owner should can alter project!
     fun updateProject(@PathVariable id: Long, @RequestBody project: Project) =
-<<<<<<< HEAD
-        service.update(id, project)
-
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @PutMapping("/attend/{id}")
-    fun attendProject(@PathVariable id: Long, principal: Principal) =
-        service.attend(id, principal.getName())
-=======
         projectService.update(id, project)
 
 /*
@@ -131,5 +104,4 @@ class ProjectController(
         return ResponseEntity.ok("Project successfully deleted!")
     }
 
->>>>>>> new-db-schema
 }

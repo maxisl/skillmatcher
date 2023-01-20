@@ -1,20 +1,14 @@
 package restapi;
 
-<<<<<<< HEAD
-=======
 import java.util.Arrays;
 import java.util.List;
->>>>>>> new-db-schema
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-<<<<<<< HEAD
-=======
 import restapi.model.Skill;
 import restapi.repository.SkillRepository;
->>>>>>> new-db-schema
 import restapi.repository.UserRepository;
 import restapi.security.JwtTokenProvider;
 

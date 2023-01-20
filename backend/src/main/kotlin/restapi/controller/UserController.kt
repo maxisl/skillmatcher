@@ -5,11 +5,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
-<<<<<<< HEAD
-=======
 import restapi.model.Skill
 import restapi.model.SkillDTO
->>>>>>> new-db-schema
 import restapi.model.User
 import restapi.service.UserService
 import java.security.Principal
@@ -44,14 +41,9 @@ class UserController(val userService: UserService) {
  */
     // TODO: Not working yet
     @JsonView(DataView.User::class)
-<<<<<<< HEAD
-    @PutMapping("/{email}")
-    fun updateUser(@PathVariable email: String, @RequestBody user: User) = service.update(email, user)
-=======
     @PutMapping("/byMail/{email}")
     fun updateUser(@PathVariable email: String, @RequestBody user: User) =
         userService.update(email, user)
->>>>>>> new-db-schema
 
 /*
 ********************************** POST **********************************

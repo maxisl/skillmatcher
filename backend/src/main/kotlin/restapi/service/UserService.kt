@@ -4,16 +4,12 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-<<<<<<< HEAD
-import restapi.model.User
-=======
 import org.webjars.NotFoundException
 import restapi.model.Skill
 import restapi.model.SkillDTO
 import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
->>>>>>> new-db-schema
 import restapi.repository.UserRepository
 
 
@@ -24,19 +20,11 @@ class UserService(
     private val skillRepository: SkillRepository
 ) {
 
-<<<<<<< HEAD
-    fun getAll(): List<User> = repository.findAll()
-=======
     fun getAll(): List<User> = userRepository.findAll()
->>>>>>> new-db-schema
 
     fun getById(id: Long): User = userRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
     fun getByEmail(email: String): User =
-<<<<<<< HEAD
-        repository.findUserByEmail(email) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
-
-=======
         userRepository.findUserByEmail(email) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
 
     fun getUserSkillsByEmail(email: String): MutableList<Skill> {
@@ -44,7 +32,6 @@ class UserService(
         return user.skills
     }
 
->>>>>>> new-db-schema
     fun update(email: String, user: User): User {
         val dbUser = this.getByEmail(email);
         user.id = dbUser.id;

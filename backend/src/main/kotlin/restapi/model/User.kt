@@ -1,9 +1,6 @@
 package restapi.model;
 
-<<<<<<< HEAD
-=======
 import com.fasterxml.jackson.annotation.JsonBackReference
->>>>>>> new-db-schema
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView;
@@ -59,26 +56,15 @@ class User {
 
     */
 /**  // user attends
-<<<<<<< HEAD
-    @JsonView(DataView.UserWithProjects::class)
-    @ManyToMany(mappedBy = "attendees")
-    var attends: MutableList<Project>? = null *//*
-=======
 @JsonView(DataView.UserWithProjects::class)
 @ManyToMany(mappedBy = "attendees")
 var attends: MutableList<Project>? = null *//*
->>>>>>> new-db-schema
 
 
     */
 /**@JsonView(DataView.UserWithSkill::class)
-<<<<<<< HEAD
-    @ManyToMany(mappedBy = "has_skill")
-    var has_skill: MutableList<Project>? = null*//*
-=======
 @ManyToMany(mappedBy = "has_skill")
 var has_skill: MutableList<Project>? = null*//*
->>>>>>> new-db-schema
 
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -93,11 +79,7 @@ var has_skill: MutableList<Project>? = null*//*
 }
 */
 
-<<<<<<< HEAD
-@Entity(name = "Users")
-=======
 @Entity(name = "users")
->>>>>>> new-db-schema
 data class User(
     @JsonView(DataView.User::class)
     @Id
@@ -114,15 +96,6 @@ data class User(
     var password: String? = null,
 
     @JsonView(DataView.User::class)
-<<<<<<< HEAD
-    @ManyToMany(cascade = [CascadeType.ALL])
-    @JoinTable(name = "project_user",
-        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "project_id", referencedColumnName = "id")])
-    @JsonManagedReference
-    var projects: MutableList<Project>
-)
-=======
     val imageLink: String,
 
     @JsonView(DataView.User::class)
@@ -147,4 +120,3 @@ data class User(
 )
 
 data class UserDTO(val id: Long, val email: String?)
->>>>>>> new-db-schema

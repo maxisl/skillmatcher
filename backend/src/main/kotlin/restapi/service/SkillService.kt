@@ -6,10 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import restapi.model.Skill
-<<<<<<< HEAD
-=======
-import restapi.model.SkillDTO
->>>>>>> new-db-schema
 import restapi.repository.SkillRepository
 
 
@@ -18,11 +14,7 @@ class SkillService(val repository: SkillRepository) {
 
     fun getAll(): MutableList<Skill> = repository.findAll()
 
-<<<<<<< HEAD
-    fun getById(id: Long) =
-=======
     fun getById(id: Long): Skill =
->>>>>>> new-db-schema
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
     fun getByName(name: String): Skill =
@@ -79,11 +71,7 @@ class SkillService(val repository: SkillRepository) {
         if (skillAvailable != null) {
             val skill = this.getById(id);
             skill.id?.let { repository.deleteById(it) };
-<<<<<<< HEAD
-            return ResponseEntity.ok("Skill successfully deleted!")
-=======
             return ResponseEntity.ok("Skill successfully deleted")
->>>>>>> new-db-schema
         }
         throw ResponseStatusException(
             HttpStatus.BAD_REQUEST,
