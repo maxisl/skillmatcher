@@ -5,6 +5,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
+<<<<<<< HEAD
+=======
+import restapi.model.Skill
+import restapi.model.SkillDTO
+>>>>>>> new-db-schema
 import restapi.model.User
 import restapi.service.UserService
 import java.security.Principal
@@ -12,26 +17,57 @@ import java.security.Principal
 
 @RequestMapping("user")
 @RestController
-class UserController(val service: UserService) {
-
-    // TODO: Zukunft: {email} wird nicht gebraucht, es ist auch nur mit /get, /update, /delete sicher!
-
+class UserController(val userService: UserService) {
+/*
+********************************** GET **********************************
+ */
     @JsonView(DataView.User::class)
     @GetMapping
-    fun getAllUsers() = service.getAll()
-    @JsonView(DataView.UserWithProjects::class)
-    @GetMapping("/{email}")
-    fun getUser(@PathVariable email: String, principal: Principal) = service.getByEmail(email)
+    fun getAllUsers() = userService.getAll()
 
+    @JsonView(DataView.UserWithProjects::class)
+    @GetMapping("/byMail/{email}")
+    fun getUser(@PathVariable email: String, principal: Principal) = userService.getByEmail(email)
+
+    @JsonView(DataView.UserWithProjects::class)
+    @GetMapping("/byId/{id}")
+    fun getUserById(@PathVariable id: Long, principal: Principal) = userService.getById(id)
+
+    @GetMapping("/{email}/skills")
+    fun getUserSkills(@PathVariable email: String): List<SkillDTO> {
+        val userSkills = userService.getUserSkillsByEmail(email)
+        return userSkills.map { SkillDTO(it.id, it.name) }
+    }
+
+/*
+********************************** PUT **********************************
+ */
     // TODO: Not working yet
     @JsonView(DataView.User::class)
+<<<<<<< HEAD
     @PutMapping("/{email}")
     fun updateUser(@PathVariable email: String, @RequestBody user: User) = service.update(email, user)
+=======
+    @PutMapping("/byMail/{email}")
+    fun updateUser(@PathVariable email: String, @RequestBody user: User) =
+        userService.update(email, user)
+>>>>>>> new-db-schema
 
-    @DeleteMapping("/{email}")
+/*
+********************************** POST **********************************
+*/
+
+    @PostMapping("/{email}/skill/{skillId}")
+    fun addSkill(@PathVariable email: String, @PathVariable skillId: Long) =
+        userService.addSkill(email, skillId)
+
+/*
+********************************** DELETE **********************************
+ */
+    @DeleteMapping("/byMail/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
-        service.remove(email)
+        userService.remove(email)
         return ResponseEntity.ok("User successfully deleted!")
     }
 }
