@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Parcelize
 data class User(
-    val name: String,
+    //val name: String,
     val id: String,
     val created: LocalDateTime,
     val password: String,
