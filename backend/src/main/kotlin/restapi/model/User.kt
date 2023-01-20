@@ -96,6 +96,9 @@ data class User(
     var password: String? = null,
 
     @JsonView(DataView.User::class)
+    val imageLink: String,
+
+    @JsonView(DataView.User::class)
     @ManyToMany(cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_project",
