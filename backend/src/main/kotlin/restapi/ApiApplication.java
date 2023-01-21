@@ -51,7 +51,7 @@ public class ApiApplication implements CommandLineRunner {
 
       for(String name : Skills) {
         // check if skills table is empty; if empty, insert predefined skills
-        if(skillRepository.count() == 0) {
+        if(skillRepository.count() <= 10) {
           Skill skill = new Skill();
           skill.setName(name);
           skillRepository.save(skill);

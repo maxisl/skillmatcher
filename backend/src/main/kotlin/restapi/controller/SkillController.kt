@@ -17,7 +17,7 @@ import javax.validation.Valid
 class SkillController(val skillService: SkillService) {
 
 /*
-    ********************************** GET **********************************
+********************************** GET **********************************
     */
 
     @JsonView(DataView.Skill::class)
@@ -33,7 +33,7 @@ class SkillController(val skillService: SkillService) {
     fun getSkillByName(@PathVariable name: String, principal: Principal) = skillService.getByName(name)
 
 /*
-    ********************************** POST **********************************
+********************************** POST **********************************
      */
 
     @JsonView(DataView.Skill::class)
@@ -54,7 +54,7 @@ class SkillController(val skillService: SkillService) {
     }
 
 /*
-    ********************************** DELETE **********************************
+********************************** DELETE **********************************
     */
 
     @DeleteMapping("/{id}")

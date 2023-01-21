@@ -50,7 +50,7 @@ class ProjectService(
             attendees = mutableListOf(),
             startDate = projectRequest.startDate,
             endDate = projectRequest.endDate,
-            imageLink = projectRequest.imageLink
+            image = projectRequest.image
         )
         return projectRepository.save(project)
     }
