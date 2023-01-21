@@ -306,16 +306,16 @@ fun getAllProjects(result: MutableState<List<Project>>) {
 }
 
 fun getAvailableSkills(result: MutableState<List<Skill>>) {
-    Log.d("getAllProjects: ", "Executed")
+    Log.d("getAvailableSkills: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<List<Skill>> =
         retrofitAPI.getAllSkills("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<Skill>> {
         override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
             // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
-            Log.d("getAllProjects", response.body().toString())
+            Log.d("getAvailableSkills", response.body().toString())
             result.value = response.body() as MutableList<Skill>
-            Log.d("getAllProjects", "Projects as List: $result")
+            Log.d("getAvailableSkills", "Skills as List: $result")
         }
         override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
