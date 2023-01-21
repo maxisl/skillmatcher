@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Data
-@Table(name = "skill")
+@Table(name = "skills")
 class Skill {
     //skillId
     @JsonView(DataView.Skill::class)

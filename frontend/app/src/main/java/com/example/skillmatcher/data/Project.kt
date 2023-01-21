@@ -19,4 +19,7 @@ data class Project(
     var name: String,
     var description: String,
     var maxAttendees: String,
+    val startDate: String,
+    val endDate: String,
+    val image: Bitmap?
 )

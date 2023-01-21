@@ -1,6 +1,7 @@
 package com.example.skillmatcher.api
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -8,6 +9,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.ApiUser
 import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.UserLoginModel
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -16,10 +18,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-
-
-// TODO: Wie hier machen: https://stackoverflow.com/questions/30180957/send-post-request-with-params-using-retrofit
-// TODO: BACKEND liefer bei login dirc alle daten!
 
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
@@ -48,6 +46,9 @@ interface BackendAPI {
 
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
+
+    @GET("skills")
+    fun getAllSkills(@Header("Authorization") jwt: String): Call<List<Skill>>
 }
 
 var token = ""
@@ -56,8 +57,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    // "http://10.0.2.2:8080/"
-    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    "http://10.0.2.2:8080/"
+    // "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -255,11 +256,12 @@ fun createProject(
     name: String,
     description: String,
     maxAttendees: String,
-    // startDate: String, TODO add start / end date as soon as db schema is updated
-    // endDate: String,
+    startDate: String,
+    endDate: String,
+    image: Bitmap?
 ) {
     Log.d("createProject", "Executed")
-    val project = Project(name, description, maxAttendees)
+    val project = Project(name, description, maxAttendees, startDate, endDate, image)
     Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(
@@ -272,6 +274,7 @@ fun createProject(
             Log.d("createProject", "Created $response")
             if (response.code() == 201) {
                 Toast.makeText(ctx, "Project $name created", Toast.LENGTH_SHORT).show()
+                Log.d("createProject", "Response Code ${response.code()}")
             } else {
                 Toast.makeText(ctx, "Failed to create project", Toast.LENGTH_SHORT).show()
             }
@@ -297,6 +300,24 @@ fun getAllProjects(result: MutableState<List<Project>>) {
             Log.d("getAllProjects", "Projects as List: $result")
         }
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}
+
+fun getAvailableSkills(result: MutableState<List<Skill>>) {
+    Log.d("getAllProjects: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Skill>> =
+        retrofitAPI.getAllSkills("Bearer ${preferencesManager.getJWT()}")
+    call!!.enqueue(object : Callback<List<Skill>> {
+        override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
+            // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
+            Log.d("getAllProjects", response.body().toString())
+            result.value = response.body() as MutableList<Skill>
+            Log.d("getAllProjects", "Projects as List: $result")
+        }
+        override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })

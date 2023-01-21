@@ -20,7 +20,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skillmatcher.R
 import com.example.skillmatcher.data.User
 // import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
@@ -191,6 +190,7 @@ fun postData(navigator: DestinationsNavigator) {
                     ctx, userName, job, response
                 )
                 navigator.navigate(
+                    // TODO can be removed?
                     SideBarDestination(
                         id = 1,
                         User(
@@ -236,17 +236,5 @@ fun postData(navigator: DestinationsNavigator) {
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        // TODO remove after testing: Button to test function
-        Button(
-            onClick = {
-                getAllUsers()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
-        }
     }
 }

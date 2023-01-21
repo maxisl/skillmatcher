@@ -92,8 +92,6 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
         }
     }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun projectName(): String {
@@ -131,7 +129,6 @@ fun projectDescription(): String {
     }
     return projectDescription
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -262,8 +259,6 @@ fun numberInput(): Int {
     return pickerValue
 }
 
-
-
 @Composable
 fun imagePicker(): Bitmap? {
     var imageUri by remember {
@@ -337,8 +332,9 @@ fun saveButton(
                 var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())
+
                 // duplicate to fit data type of Project (not ProjectModel)
-                createProject(ctx, name, description, attendees.toString())
+                createProject(ctx, name, description, attendees.toString(), startDate, endDate, image)
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }

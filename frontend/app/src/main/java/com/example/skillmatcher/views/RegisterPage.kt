@@ -1,5 +1,6 @@
 package com.example.skillmatcher.views
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
@@ -17,15 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.chargemap.compose.numberpicker.NumberPicker
+import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
@@ -35,6 +33,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Destination
 @Composable
 fun RegisterPage() {
+    val ctx = LocalContext.current
 
     val userName = remember {
         mutableStateOf(TextFieldValue())
@@ -42,6 +41,10 @@ fun RegisterPage() {
 
     val pw = remember {
         mutableStateOf(TextFieldValue())
+    }
+
+    val response = remember {
+        mutableStateOf("")
     }
 
     Column(
@@ -117,8 +120,8 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSKillCards()
-                registerUser()
+                createSkillCards()
+                RegisterUser(ctx, userName, pw, response)
             }
 
         }
@@ -126,7 +129,7 @@ fun RegisterPage() {
 }
 
 @Composable
-fun createSKillCards() {
+fun createSkillCards() {
 
     val listOfSkills = getSkills()
     LazyRow() {
@@ -197,7 +200,7 @@ fun drawSkill(name: String): Skill? {
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Black),
                     maxLines = 1,
 
-                )
+                    )
                 /* NumberPicker(
                     value = pickerValue,
                     textStyle = TextStyle(Color.White),
@@ -211,20 +214,33 @@ fun drawSkill(name: String): Skill? {
 
         }
     }
-    var skillValue:String = skillTextField.value.toString();
-    try {return Skill(name,skillValue.toInt())}
-    catch (e :NumberFormatException){
+    var skillValue: String = skillTextField.value.toString();
+    try {
+        return Skill(name, skillValue.toInt())
+    } catch (e: NumberFormatException) {
         return null;
     }
 }
 
 @Composable
-fun registerUser(){
-        Button(onClick = {
-
-        }) {
-            Text(text = "Register")
-        }
+fun RegisterUser(
+    ctx: Context,
+    userName: MutableState<TextFieldValue>,
+    job: MutableState<TextFieldValue>,
+    // TODO image
+    // TODO skills
+    response: MutableState<String>
+) {
+    Button(
+        onClick = {
+            registerUser(ctx, userName, job, response)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "Register", modifier = Modifier.padding(8.dp))
+    }
 }
 
 

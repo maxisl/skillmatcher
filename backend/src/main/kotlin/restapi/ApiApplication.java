@@ -36,22 +36,12 @@ public class ApiApplication implements CommandLineRunner {
   public void run(String... args) throws Exception {
 
     try {
-      /*Random rand = new Random(); //instance of random class
-      int upperbound = 2500;
-      //generate random values from 0-2499
-      int int_random = rand.nextInt(upperbound);
-      ApiUser user = new ApiUser();
-      user.setEmail(int_random + "@noel.de");
-      user.setPassword(passwordEncoder.encode("1234"));
-
-      ApiUser saved = userRepository.save(user);
-
-      System.out.println("Token " + jwtTokenProvider.generateToken(saved.getEmail()));*/
-      List<String> Skills = Arrays.asList("Cloud", "AI", "React", "Java", "Python", "Project Management", "IoT", "R", "Blockchain", "C");
+      List<String> Skills = Arrays.asList("Cloud", "AI", "React", "Java", "Python", "Scrum", "IoT", "R", "Blockchain", "C");
 
       for(String name : Skills) {
-        // check if skills table is empty; if empty, insert predefined skills
-        if(skillRepository.count() <= 10) {
+        // TODO fix: maybe insert manually?
+        // insert predefined skills in skills table
+        if(skillRepository.count() <= 0) {
           Skill skill = new Skill();
           skill.setName(name);
           skillRepository.save(skill);
