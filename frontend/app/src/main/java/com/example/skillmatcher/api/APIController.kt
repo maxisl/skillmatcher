@@ -312,7 +312,7 @@ fun getAvailableSkills(result: MutableState<List<Skill>>) {
         retrofitAPI.getAllSkills("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<Skill>> {
         override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
-            // Log.d("getAllProjects", "Http-Code: ${response.code()}") // debug only
+            Log.d("getAvailableSkills", "Http-Code: ${response.code()}") // debug only
             Log.d("getAvailableSkills", response.body().toString())
             result.value = response.body() as MutableList<Skill>
             Log.d("getAvailableSkills", "Skills as List: $result")

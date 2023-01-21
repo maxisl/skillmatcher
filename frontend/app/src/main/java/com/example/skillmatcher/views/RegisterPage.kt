@@ -23,8 +23,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.api.getAvailableSkills
 import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.Skill
+import com.example.skillmatcher.data.SkillModel
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -46,6 +48,22 @@ fun RegisterPage() {
     val response = remember {
         mutableStateOf("")
     }
+
+    val availableSkills = remember {
+        mutableStateOf(listOf(Skill("")))
+    }
+
+    Button(
+        onClick = {
+            getAvailableSkills(availabeSkills)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "getAvailableSkills", modifier = Modifier.padding(8.dp))
+    }
+
 
     Column(
         modifier = Modifier
@@ -122,6 +140,7 @@ fun RegisterPage() {
 
                 createSkillCards()
                 RegisterUser(ctx, userName, pw, response)
+                getAvailableSkills(availableSkills)
             }
 
         }
@@ -156,7 +175,7 @@ fun getSkills(): MutableList<Skill> {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun drawSkill(name: String): Skill? {
+fun drawSkill(name: String): SkillModel? {
     val skillTextField = remember { mutableStateOf(TextFieldValue()) }
     val context = LocalContext.current
     var selected by remember { mutableStateOf(false) }
@@ -216,7 +235,7 @@ fun drawSkill(name: String): Skill? {
     }
     var skillValue: String = skillTextField.value.toString();
     try {
-        return Skill(name, skillValue.toInt())
+        return SkillModel(name, skillValue.toInt())
     } catch (e: NumberFormatException) {
         return null;
     }
