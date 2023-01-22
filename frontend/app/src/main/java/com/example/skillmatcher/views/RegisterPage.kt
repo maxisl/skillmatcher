@@ -1,6 +1,7 @@
 package com.example.skillmatcher.views
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -92,15 +93,6 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                OutlinedTextField(
-                    value = pw.value,
-                    onValueChange = { pw.value = it },
-                    placeholder = { Text(text = "Enter Username") },
-                    modifier = Modifier
-                        .padding(16.dp),
-                    singleLine = true,
-                )
-
                 Spacer(modifier = Modifier.height(5.dp))
 
                 OutlinedTextField(
@@ -125,7 +117,7 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                var profilDescription = projectDescription()
+                // var profilDescription = projectDescription()
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -139,12 +131,10 @@ fun RegisterPage() {
 
 @Composable
 fun createSkillCards(listOfSkills: List<Skill>) {
-
-
-    // val listOfSkills = getSkills()
-    LazyRow() {
-        listOfSkills.iterator().forEach { skill ->
-            item() {
+    Log.d("getAvailableSkills", "found list: $listOfSkills".toString())
+    LazyRow {
+        for (skill in listOfSkills) {
+            item {
                 drawSkill(skill.name)
             }
         }
@@ -212,15 +202,6 @@ fun drawSkill(name: String): SkillModel? {
                     maxLines = 1,
 
                     )
-                /* NumberPicker(
-                    value = pickerValue,
-                    textStyle = TextStyle(Color.White),
-                    dividersColor = LMUGreen,
-                    range = 0..5,
-                    onValueChange = {
-                        pickerValue = it
-                    }
-                )*/
             }
 
         }
