@@ -12,7 +12,11 @@ import restapi.repository.SkillRepository
 @Service
 class SkillService(val repository: SkillRepository) {
 
-    fun getAll(): MutableList<Skill> = repository.findAll()
+    fun getAll(): MutableList<Skill> {
+        val skills = repository.findAll()
+        return skills
+    }
+
 
     fun getById(id: Long): Skill =
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)

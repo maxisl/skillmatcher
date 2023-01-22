@@ -45,13 +45,17 @@ fun RegisterPage() {
         mutableStateOf(TextFieldValue())
     }
 
-    val response = remember {
+    val registerResponse = remember {
         mutableStateOf("")
     }
 
-    val availableSkills = remember {
+    val response = remember {
         mutableStateOf(listOf(Skill("")))
     }
+
+    getAvailableSkills(ctx, response)
+
+    val skills = response.value
 
     Column(
         modifier = Modifier
@@ -64,16 +68,6 @@ fun RegisterPage() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                Button(
-                    onClick = {
-                        getAvailableSkills(ctx, availableSkills)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(text = "getAvailableSkills", modifier = Modifier.padding(8.dp))
-                }
                 Text(
                     text = "Register",
                     fontSize = 60.sp,
@@ -135,8 +129,8 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSkillCards()
-                RegisterUser(ctx, userName, pw, response)
+                createSkillCards(skills)
+                RegisterUser(ctx, userName, pw, registerResponse)
             }
 
         }
@@ -144,9 +138,10 @@ fun RegisterPage() {
 }
 
 @Composable
-fun createSkillCards() {
+fun createSkillCards(listOfSkills: List<Skill>) {
 
-    val listOfSkills = getSkills()
+
+    // val listOfSkills = getSkills()
     LazyRow() {
         listOfSkills.iterator().forEach { skill ->
             item() {
@@ -157,6 +152,7 @@ fun createSkillCards() {
 }
 
 fun getSkills(): MutableList<Skill> {
+
     //do API call and give list of skills back
     val listOfSkills = mutableListOf<Skill>()
     listOfSkills.add(Skill("Java"))
@@ -244,11 +240,11 @@ fun RegisterUser(
     job: MutableState<TextFieldValue>,
     // TODO image
     // TODO skills
-    response: MutableState<String>
+    registerResponse: MutableState<String>
 ) {
     Button(
         onClick = {
-            registerUser(ctx, userName, job, response)
+            registerUser(ctx, userName, job, registerResponse)
         },
         modifier = Modifier
             .fillMaxWidth()

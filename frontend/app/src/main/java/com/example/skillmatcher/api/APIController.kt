@@ -319,8 +319,8 @@ fun getAvailableSkills(ctx: Context, result: MutableState<List<Skill>>) {
         override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
             Log.d("getAvailableSkills", "Http-Code: ${response.code()}") // debug only
             Log.d("getAvailableSkills", response.body().toString())
-            // result.value = response.body() as MutableList<Skill>
-            // Log.d("getAvailableSkills", "Skills as List: $result")
+            result.value = response.body() as MutableList<Skill>
+            Log.d("getAvailableSkills", "Skills as List: $result")
         }
 
         override fun onFailure(call: Call<List<Skill>>, t: Throwable) {

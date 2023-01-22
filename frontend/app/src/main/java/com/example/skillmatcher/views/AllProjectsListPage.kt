@@ -29,7 +29,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun AllProjectsListPage(
 ) {
-    val response = remember { mutableStateOf(listOf(Project("", "", "", "", "", null))) }
+    val response = remember {
+        mutableStateOf(listOf(Project("", "", "", "", "", null)))
+    }
     getAllProjects(response)
     val projects = response.value
     SkillMatcherTheme {
