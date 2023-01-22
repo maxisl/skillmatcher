@@ -7,10 +7,7 @@ import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
-import com.example.skillmatcher.data.ApiUser
-import com.example.skillmatcher.data.Project
-import com.example.skillmatcher.data.Skill
-import com.example.skillmatcher.data.UserLoginModel
+import com.example.skillmatcher.data.*
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,6 +46,12 @@ interface BackendAPI {
 
     @GET("skill/")
     fun getAllSkills(): Call<List<Skill>>
+
+    @POST("/{email}/skill/{skillId}")
+    fun addSkillToUser(
+        @Path("email") email: String,
+        @Path("skillId") id: Long
+    ): Call<ApiUser>
 }
 
 var token = ""
@@ -326,5 +329,32 @@ fun getAvailableSkills(ctx: Context, result: MutableState<List<Skill>>) {
         override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
             t.message?.let { Log.d("getAvailableSkills", it) }
         }
+    })
+}
+
+fun addSkillToUser(
+    email: String,
+    skillId: Long
+) {
+    Log.d("addSkillsToUser", "Executed")
+    Log.d("addSkillsToUser", "Skills to add: $skillId")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<ApiUser> = retrofitAPI.addSkillToUser(
+        email, skillId
+    )
+    call!!.enqueue(object : Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            Log.d("createProject", "Created $response")
+            if (response.code() == 201) {
+                Log.d("createProject", "Response Code ${response.code()}")
+            } else {
+                Toast.makeText(ctx, "Failed to add skills", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.d("createProject", "Error: $it") }
+        }
+
     })
 }

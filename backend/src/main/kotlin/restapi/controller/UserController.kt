@@ -5,19 +5,22 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
-import restapi.model.Skill
 import restapi.model.SkillDTO
 import restapi.model.User
+import restapi.repository.SkillRepository
 import restapi.service.UserService
 import java.security.Principal
 
 
 @RequestMapping("user")
 @RestController
-class UserController(val userService: UserService) {
-/*
-********************************** GET **********************************
- */
+class UserController(
+    val userService: UserService,
+    private val skillRepository: SkillRepository
+) {
+    /*
+    ********************************** GET **********************************
+     */
     @JsonView(DataView.User::class)
     @GetMapping
     fun getAllUsers() = userService.getAll()
@@ -36,6 +39,9 @@ class UserController(val userService: UserService) {
         return userSkills.map { SkillDTO(it.id, it.name) }
     }
 
+    @GetMapping("/skill/{skillId}")
+    fun getUsersBySkillId(@PathVariable skillId: Long) = userService.getUsersBySkillId(skillId)
+
 /*
 ********************************** PUT **********************************
  */
@@ -49,9 +55,9 @@ class UserController(val userService: UserService) {
 ********************************** POST **********************************
 */
 
-    @PostMapping("/{email}/skill/{skillId}")
-    fun addSkill(@PathVariable email: String, @PathVariable skillId: Long) =
-        userService.addSkill(email, skillId)
+    @PostMapping("/{email}/skill")
+    fun addSkill(@PathVariable email: String, @RequestBody skillIds: List<Long>) =
+        userService.addSkill(email, skillIds)
 
 /*
 ********************************** DELETE **********************************

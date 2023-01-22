@@ -25,12 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAvailableSkills
-import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.SkillModel
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 
+var selectedSkills = mutableListOf<Skill>()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
@@ -51,7 +51,7 @@ fun RegisterPage() {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("")))
+        mutableStateOf(listOf(Skill(null,"")))
     }
 
     getAvailableSkills(ctx, response)
@@ -131,37 +131,23 @@ fun RegisterPage() {
 
 @Composable
 fun createSkillCards(listOfSkills: List<Skill>) {
-    Log.d("getAvailableSkills", "found list: $listOfSkills".toString())
     LazyRow {
         for (skill in listOfSkills) {
             item {
-                drawSkill(skill.name)
+                drawSkill(skill)
             }
         }
     }
 }
 
-fun getSkills(): MutableList<Skill> {
-
-    //do API call and give list of skills back
-    val listOfSkills = mutableListOf<Skill>()
-    listOfSkills.add(Skill("Java"))
-    listOfSkills.add(Skill("Python"))
-    listOfSkills.add(Skill("REST"))
-    listOfSkills.add(Skill("REACT"))
-    listOfSkills.add(Skill("Java-Script"))
-
-
-    return listOfSkills
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun drawSkill(name: String): SkillModel? {
+fun drawSkill(skill: Skill): SkillModel? {
     val skillTextField = remember { mutableStateOf(TextFieldValue()) }
     val context = LocalContext.current
     var selected by remember { mutableStateOf(false) }
     val color = if (selected) LMUGreen else Color.Gray
+    val skillName = skill.name
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -175,10 +161,14 @@ fun drawSkill(name: String): SkillModel? {
                     Toast
                         .makeText(context, "saved", Toast.LENGTH_SHORT)
                         .show()
+                    if (selected) {
+                        selectedSkills.add(skill)
+                    } else {
+                        selectedSkills.remove(skill)
+                    }
                 })
     ) {
         Column(modifier = Modifier.background(color)) {
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -186,7 +176,7 @@ fun drawSkill(name: String): SkillModel? {
                     .padding(start = 5.dp)
             ) {
                 Text(
-                    text = name,
+                    text = skillName,
                     textAlign = TextAlign.Center
                 )
 
@@ -208,10 +198,14 @@ fun drawSkill(name: String): SkillModel? {
     }
     var skillValue: String = skillTextField.value.toString();
     try {
-        return SkillModel(name, skillValue.toInt())
+        return SkillModel(skillName, skillValue.toInt())
     } catch (e: NumberFormatException) {
         return null;
     }
+}
+
+fun showSelectedSkills() {
+    Log.d("showSelectedSkills", "$selectedSkills")
 }
 
 @Composable
@@ -225,7 +219,8 @@ fun RegisterUser(
 ) {
     Button(
         onClick = {
-            registerUser(ctx, userName, job, registerResponse)
+            // registerUser(ctx, userName, job, registerResponse)
+            showSelectedSkills()
         },
         modifier = Modifier
             .fillMaxWidth()

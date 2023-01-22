@@ -49,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix d
       // whitelist "/excluded" route for testing
       "/excluded",
       "/auth/login",
-      "/skill/"
+      "/skill/",
+      "/user/*/skill/*"
       // other public endpoints of your API may be appended to this array
   };
 

@@ -6,15 +6,18 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
 import restapi.model.Skill
-import restapi.model.SkillDTO
+import restapi.model.User
+import restapi.repository.SkillRepository
 import restapi.service.SkillService
 import java.security.Principal
-import javax.validation.Valid
 
 
 @RequestMapping("skill")
 @RestController
-class SkillController(val skillService: SkillService) {
+class SkillController(
+    val skillService: SkillService,
+    private val skillRepository: SkillRepository
+) {
 
 /*
 ********************************** GET **********************************
@@ -31,6 +34,7 @@ class SkillController(val skillService: SkillService) {
     @JsonView(DataView.UserWithSkill::class)
     @GetMapping("/byName/{name}")
     fun getSkillByName(@PathVariable name: String, principal: Principal) = skillService.getByName(name)
+
 
 /*
 ********************************** POST **********************************

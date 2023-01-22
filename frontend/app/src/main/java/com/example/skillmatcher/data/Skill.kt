@@ -1,6 +1,7 @@
 package com.example.skillmatcher.data
 
 data class Skill(
+    var id: Long?,
     var name: String,
 )
 

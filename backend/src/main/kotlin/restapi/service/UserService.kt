@@ -22,13 +22,18 @@ class UserService(
 
     fun getAll(): List<User> = userRepository.findAll()
 
-    fun getById(id: Long): User = userRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+    fun getById(id: Long): User =
+        userRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
     fun getByEmail(email: String): User =
-        userRepository.findUserByEmail(email) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
+        userRepository.findUserByEmail(email) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No User with this Email found!"
+        )
 
     fun getUserSkillsByEmail(email: String): MutableList<Skill> {
-        val user = userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        val user =
+            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
         return user.skills
     }
 
@@ -44,13 +49,19 @@ class UserService(
         return
     }
 
-    fun addSkill(email: String, skillId: Long) {
-        val user = userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
-        val skill = skillRepository.findById(skillId).orElseThrow { NotFoundException("Skill not found") }
-        user.skills.add(skill)
-        skill.usersWithSkill.add(user)
+    fun addSkill(email: String, skillIds: List<Long>) {
+        val user =
+            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        var skills = skillRepository.findAllById(skillIds)
+        //val skill = skillRepository.findById(skillId).orElseThrow { NotFoundException("Skill not found") }
+        user.skills.addAll(skills)
+        skills.forEach { skill -> skill.usersWithSkill.add(user) }
         userRepository.save(user)
-        skillRepository.save(skill)
+    }
+
+    fun getUsersBySkillId(skillId: Long): List<User> {
+        val skill = skillRepository.findById(skillId) ?: throw Exception("Skill not found")
+        return skill.usersWithSkill
     }
 
 
