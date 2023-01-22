@@ -59,7 +59,7 @@ class SkillController(
 
 /*
 ********************************** DELETE **********************************
-    */
+*/
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

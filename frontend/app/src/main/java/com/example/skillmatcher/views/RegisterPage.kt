@@ -1,6 +1,7 @@
 package com.example.skillmatcher.views
 
 import android.content.Context
+import android.content.res.Resources.NotFoundException
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -24,7 +25,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.api.addSkillToUser
 import com.example.skillmatcher.api.getAvailableSkills
+import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.SkillModel
 import com.example.skillmatcher.ui.theme.LMUGreen
@@ -51,7 +54,7 @@ fun RegisterPage() {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill(null,"")))
+        mutableStateOf(listOf(Skill(null, "")))
     }
 
     getAvailableSkills(ctx, response)
@@ -122,7 +125,7 @@ fun RegisterPage() {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 createSkillCards(skills)
-                RegisterUser(ctx, userName, pw, registerResponse)
+                RegisterUser(ctx, userName, pw, selectedSkills, registerResponse)
             }
 
         }
@@ -204,23 +207,21 @@ fun drawSkill(skill: Skill): SkillModel? {
     }
 }
 
-fun showSelectedSkills() {
-    Log.d("showSelectedSkills", "$selectedSkills")
-}
-
 @Composable
 fun RegisterUser(
     ctx: Context,
     userName: MutableState<TextFieldValue>,
     job: MutableState<TextFieldValue>,
-    // TODO image
-    // TODO skills
+    selectedSkills: MutableList<Skill>,
     registerResponse: MutableState<String>
 ) {
     Button(
         onClick = {
-            // registerUser(ctx, userName, job, registerResponse)
-            showSelectedSkills()
+            val skillList = selectedSkills.map { it.id }
+            Log.d("addSkillsToUser", "Skill ID List: $skillList")
+            registerUser(ctx, userName, job, registerResponse)
+
+            addSkillToUser(userName.value.text, skillList as List<Long>)
         },
         modifier = Modifier
             .fillMaxWidth()

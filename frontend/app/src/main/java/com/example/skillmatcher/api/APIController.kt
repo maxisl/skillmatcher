@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.skillmatcher.data.*
 import com.google.gson.GsonBuilder
@@ -47,10 +46,10 @@ interface BackendAPI {
     @GET("skill/")
     fun getAllSkills(): Call<List<Skill>>
 
-    @POST("/{email}/skill/{skillId}")
+    @POST("/user/{email}/skill/")
     fun addSkillToUser(
         @Path("email") email: String,
-        @Path("skillId") id: Long
+        @Body id: List<Long>
     ): Call<ApiUser>
 }
 
@@ -334,26 +333,28 @@ fun getAvailableSkills(ctx: Context, result: MutableState<List<Skill>>) {
 
 fun addSkillToUser(
     email: String,
-    skillId: Long
+    skillIds: List<Long>
 ) {
     Log.d("addSkillsToUser", "Executed")
-    Log.d("addSkillsToUser", "Skills to add: $skillId")
+    Log.d("addSkillsToUser", "Skills to add: $skillIds")
+    Log.d("addSkillsToUser", "Email: $email")
     val retrofitAPI = createRetrofitInstance()
+
     val call: Call<ApiUser> = retrofitAPI.addSkillToUser(
-        email, skillId
+        email, skillIds
     )
     call!!.enqueue(object : Callback<ApiUser> {
         override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
-            Log.d("createProject", "Created $response")
+            Log.d("addSkillsToUser", "Created $response")
             if (response.code() == 201) {
-                Log.d("createProject", "Response Code ${response.code()}")
+                Log.d("addSkillsToUser", "Response Code ${response.code()}")
             } else {
-                Toast.makeText(ctx, "Failed to add skills", Toast.LENGTH_SHORT).show()
+                Log.d("addSkillsToUser", "Failed: Response Code ${response.code()}")
             }
         }
 
         override fun onFailure(call: Call<ApiUser>, t: Throwable) {
-            t.message?.let { Log.d("createProject", "Error: $it") }
+            t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
 
     })

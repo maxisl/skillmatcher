@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
 import restapi.model.Skill
-import restapi.model.SkillDTO
 import restapi.model.User
 import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
@@ -44,25 +43,31 @@ class UserService(
     }
 
     fun remove(email: String) {
-        val dbUser = this.getByEmail(email);
-        dbUser.id.let { userRepository.deleteById(it) };
+        val user = this.getByEmail(email);
+        user.id.let { userRepository.deleteById(it) };
         return
     }
 
     fun addSkill(email: String, skillIds: List<Long>) {
-        val user =
-            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
-        val skills = skillRepository.findAllById(skillIds)
-        //val skill = skillRepository.findById(skillId).orElseThrow { NotFoundException("Skill not found") }
-        user.skills.addAll(skills)
-        skills.forEach { skill -> skill.usersWithSkill.add(user) }
+        val user = userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        val newSkills = skillRepository.findAllById(skillIds)
+        val existingSkills = user.skills.toMutableList()
+        newSkills.forEach { skill ->
+            if (!existingSkills.contains(skill)) {
+                existingSkills.add(skill)
+                skill.usersWithSkill.add(user)
+            }
+            else {
+                throw Exception("Skill already added")
+            }
+        }
+        user.skills = existingSkills
         userRepository.save(user)
     }
 
     fun getUsersBySkillId(skillId: Long): List<User> {
-        val skill = skillRepository.findById(skillId) ?: throw Exception("Skill not found")
-        val user_skill = skill.
-        return // skill.usersWithSkill
+        val skill = skillRepository.findByIdOrNull(skillId) ?: throw Exception("Skill not found")
+        return skill.usersWithSkill
     }
 
 
