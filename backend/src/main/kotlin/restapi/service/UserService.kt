@@ -52,7 +52,7 @@ class UserService(
     fun addSkill(email: String, skillIds: List<Long>) {
         val user =
             userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
-        var skills = skillRepository.findAllById(skillIds)
+        val skills = skillRepository.findAllById(skillIds)
         //val skill = skillRepository.findById(skillId).orElseThrow { NotFoundException("Skill not found") }
         user.skills.addAll(skills)
         skills.forEach { skill -> skill.usersWithSkill.add(user) }
@@ -61,7 +61,8 @@ class UserService(
 
     fun getUsersBySkillId(skillId: Long): List<User> {
         val skill = skillRepository.findById(skillId) ?: throw Exception("Skill not found")
-        return skill.usersWithSkill
+        val user_skill = skill.
+        return // skill.usersWithSkill
     }
 
 
