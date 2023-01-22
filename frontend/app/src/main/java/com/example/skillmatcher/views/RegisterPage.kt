@@ -53,18 +53,6 @@ fun RegisterPage() {
         mutableStateOf(listOf(Skill("")))
     }
 
-    Button(
-        onClick = {
-            getAvailableSkills(availableSkills)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text(text = "getAvailableSkills", modifier = Modifier.padding(8.dp))
-    }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,8 +63,17 @@ fun RegisterPage() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             item {
+                Button(
+                    onClick = {
+                        getAvailableSkills(ctx, availableSkills)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(text = "getAvailableSkills", modifier = Modifier.padding(8.dp))
+                }
                 Text(
                     text = "Register",
                     fontSize = 60.sp,
@@ -140,7 +137,6 @@ fun RegisterPage() {
 
                 createSkillCards()
                 RegisterUser(ctx, userName, pw, response)
-                getAvailableSkills(availableSkills)
             }
 
         }

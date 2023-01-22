@@ -47,8 +47,8 @@ interface BackendAPI {
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
 
-    @GET("skills")
-    fun getAllSkills(@Header("Authorization") jwt: String): Call<List<Skill>>
+    @GET("skill/")
+    fun getAllSkills(): Call<List<Skill>>
 }
 
 var token = ""
@@ -58,7 +58,7 @@ private lateinit var preferencesManager: PreferencesManager
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
     "http://10.0.2.2:8080/"
-    // "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+// "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -85,7 +85,7 @@ fun postLoginUserData(
     job: MutableState<TextFieldValue>,          // job = user password
     result: MutableState<String>
 ) {
-    Log.i("APIController", "Post login data!")
+    Log.d("postLoginUserData", "Executed")
 
     val retrofitAPI = createRetrofitInstance()
 
@@ -93,7 +93,7 @@ fun postLoginUserData(
     try {
         // pass data from text fields
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
-        // call a method (asynchronously) to create an update and pass our model class
+        // call a method (asynchronously) to create an update and pass model class
         val call: Call<String>? = retrofitAPI.loginUser(userLoginModel)
         // execute request asynchronously
         call!!.enqueue(object : Callback<String> {
@@ -160,18 +160,20 @@ fun registerUser(
                 call: Call<ApiUser>,
                 response: Response<ApiUser>
             ) {
-                Log.i(
-                    "Executing call to function: ",
-                    "register user"
+                Log.d(
+                    "registerUser",
+                    "Executing call to function"
                 )
                 if (response.code() == 400) {
+                    Toast.makeText(ctx, "User already exists", Toast.LENGTH_SHORT).show()
                     val resp = "User already exists"
                     result.value = resp
                 } else if (response.code() == 200) {
+                    Toast.makeText(ctx, "User created", Toast.LENGTH_SHORT).show()
                     val resp = "User created"
                     result.value = resp
                 }
-                Log.d("Response: ", response.body().toString())
+                Log.d("registerUser", response.body().toString())
             }
 
             // error handling
@@ -299,27 +301,30 @@ fun getAllProjects(result: MutableState<List<Project>>) {
             result.value = response.body() as MutableList<Project>
             Log.d("getAllProjects", "Projects as List: $result")
         }
+
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })
 }
 
-fun getAvailableSkills(result: MutableState<List<Skill>>) {
-    Log.d("getAvailableSkills: ", "Executed")
+fun getAvailableSkills(ctx: Context, result: MutableState<List<Skill>>) {
+    Log.d("getAvailableSkills", "Executed")
     val retrofitAPI = createRetrofitInstance()
+    preferencesManager = PreferencesManager(ctx)
     // preferencesManager = PreferencesManager(ctx)
     val call: Call<List<Skill>> =
-        retrofitAPI.getAllSkills("Bearer ${preferencesManager.getJWT()}")
+        retrofitAPI.getAllSkills(/*"Bearer ${preferencesManager.getJWT()}"*/)
     call!!.enqueue(object : Callback<List<Skill>> {
         override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
             Log.d("getAvailableSkills", "Http-Code: ${response.code()}") // debug only
             Log.d("getAvailableSkills", response.body().toString())
-            result.value = response.body() as MutableList<Skill>
-            Log.d("getAvailableSkills", "Skills as List: $result")
+            // result.value = response.body() as MutableList<Skill>
+            // Log.d("getAvailableSkills", "Skills as List: $result")
         }
+
         override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
-            t.message?.let { Log.i("Error found is : ", it) }
+            t.message?.let { Log.d("getAvailableSkills", it) }
         }
     })
 }
