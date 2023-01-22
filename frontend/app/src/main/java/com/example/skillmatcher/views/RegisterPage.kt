@@ -55,7 +55,7 @@ fun RegisterPage() {
 
     Button(
         onClick = {
-            getAvailableSkills(availabeSkills)
+            getAvailableSkills(availableSkills)
         },
         modifier = Modifier
             .fillMaxWidth()

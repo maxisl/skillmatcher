@@ -308,6 +308,7 @@ fun getAllProjects(result: MutableState<List<Project>>) {
 fun getAvailableSkills(result: MutableState<List<Skill>>) {
     Log.d("getAvailableSkills: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
+    // preferencesManager = PreferencesManager(ctx)
     val call: Call<List<Skill>> =
         retrofitAPI.getAllSkills("Bearer ${preferencesManager.getJWT()}")
     call!!.enqueue(object : Callback<List<Skill>> {
