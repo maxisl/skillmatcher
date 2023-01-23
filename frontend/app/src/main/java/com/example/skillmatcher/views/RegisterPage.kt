@@ -35,7 +35,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import java.time.LocalDateTime
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
@@ -60,10 +59,10 @@ fun RegisterPage() {
         mutableStateOf("")
     }
 
-    var isWrongMail by rememberSaveable  { mutableStateOf(false)}
-    var isSomethingWrong by rememberSaveable  { mutableStateOf(false)}
+    var isWrongMail by rememberSaveable { mutableStateOf(false) }
+    var isSomethingWrong by rememberSaveable { mutableStateOf(false) }
 
-    var listOfSelectedSkills = remember{mutableListOf<Skill?>()}
+    var listOfSelectedSkills = remember { mutableListOf<Skill?>() }
 
 
     Column(
@@ -93,18 +92,22 @@ fun RegisterPage() {
 
                 OutlinedTextField(
                     value = eMail.value,
-                    onValueChange = { eMail.value = it
-                                    isWrongMail},
+                    onValueChange = {
+                        eMail.value = it
+                        isWrongMail
+                    },
                     placeholder = { Text(text = "Enter Email") },
                     modifier = Modifier
                         .padding(16.dp),
                     singleLine = true,
                     trailingIcon = {
                         if (isWrongMail)
-                            Icon(Icons.Filled.Warning,"error", tint = Color.Red)
+                            Icon(Icons.Filled.Warning, "error", tint = Color.Red)
                     },
-                    keyboardActions = KeyboardActions { isWrongMail = validateEmail(eMail.value.text) },
-                    )
+                    keyboardActions = KeyboardActions {
+                        isWrongMail = validateEmail(eMail.value.text)
+                    },
+                )
                 if (isWrongMail) {
                     Text(
                         text = "please type in a correct e-mail adress",
@@ -154,9 +157,16 @@ fun RegisterPage() {
 
                 createSKillCards(listOfSelectedSkills = listOfSelectedSkills)
 
-                registerUserButton(interactionSource = interactionSource,eMail.value.text,
-                    pw.value.text,pwSecond.value.text,profileDescription, listOfSelectedSkills
-                    ,profileImage,response)
+                registerUserButton(
+                    interactionSource = interactionSource,
+                    eMail.value.text,
+                    pw.value.text,
+                    pwSecond.value.text,
+                    profileDescription,
+                    listOfSelectedSkills,
+                    profileImage,
+                    response
+                )
 
                 LaunchedEffect(interactionSource) {
                     interactionSource.interactions.collect { interaction ->
@@ -172,9 +182,11 @@ fun RegisterPage() {
                     is PressInteraction.Press -> "Pressed"
                     else -> "No state"
                 }
-                var errorNotifications: InputCheck = checkIfInputIsCorrect(eMail.value.text,
-                    pw.value.text,pwSecond.value.text, listOfSelectedSkills)
-                if(lastInteraction.equals("Pressed") and errorNotifications.error){
+                var errorNotifications: InputCheck = checkIfInputIsCorrect(
+                    eMail.value.text,
+                    pw.value.text, pwSecond.value.text, listOfSelectedSkills
+                )
+                if (lastInteraction.equals("Pressed") and errorNotifications.error) {
                     Text(
                         text = errorNotifications.notifications.joinToString(separator = " "),
                         color = Color.Red,
@@ -195,7 +207,7 @@ fun RegisterPage() {
 @Composable
 fun createSKillCards(listOfSelectedSkills: MutableList<Skill?>): MutableList<Skill?> {
 
-    var selectedSkill:Skill?
+    var selectedSkill: Skill?
     val listOfSkills = getSkills()
     Column() {
         LazyRow() {
@@ -228,19 +240,22 @@ fun createSKillCards(listOfSelectedSkills: MutableList<Skill?>): MutableList<Ski
     return listOfSelectedSkills
 }
 
-fun isSkillAlreadySelected(listOfSkills: MutableList<Skill?>, selectedSkill: Skill):Boolean{
-    for(i in listOfSkills.indices){
-        if(listOfSkills[i]!!.name.equals(selectedSkill.name)){
-           return true
+fun isSkillAlreadySelected(listOfSkills: MutableList<Skill?>, selectedSkill: Skill): Boolean {
+    for (i in listOfSkills.indices) {
+        if (listOfSkills[i]!!.name.equals(selectedSkill.name)) {
+            return true
         }
     }
     return false
 }
 
-fun returnSelectedSkillPosition(listOfSelectedSkills: MutableList<Skill?>, selectedSkill: Skill): Int {
+fun returnSelectedSkillPosition(
+    listOfSelectedSkills: MutableList<Skill?>,
+    selectedSkill: Skill
+): Int {
     var position: Int = 0
-    for(i in listOfSelectedSkills.indices){
-        if(listOfSelectedSkills[i]!!.name.equals(selectedSkill.name)){
+    for (i in listOfSelectedSkills.indices) {
+        if (listOfSelectedSkills[i]!!.name.equals(selectedSkill.name)) {
             position = i
         }
     }
@@ -306,14 +321,15 @@ fun drawSkill(name: String): Skill? {
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Black),
                     maxLines = 1,
 
-                )
+                    )
             }
 
         }
     }
-    var skillValue:String = skillTextField.value.text;
-    try {return Skill(name,skillValue.toInt(),selected)}
-    catch (e :NumberFormatException){
+    var skillValue: String = skillTextField.value.text;
+    try {
+        return Skill(name, skillValue.toInt(), selected)
+    } catch (e: NumberFormatException) {
         return null;
     }
 }
@@ -321,56 +337,59 @@ fun drawSkill(name: String): Skill? {
 @Composable
 fun registerUserButton(
     interactionSource: MutableInteractionSource,
-    eMail: String,pw: String, pwSecond: String,
+    eMail: String, pw: String, pwSecond: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
     response: MutableState<String>
-){
-        var error by remember { mutableStateOf(false)}
+) {
+    var error by remember { mutableStateOf(false) }
 
-        Button(interactionSource = interactionSource,onClick = {
+    Button(interactionSource = interactionSource, onClick = {
 
-            var errorNotifications: InputCheck = checkIfInputIsCorrect(eMail,pw,pwSecond,selectedSkills)
-            error = errorNotifications.error
-            if(!error){
-                createUser(eMail,pw,profileDescription,selectedSkills,profileImage,response)
-            }
-        }) {
-            Text(text = "Register")
-            if(error){
-                Icon(Icons.Filled.Warning,"error", tint = Color.Red)
-            }
+        var errorNotifications: InputCheck =
+            checkIfInputIsCorrect(eMail, pw, pwSecond, selectedSkills)
+        error = errorNotifications.error
+        if (!error) {
+            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, response)
         }
+    }) {
+        Text(text = "Register")
+        if (error) {
+            Icon(Icons.Filled.Warning, "error", tint = Color.Red)
+        }
+    }
 }
 
-fun checkIfInputIsCorrect( eMail: String, pw: String, pwSecond: String,
-                           selectedSkills: MutableList<Skill?>,): InputCheck {
+private fun checkIfInputIsCorrect(
+    eMail: String, pw: String, pwSecond: String,
+    selectedSkills: MutableList<Skill?>,
+): InputCheck {
 
     var error: Boolean = false
     val notifications = mutableListOf<String>()
     var errorNotifications: InputCheck
 
-    if(eMail.isEmpty() or !android.util.Patterns.EMAIL_ADDRESS.matcher(eMail).matches()){
+    if (eMail.isEmpty() or !android.util.Patterns.EMAIL_ADDRESS.matcher(eMail).matches()) {
         error = true
-        notifications.add("Please ad a E-Mail to your Profile")
+        notifications.add("Please ad a E-Mail to your profile")
     }
-    if(pw.isEmpty()){
+    if (pw.isEmpty()) {
         error = true
-        notifications.add("Please ad a Password to your Profile")
+        notifications.add("Please ad a Password to your profile")
     }
-    if(pwSecond.isEmpty() or (pw != pwSecond)){
+    if (pwSecond.isEmpty() or (pw != pwSecond)) {
         error = true
         notifications.add("Password is not identical")
     }
-    if(selectedSkills.size < 1){
+    if (selectedSkills.size < 1) {
         error = true
-        notifications.add("Please ad at least one Skill to your Profile")
+        notifications.add("Please ad at least one Skill to your profile")
     }
 
-    if(error){
+    if (error) {
         errorNotifications = InputCheck(error, notifications)
-    }else{
+    } else {
         errorNotifications = InputCheck(false, notifications)
     }
 
@@ -383,15 +402,17 @@ fun createUser(
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
     response: MutableState<String>
-){
+) {
 
-    val newUser = User(eMail,
-        created = LocalDateTime.now(),pw,profileDescription,selectedSkills,profileImage)
+    val newUser = User(
+        eMail,
+        created = LocalDateTime.now(), pw, profileDescription, selectedSkills, profileImage
+    )
 
     //registerUser(newUser.id,newUser.password,response) //Todo: restliche values hinzufügen
 }
 
-fun validateEmail(email: String):Boolean {
+fun validateEmail(email: String): Boolean {
 
     return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
