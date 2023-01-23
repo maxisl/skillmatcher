@@ -207,6 +207,7 @@ fun drawSkill(skill: Skill): SkillModel? {
     }
 }
 
+// TODO add image
 @Composable
 fun RegisterUser(
     ctx: Context,

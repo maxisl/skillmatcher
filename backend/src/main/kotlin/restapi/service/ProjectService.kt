@@ -52,6 +52,11 @@ class ProjectService(
             endDate = projectRequest.endDate,
             image = projectRequest.image
         )
+        val requiredSkillsIds = projectRequest.requiredSkillsIds
+        if (requiredSkillsIds != null) {
+            val skills = skillRepository.findAllById(requiredSkillsIds)
+            project.requiredSkills.addAll(skills)
+        }
         return projectRepository.save(project)
     }
 

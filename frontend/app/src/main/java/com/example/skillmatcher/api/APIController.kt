@@ -17,6 +17,9 @@ import retrofit2.http.*
 
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
+
+    /*************************************************** USER *******************************************/
+
     @POST("auth/login")
     // add "suspend" in front of "fun" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
@@ -24,6 +27,7 @@ interface BackendAPI {
     @POST("auth/register")
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
 
+    // DEACTIVATED - TEST ONLY
     //@GET("excluded")
     //fun getAllUsers(): Call<List<ApiUser>>
 
@@ -32,6 +36,8 @@ interface BackendAPI {
 
     @GET("user/{email}")
     fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
+
+    /*************************************************** PROJECT *******************************************/
 
     @POST("projects/{email}")
     fun createProject(
@@ -42,6 +48,15 @@ interface BackendAPI {
 
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
+
+    @POST("/projects/{projectId}/requiredSkills")
+    fun addRequiredSkillsToProject(
+        @Header("Authorization") jwt: String,
+        @Path("projectId") projectId: Long,
+        @Body id: List<Long>
+    ): Call<Project>
+
+    /*************************************************** SKILL *******************************************/
 
     @GET("skill/")
     fun getAllSkills(): Call<List<Skill>>
@@ -59,8 +74,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    "http://10.0.2.2:8080/"
-// "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+//    "http://10.0.2.2:8080/"
+    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -164,7 +179,7 @@ fun registerUser(
             ) {
                 Log.d(
                     "registerUser",
-                    "Executing call to function"
+                    "Executed"
                 )
                 if (response.code() == 400) {
                     Toast.makeText(ctx, "User already exists", Toast.LENGTH_SHORT).show()
@@ -255,6 +270,7 @@ fun getUserMail(result: MutableState<String>) {
     })
 }
 
+// TODO add image
 fun createProject(
     ctx: Context,
     name: String,
@@ -276,7 +292,7 @@ fun createProject(
     call!!.enqueue(object : Callback<Project> {
         override fun onResponse(call: Call<Project>, response: Response<Project>) {
             Log.d("createProject", "Created $response")
-            if (response.code() == 201) {
+            if (response.code() == 200) {
                 Toast.makeText(ctx, "Project $name created", Toast.LENGTH_SHORT).show()
                 Log.d("createProject", "Response Code ${response.code()}")
             } else {
@@ -353,8 +369,40 @@ fun addSkillToUser(
             }
         }
 
+        // TODO Error: End of input at line 1 column 1 path $ (works though)
         override fun onFailure(call: Call<ApiUser>, t: Throwable) {
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
+        }
+
+    })
+}
+
+fun addRequiredSkillsToProject(
+    skillIds: List<Long>
+) {
+    Log.d("addRequiredSkillsToProject", "Executed")
+    Log.d("addRequiredSkillsToProject", "Skills to add: $skillIds")
+    val retrofitAPI = createRetrofitInstance()
+
+    val call: Call<Project> = retrofitAPI.addRequiredSkillsToProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        projectId,
+        skillIds
+    )
+    Log.d("addRequiredSkillsToProject", "Email: ${preferencesManager.getMail()}")
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("addRequiredSkillsToProject", "Created $response")
+            if (response.code() == 201) {
+                Log.d("addRequiredSkillsToProject", "Response Code ${response.code()}")
+            } else {
+                Log.d("addRequiredSkillsToProject", "Failed: Response Code ${response.code()}")
+            }
+        }
+
+        // TODO Error: End of input at line 1 column 1 path $ (works though)
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("addRequiredSkillsToProject", "Error: $it") }
         }
 
     })

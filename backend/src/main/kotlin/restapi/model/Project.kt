@@ -62,6 +62,6 @@ data class ProjectRequest(
     val startDate: String,
     val endDate: String,
     val image: Blob?,
-    // TODO add required skills in request
+    val requiredSkillsIds: List<Long>?
 )
 

@@ -9,16 +9,22 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 
@@ -32,23 +38,36 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import com.commandiron.wheel_picker_compose.WheelTextPicker
 import com.example.skillmatcher.ui.theme.White
 import java.util.*
 import com.chargemap.compose.numberpicker.NumberPicker
-import com.example.skillmatcher.api.createProject
-import com.example.skillmatcher.api.getAllProjects
+import com.example.skillmatcher.api.*
 import com.example.skillmatcher.data.ProjectModel
 import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.data.Skill
+import com.example.skillmatcher.data.SkillModel
 import com.example.skillmatcher.ui.theme.LMUGreen
 
-
+var selectedProjectSkills = mutableListOf<Skill>()
 
 @Destination
 @Composable
 fun ProjectCreationPage( ) { //openDrawer: () -> Unit
+    val ctx = LocalContext.current
+
+    val response = remember {
+        mutableStateOf(listOf(Skill(null, "")))
+    }
+
+    getAvailableSkills(ctx, response)
+
+    val skills = response.value
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color(Color.Black.value))) {
@@ -82,6 +101,7 @@ fun ProjectCreationPage( ) { //openDrawer: () -> Unit
                 val attendees = numberInput()
 
                 Spacer(modifier = Modifier.height(7.dp))
+                createSkillCards(skills)
 
                 // Spacer(modifier = Modifier.height(200.dp))
                 saveButton(name,description,startDate,endDate,attendees,image)
@@ -120,7 +140,7 @@ fun projectDescription(): String {
             value = projectDescription,
             onValueChange = { projectDescription = it },
             label = { Text("Description") },
-            modifier = Modifier.defaultMinSize(minHeight = 200.dp)
+            modifier = Modifier.defaultMinSize(minHeight = 100.dp)
         )
 
         //Start Date
@@ -309,6 +329,7 @@ fun imagePicker(): Bitmap? {
     return bitmap.value
 }
 
+// TODO add required skills
 @Composable
 fun saveButton(
     name: String,
@@ -326,15 +347,17 @@ fun saveButton(
             .fillMaxWidth()
             .padding(16.dp),
             onClick = {
-                // TODO id and owner_id generated in backend?
-                var id = UUID.randomUUID()
-                var owner_id = UUID.randomUUID()
-                var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
-                println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
-                        + endDate + " Attendees: " + attendees.toString())
+                val projectSkillList = selectedSkills.map { it.id }
+                Log.d("addRequiredSkillsToProject", "Skill ID List: $projectSkillList")
 
-                // duplicate to fit data type of Project (not ProjectModel)
-                createProject(ctx, name, description, attendees.toString(), startDate, endDate, image)
+                /*var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
+                println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
+                        + endDate + " Attendees: " + attendees.toString())*/
+
+                val project = createProject(ctx, name, description, attendees.toString(), startDate, endDate, image)
+                // GET PROJECT ID
+                val projectId = project["id"]
+                addRequiredSkillsToProject(projectSkillList as List<Long>)
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }
