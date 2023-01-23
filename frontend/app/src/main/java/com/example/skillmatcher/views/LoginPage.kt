@@ -193,11 +193,6 @@ fun postData(navigator: DestinationsNavigator) {
                     // TODO can be removed?
                     SideBarDestination(
                         id = 1,
-                        User(
-                            name = "Chris P. Bacon",
-                            id = "userid",
-                            created = LocalDateTime.now()
-                        )
                     )
                 )
             },
@@ -210,7 +205,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx, userName, job, response)
+                registerUser(userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(
