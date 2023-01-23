@@ -1,5 +1,7 @@
 package com.example.skillmatcher.views
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.addSkillToUser
 import com.example.skillmatcher.api.getAvailableSkills
+import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
@@ -58,17 +61,17 @@ fun RegisterPage() {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill(null, "")))
+        mutableStateOf(listOf(Skill("", 0,false)))
+    }
+
+    val result = remember {
+        mutableStateOf("")
     }
 
     var isWrongMail by rememberSaveable { mutableStateOf(false) }
     var isSomethingWrong by rememberSaveable { mutableStateOf(false) }
 
     var listOfSelectedSkills = remember { mutableListOf<Skill?>() }
-
-    getAvailableSkills(ctx, response)
-
-    val skills = response.value
 
     Column(
         modifier = Modifier
@@ -160,7 +163,7 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSKillCards(listOfSelectedSkills = listOfSelectedSkills)
+                createSKillCards(listOfSelectedSkills = listOfSelectedSkills,ctx, response)
 
                 registerUserButton(
                     interactionSource = interactionSource,
@@ -170,7 +173,8 @@ fun RegisterPage() {
                     profileDescription,
                     listOfSelectedSkills,
                     profileImage,
-                    response
+                    result,
+                    ctx
                 )
 
                 LaunchedEffect(interactionSource) {
@@ -210,15 +214,19 @@ fun RegisterPage() {
 
 
 @Composable
-fun createSKillCards(listOfSelectedSkills: MutableList<Skill?>): MutableList<Skill?> {
+fun createSKillCards(
+    listOfSelectedSkills: MutableList<Skill?>,
+    ctx: Context,
+    response: MutableState<List<Skill>>
+): MutableList<Skill?> {
 
     var selectedSkill: Skill?
-    val listOfSkills = getSkills()
+    val listOfSkills = getSkills(ctx,response)
     Column() {
         LazyRow() {
             listOfSkills.iterator().forEach { skill ->
                 item() {
-                    selectedSkill = drawSkill(skill.name)
+                    selectedSkill = drawSkill(skill)
                     if (selectedSkill != null) {
                         if (selectedSkill!!.isSelected and !isSkillAlreadySelected(
                                 listOfSelectedSkills, selectedSkill!!
@@ -267,22 +275,18 @@ fun returnSelectedSkillPosition(
     return position
 }
 
-fun getSkills(): MutableList<Skill> {
+fun getSkills(ctx: Context, response: MutableState<List<Skill>>): List<Skill> {
     //do API call and give list of skills back
-    val listOfSkills = mutableListOf<Skill>()
-    listOfSkills.add(Skill("Java"))
-    listOfSkills.add(Skill("Python"))
-    listOfSkills.add(Skill("REST"))
-    listOfSkills.add(Skill("REACT"))
-    listOfSkills.add(Skill("Java-Script"))
+    getAvailableSkills(ctx, response)
+    val skills = response.value
 
 
-    return listOfSkills
+    return skills
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun drawSkill(skill: Skill): SkillModel? {
+fun drawSkill(skill: Skill): Skill? {
     val skillTextField = remember { mutableStateOf(TextFieldValue()) }
     val context = LocalContext.current
     var selected by remember { mutableStateOf(false) }
@@ -347,7 +351,8 @@ fun registerUserButton(
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
-    response: MutableState<String>
+    result: MutableState<String>,
+    ctx: Context
 ) {
     var error by remember { mutableStateOf(false) }
 
@@ -357,7 +362,7 @@ fun registerUserButton(
             checkIfInputIsCorrect(eMail, pw, pwSecond, selectedSkills)
         error = errorNotifications.error
         if (!error) {
-            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, response)
+            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
         }
     }) {
         Text(text = "Register")
@@ -407,7 +412,8 @@ fun createUser(
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
-    response: MutableState<String>
+    result: MutableState<String>,
+    ctx: Context
 ) {
 
     val newUser = User(
@@ -415,8 +421,8 @@ fun createUser(
         created = LocalDateTime.now(), pw, profileDescription, selectedSkills, profileImage
     )
 
-    addSkillToUser(userName.value.text, skillList as List<Long>)
-    registerUser(newUser.id,newUser.password,response) //Todo: restliche values hinzufügen
+    addSkillToUser(eMail, selectedSkills as List<Long>)
+    registerUser(ctx,newUser.id,newUser.password,result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {

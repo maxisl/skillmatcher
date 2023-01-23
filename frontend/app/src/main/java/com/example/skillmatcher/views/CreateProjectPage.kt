@@ -47,11 +47,16 @@ import java.util.*
 @Destination
 @Composable
 fun ProjectCreationPage() { //openDrawer: () -> Unit
+    val ctx = LocalContext.current
 
     var listOfSelectedSkills = remember { mutableListOf<Skill?>() }
 
     val interactionSource = remember { MutableInteractionSource() }
     val interactions = remember { mutableStateListOf<Interaction>() }
+
+    val response = remember {
+        mutableStateOf(listOf(Skill("", 0,false)))
+    }
 
     Column(
         modifier = Modifier
@@ -90,7 +95,11 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
                 val attendees = numberInput()
 
                 Spacer(modifier = Modifier.height(7.dp))
-                createSKillCards(listOfSelectedSkills = listOfSelectedSkills)
+                createSKillCards(
+                    listOfSelectedSkills = listOfSelectedSkills,
+                    ctx = ctx,
+                    response = response
+                )
 
                 Spacer(modifier = Modifier.height(7.dp))
                 saveButton(
@@ -405,7 +414,8 @@ fun saveButton(
                 if (!error) {
                     // duplicate to fit data type of Project (not ProjectModel)
                     //TODO: Image und Skills müssen noch übergeben werden
-                    createProject(ctx, name, description, attendees.toString())
+                    val randomIDs= listOf<Long>(1,2)
+                    createProject(ctx, name, description, attendees.toString(),startDate,endDate,image,randomIDs)
                 }
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))

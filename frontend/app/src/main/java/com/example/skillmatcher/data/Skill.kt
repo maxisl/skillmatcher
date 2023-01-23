@@ -10,7 +10,7 @@ data class Skill (
     var value: Int = 0 ,
     var isSelected: Boolean = false
     ) : Parcelable
-)
+
 
 data class SkillModel(
     var name: String,

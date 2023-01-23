@@ -161,7 +161,7 @@ fun postLoginUserData(
 }
 
 fun registerUser(
-    //ctx: Context,  Todo: brauchen wir den context hier?
+    ctx: Context,
     userName: String,
     // job = user password
     job: String,
