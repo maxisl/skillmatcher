@@ -278,10 +278,11 @@ fun createProject(
     maxAttendees: String,
     startDate: String,
     endDate: String,
-    image: Bitmap?
+    image: Bitmap?,
+    skillIds: List<Long>
 ) {
     Log.d("createProject", "Executed")
-    val project = Project(name, description, maxAttendees, startDate, endDate, image)
+    val project = Project(name, description, maxAttendees, startDate, endDate, image, skillIds)
     Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(
@@ -377,7 +378,7 @@ fun addSkillToUser(
     })
 }
 
-fun addRequiredSkillsToProject(
+/*fun addRequiredSkillsToProject(
     skillIds: List<Long>
 ) {
     Log.d("addRequiredSkillsToProject", "Executed")
@@ -406,4 +407,4 @@ fun addRequiredSkillsToProject(
         }
 
     })
-}
+}*/

@@ -353,11 +353,7 @@ fun saveButton(
                 /*var newProject = ProjectModel(id,description,attendees,name,startDate,endDate,owner_id,image)
                 println("name: " + newProject.name + " Description: " + description + " StartDate: " + startDate + " EndDate: "
                         + endDate + " Attendees: " + attendees.toString())*/
-
-                val project = createProject(ctx, name, description, attendees.toString(), startDate, endDate, image)
-                // GET PROJECT ID
-                val projectId = project["id"]
-                addRequiredSkillsToProject(projectSkillList as List<Long>)
+                createProject(ctx, name, description, attendees.toString(), startDate, endDate, image, projectSkillList as List<Long>)
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
         }

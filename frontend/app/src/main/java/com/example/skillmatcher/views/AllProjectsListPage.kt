@@ -30,7 +30,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 fun AllProjectsListPage(
 ) {
     val response = remember {
-        mutableStateOf(listOf(Project("", "", "", "", "", null)))
+        mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
     }
     getAllProjects(response)
     val projects = response.value
