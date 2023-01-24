@@ -190,7 +190,6 @@ fun postData(navigator: DestinationsNavigator) {
                     ctx, userName, job, response
                 )
                 navigator.navigate(
-                    // TODO can be removed?
                     SideBarDestination(
                         id = 1,
                     )
@@ -205,7 +204,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx, userName.value.text, job.value.text, response)
+                registerUser(ctx,userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(
@@ -231,5 +230,17 @@ fun postData(navigator: DestinationsNavigator) {
         )
 
         Spacer(modifier = Modifier.height(20.dp))
+
+        // TODO remove after testing: Button to test function
+        Button(
+            onClick = {
+                getAllUsers()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
+        }
     }
 }
