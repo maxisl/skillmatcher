@@ -33,7 +33,6 @@ class ProjectController(
     @GetMapping("/{id}")
     fun getProject(@PathVariable id: Long) = projectService.getById(id)
 
-    // TODO getAllProjectsByUserEmail
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byUserEmail/{userEmail}")
     fun getAllProjectsByUserEmail(@PathVariable userEmail: String): ResponseEntity<List<Project>> {
