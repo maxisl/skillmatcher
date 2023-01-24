@@ -466,7 +466,7 @@ private fun checkIfInputIsCorrect(
     }
     if (listOfSelectedSkills.size < 1) {
         error = true
-        notifications.add("Please ad at least one Skill to your profile")
+        notifications.add("Please add at least one Skill to your profile")
     }
 
     if (error) {
