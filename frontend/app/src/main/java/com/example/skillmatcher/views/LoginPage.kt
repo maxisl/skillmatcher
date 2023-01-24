@@ -3,7 +3,6 @@ package com.example.skillmatcher.views
 import androidx.compose.foundation.background
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
@@ -11,12 +10,18 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -142,6 +147,7 @@ fun postData(navigator: DestinationsNavigator) {
     val response = remember {
         mutableStateOf("")
     }
+    var passwordVisibility by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -176,10 +182,23 @@ fun postData(navigator: DestinationsNavigator) {
             value = job.value,
             onValueChange = { job.value = it },
             placeholder = { Text(text = "Enter Password") },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
             singleLine = true,
+            trailingIcon = {
+                val image = if (passwordVisibility)
+                    Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                val description = if (passwordVisibility) "Hide password" else "Show password"
+
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility}){
+                    Icon(imageVector  = image, description)
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(10.dp))
