@@ -437,11 +437,11 @@ private fun checkIfInputIsCorrect(
 
     if (name.isEmpty()) {
         error = true
-        notifications.add("Please ad a name to your project")
+        notifications.add("Please add a name to your project")
     }
     if (description.isEmpty()) {
         error = true
-        notifications.add("Please ad a description to your project")
+        notifications.add("Please add a description to your project")
     }
     if (startDate.isEmpty()) {
         error = true
@@ -449,7 +449,7 @@ private fun checkIfInputIsCorrect(
     }
     if (endDate.isEmpty()) {
         error = true
-        notifications.add("Please select a end date")
+        notifications.add("Please select an end date")
     }
     if (startDate.isNotEmpty() and endDate.isNotEmpty()) {
         val tmpStartDate = formatStringToDate(startDate)
