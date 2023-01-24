@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
+import restapi.model.Project
 import restapi.model.Skill
 import restapi.model.User
 import restapi.repository.ProjectRepository
@@ -34,6 +35,12 @@ class UserService(
         val user =
             userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
         return user.skills
+    }
+
+    fun getUserProjects(userId: Long): MutableList<Project> //= userRepository.findByEmail(userEmail);
+    {
+        val user = userRepository.findById(userId)
+        return user.map { it.projects }.orElse(mutableListOf())
     }
 
     fun update(email: String, user: User): User {

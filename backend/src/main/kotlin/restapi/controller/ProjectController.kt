@@ -10,8 +10,8 @@ import restapi.jsonView.DataView
 import restapi.model.ProjectRequest
 import restapi.model.SkillDTO
 import restapi.repository.ProjectRepository
-import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
+import restapi.service.UserService
 
 
 @RequestMapping("projects")
@@ -20,11 +20,11 @@ class ProjectController(
     val projectService: ProjectService,
     val projectRepository: ProjectRepository,
     val userRepository: UserRepository,
-    private val skillRepository: SkillRepository
+    private val userService: UserService
 ) {
     /*
-        ********************************** GET **********************************
-        */
+            ********************************** GET **********************************
+            */
     @JsonView(DataView.ProjectWithOwner::class)
     @GetMapping
     fun getAllProjects() = projectService.getAll()
@@ -34,10 +34,17 @@ class ProjectController(
     fun getProject(@PathVariable id: Long) = projectService.getById(id)
 
     // TODO getAllProjectsByUserEmail
-    /*@JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byUserEmail/{userEmail}")
-    fun getAllProjectsByUserEmail(@PathVariable userEmail: String) = projectService.getAllByUser(userEmail)
-    */
+    fun getAllProjectsByUserEmail(@PathVariable userEmail: String): ResponseEntity<List<Project>> {
+        val userId = userService.getByEmail(userEmail).id
+        val projects = userService.getUserProjects(userId)
+        return if (projects.isNotEmpty()) {
+            ResponseEntity.ok(projects)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byName/{name}")
