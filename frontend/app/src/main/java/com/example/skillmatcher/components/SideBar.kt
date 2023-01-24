@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 @Destination
 @Composable
 fun SideBar(id: Int, // <-- required navigation argument
-            user: User?,
             navigator: DestinationsNavigator?
 ) {
     SkillMatcherTheme {
