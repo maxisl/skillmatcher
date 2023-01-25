@@ -1,6 +1,7 @@
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
@@ -23,9 +24,9 @@ data class ChatMessage(
     @Column(nullable = false)
     var message: String,
 
-    @JsonView(DataView.ChatMessage::class)
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
+    @JsonIgnore
     var sender: User,
 
     @JsonView(DataView.ChatMessage::class)

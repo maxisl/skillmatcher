@@ -50,7 +50,7 @@ data class User(
     var skills: MutableList<Skill> = mutableListOf(),
 
     @OneToMany(mappedBy = "sender")
-    var sentMessages: List<ChatMessage> = listOf()
+    var messages: List<ChatMessage> = emptyList()
 
 )
 
