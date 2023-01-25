@@ -16,9 +16,6 @@ import restapi.service.ProjectService
 @RestController
 class ChatMessageController(
     private val chatMessageService: ChatMessageService,
-    private val userRepository: UserRepository,
-    private val projectService: ProjectService,
-    private val chatMessageRepository: ChatMessageRepository
 ) {
 
     // TODO check if user attends projects before returning messages for that project?

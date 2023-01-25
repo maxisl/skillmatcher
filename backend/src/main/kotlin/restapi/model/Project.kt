@@ -1,6 +1,7 @@
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
 import java.sql.Blob
@@ -51,7 +52,11 @@ data class Project(
         inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
     )
     @JsonBackReference
-    var requiredSkills: MutableList<Skill> = mutableListOf()
+    var requiredSkills: MutableList<Skill> = mutableListOf(),
+
+    @OneToMany(mappedBy = "project")
+    @JsonManagedReference
+    var chatMessages: List<ChatMessage> = emptyList()
 
 )
 
