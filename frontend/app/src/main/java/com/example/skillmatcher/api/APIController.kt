@@ -49,12 +49,13 @@ interface BackendAPI {
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
 
-    @POST("/projects/{projectId}/requiredSkills")
+    // LEGACY
+    /*@POST("/projects/{projectId}/requiredSkills")
     fun addRequiredSkillsToProject(
         @Header("Authorization") jwt: String,
         @Path("projectId") projectId: Long,
         @Body id: List<Long>
-    ): Call<Project>
+    ): Call<Project>*/
 
     /*************************************************** SKILL *******************************************/
 
@@ -378,6 +379,7 @@ fun addSkillToUser(
     })
 }
 
+// LEGACY: required skills are automatically added to project upon creation
 /*fun addRequiredSkillsToProject(
     skillIds: List<Long>
 ) {

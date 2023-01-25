@@ -17,6 +17,7 @@ class ProjectService(
     @Autowired val projectRepository: ProjectRepository,
     @Autowired val userRepository: UserRepository,
     private val skillRepository: SkillRepository,
+    private val userService: UserService,
 ) {
 
     fun getAll(): MutableList<Project> {
@@ -29,7 +30,6 @@ class ProjectService(
 
     fun getAllByName(id: String): MutableList<Project> = projectRepository.findByNameContaining(id)
 
-    // fun getAllByUser(userEmail: String): MutableList<Project> = userRepository.findByEmail(userEmail);
 
     fun getById(id: Long): Project =
         projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(
@@ -95,7 +95,7 @@ class ProjectService(
         }
     }
 
-    fun getRequiredSkills(project: Project) : List<SkillDTO> {
+    fun getRequiredSkills(project: Project): List<SkillDTO> {
         return project.requiredSkills.map { skill -> SkillDTO(skill.id!!, skill.name) }
     }
 }

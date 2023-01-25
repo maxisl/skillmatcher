@@ -47,7 +47,11 @@ data class User(
         inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
     )
     @JsonBackReference
-    var skills: MutableList<Skill> = mutableListOf()
+    var skills: MutableList<Skill> = mutableListOf(),
+
+    @OneToMany(mappedBy = "sender")
+    var sentMessages: List<ChatMessage> = listOf()
+
 )
 
 data class UserDTO(val id: Long, val email: String?)
