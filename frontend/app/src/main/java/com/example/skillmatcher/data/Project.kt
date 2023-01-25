@@ -14,7 +14,7 @@ data class ProjectModel(
     var image: Bitmap?
 )
 
-// have to use this model for getAllProjects until backend contains all attributes from ProjectModel
+// use this model for getAllProjects
 data class Project(
     var name: String,
     var description: String,

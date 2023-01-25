@@ -379,6 +379,7 @@ fun addSkillToUser(
     })
 }
 
+// LEGACY: required skills are automatically added to project upon creation
 /*fun addRequiredSkillsToProject(
     skillIds: List<Long>
 ) {
