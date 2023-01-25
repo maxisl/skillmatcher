@@ -13,12 +13,17 @@ class ChatMessageService(
     private val userRepository: UserRepository,
     private val projectService: ProjectService
 ) {
+
     fun getAll(): MutableList<ChatMessage> {
         return chatMessageRepository.findAll()
     }
 
     fun getAllMessagesByProject(projectId: Long): List<ChatMessage> {
         return chatMessageRepository.findByProjectId(projectId)
+    }
+
+    fun getChatMessagesByEmail(email: String): List<ChatMessage> {
+        return chatMessageRepository.findBySenderEmail(email)
     }
 
     fun create(messageRequest: ChatMessageRequest): ChatMessage {

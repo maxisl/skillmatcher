@@ -18,9 +18,13 @@ class ChatMessageController(
     private val chatMessageService: ChatMessageService,
 ) {
 
+    /*
+    ********************************** GET **********************************
+     */
+
     // TODO check if user attends projects before returning messages for that project?
     @JsonView(DataView.ChatMessage::class)
-    @GetMapping
+    @GetMapping("/")
     fun getAllChatMessages() = chatMessageService.getAll()
 
     @GetMapping("/project/{projectId}")
@@ -28,6 +32,19 @@ class ChatMessageController(
         return chatMessageService.getAllMessagesByProject(projectId)
     }
 
+    @GetMapping("/{email}")
+    fun getChatMessagesByEmail(@PathVariable email: String): ResponseEntity<List<ChatMessage>> {
+        val messages = chatMessageService.getChatMessagesByEmail(email)
+        return if (messages.isNotEmpty()) {
+            ResponseEntity.ok(messages)
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    /*
+    ********************************** POST **********************************
+     */
 
     @JsonView(DataView.ChatMessage::class)
     @PostMapping("/")

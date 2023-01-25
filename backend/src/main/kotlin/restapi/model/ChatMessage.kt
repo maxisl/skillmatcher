@@ -15,6 +15,7 @@ data class ChatMessage(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long?,
 
+    @JsonView(DataView.ChatMessage::class)
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     @JsonBackReference

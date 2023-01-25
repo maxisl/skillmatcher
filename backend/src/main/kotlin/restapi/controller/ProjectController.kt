@@ -23,8 +23,8 @@ class ProjectController(
     private val userService: UserService
 ) {
     /*
-            ********************************** GET **********************************
-            */
+    ********************************** GET **********************************
+     */
     @JsonView(DataView.ProjectWithOwner::class)
     @GetMapping
     fun getAllProjects() = projectService.getAll()
@@ -45,7 +45,6 @@ class ProjectController(
         }
     }
 
-
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byName/{name}")
     fun findByNameContaining(@PathVariable name: String) = projectService.getAllByName(name)
@@ -60,6 +59,7 @@ class ProjectController(
         val requiredSkills = projectService.getRequiredSkills(project)
         return ResponseEntity.ok(requiredSkills)
     }
+
     /*
     ********************************** POST **********************************
      */
