@@ -51,7 +51,11 @@ class UserService(
 
     fun remove(email: String) {
         val user = this.getByEmail(email);
-        user.id.let { userRepository.deleteById(it) };
+        user.id.let {
+            if (it != null) {
+                userRepository.deleteById(it)
+            }
+        };
         return
     }
 

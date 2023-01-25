@@ -7,6 +7,7 @@ public class DataView {
     public interface UserWithProjects extends User, Project{}
     public interface Project {}
     public interface Skill {}
+    public interface ChatMessage {}
     public interface UserWithSkill extends User, Skill{}
 
     public interface ProjectWithSkill extends Project, Skill{}

@@ -14,7 +14,7 @@ data class User(
     @JsonView(DataView.User::class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long,
+    var id: Long?,
 
     // user email
     @JsonView(DataView.User::class)

@@ -37,13 +37,14 @@ class ProjectController(
     @GetMapping("/byUserEmail/{userEmail}")
     fun getAllProjectsByUserEmail(@PathVariable userEmail: String): ResponseEntity<List<Project>> {
         val userId = userService.getByEmail(userEmail).id
-        val projects = userService.getUserProjects(userId)
-        return if (projects.isNotEmpty()) {
+        val projects = userId?.let { userService.getUserProjects(it) }
+        return if (projects != null) {
             ResponseEntity.ok(projects)
         } else {
             ResponseEntity.notFound().build()
         }
     }
+
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byName/{name}")
