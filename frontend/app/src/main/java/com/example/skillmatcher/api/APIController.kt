@@ -49,6 +49,12 @@ interface BackendAPI {
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
 
+    @GET("projects/byUserEmail/{email}")
+    fun getProjectsByUserEmail(
+        @Header("Authorization") jwt: String,
+        @Path("email") email: String,
+        ): Call<List<Project>>
+
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
     fun addRequiredSkillsToProject(
@@ -376,6 +382,25 @@ fun addSkillToUser(
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
 
+    })
+}
+
+fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
+    Log.d("getProjectsByUserEmail: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Project>> =
+        retrofitAPI.getProjectsByUserEmail("Bearer ${preferencesManager.getJWT()}", "${preferencesManager.getMail()}")
+    call!!.enqueue(object : Callback<List<Project>> {
+        override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+            // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
+            Log.d("getProjectsByUserEmail", response.body().toString())
+            result.value = response.body() as MutableList<Project>
+            Log.d("getProjectsByUserEmail", "Projects as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
     })
 }
 

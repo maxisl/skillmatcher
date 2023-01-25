@@ -1,5 +1,6 @@
 package com.example.skillmatcher
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,7 +21,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import com.example.skillmatcher.api.getProjectsByUserEmail
+import com.example.skillmatcher.data.Project
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 
@@ -28,6 +33,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun HomePage(navigator: DestinationsNavigator
 ) {
+    var response = remember {
+        mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize()
@@ -36,6 +44,15 @@ fun HomePage(navigator: DestinationsNavigator
     ) {
 
         item {
+            Button(onClick = {
+                getProjectsByUserEmail(response)
+                var userProjects = response.value
+                Log.d("getProjectsByUserEmail: ", "Executed in HomePage $userProjects")}
+            ){
+
+                Text(text = "Test", modifier = Modifier.padding(8.dp))
+            }
+
             Row(
                 modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top=40.dp),
                 verticalAlignment = Alignment.CenterVertically
