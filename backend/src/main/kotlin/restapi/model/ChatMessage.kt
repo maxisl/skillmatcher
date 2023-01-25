@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
-import java.time.LocalDateTime
 import javax.persistence.*;
 
 @Entity
