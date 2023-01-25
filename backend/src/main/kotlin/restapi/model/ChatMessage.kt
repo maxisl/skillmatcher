@@ -21,7 +21,12 @@ data class ChatMessage(
     @JoinColumn(name = "sender_id", nullable = false)
     var sender: User,
 
-    // TODO use String?
     @Column(nullable = false)
-    var timestamp: LocalDateTime
+    var timestamp: String
+)
+
+data class ChatMessageRequest(
+    val message: String,
+    val sender: User,
+    val timestamp: String
 )

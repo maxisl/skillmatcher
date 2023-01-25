@@ -1,26 +1,27 @@
 package restapi.controller
 
-import com.fasterxml.jackson.annotation.JsonView
-import restapi.model.Project
-import restapi.service.ProjectService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import restapi.jsonView.DataView
-import restapi.model.ChatMessage
-import restapi.model.ProjectRequest
-import restapi.model.SkillDTO
-import restapi.repository.ProjectRepository
+import restapi.model.*
 import restapi.repository.UserRepository
 import restapi.service.ChatMessageService
-import restapi.service.UserService
 
 @RequestMapping("chat-messages")
 @RestController
-class ChatMessageController(private val chatMessageService: ChatMessageService) {
+class ChatMessageController(
+    private val chatMessageService: ChatMessageService,
+    private val userRepository: UserRepository
+) {
 
-    @PostMapping("/")
-    fun saveMessage(@RequestBody message: ChatMessage): ChatMessage {
-        return chatMessageService.saveMessage(message)
+    @PostMapping("/{projectId}/{userEmail}")
+    fun saveMessage(
+        @PathVariable projectId: Long,
+        @PathVariable userEmail: String,
+        @RequestBody messageRequest: ChatMessageRequest
+    ): ResponseEntity<ChatMessage> {
+        val user = userRepository.findUserByEmail(userEmail)
+        val chatMessage = chatMessageService.create(ChatMessageRequest)
+        return ResponseEntity.ok(chatMessageService.save(chatMessage))
     }
+
 }
