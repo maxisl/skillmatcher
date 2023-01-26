@@ -6,6 +6,8 @@ import restapi.service.ProjectService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
+import org.webjars.NotFoundException
 import restapi.jsonView.DataView
 import restapi.model.ProjectRequest
 import restapi.model.SkillDTO
@@ -46,11 +48,11 @@ class ProjectController(
     }
 
     // LEGACY - DOES NOT MAKE SENSE? NAME IS NOT UNIQUE
-/*    @JsonView(DataView.Project::class)
-    @GetMapping("/byName/{name}")
-    fun findByNameContaining(@PathVariable name: String): ResponseEntity<List<Project>> {
-        return ResponseEntity.ok(projectService.getAllByName(name))
-    }*/
+    /*    @JsonView(DataView.Project::class)
+        @GetMapping("/byName/{name}")
+        fun findByNameContaining(@PathVariable name: String): ResponseEntity<List<Project>> {
+            return ResponseEntity.ok(projectService.getAllByName(name))
+        }*/
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/attendees/{projectId}")
@@ -80,6 +82,8 @@ class ProjectController(
         if (user != null) {
             project.attendees.add(user)
             user.projects.add(project)
+        } else {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         }
         return ResponseEntity.ok(projectRepository.save(project))
     }

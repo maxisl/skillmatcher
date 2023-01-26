@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByEmail(username);
         if (user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found or invalid JWT");
         }
 
         return new org.springframework.security.core.userdetails.User(
