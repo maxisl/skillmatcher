@@ -26,7 +26,7 @@ data class Project(
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
-    val maxAttendees: String,
+    var maxAttendees: String,
 
     @JsonView(DataView.Project::class)
     @ManyToMany(mappedBy = "projects")
@@ -73,6 +73,7 @@ data class ProjectRequest(
 data class ProjectUpdateDto(
     var name: String?,
     var description: String?,
+    var maxAttendees: String?,
     var startDate: String?,
     var endDate: String?
 )

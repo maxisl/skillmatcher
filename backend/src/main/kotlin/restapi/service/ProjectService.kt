@@ -94,14 +94,13 @@ class ProjectService(
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }*/
 
-    // TODO "Content type 'application/json;charset=UTF-8' not supported"
     fun updateProject(id: Long, projectUpdateDto: ProjectUpdateDto): ResponseEntity<Project> {
         val project = projectRepository.findById(id)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found") }
-
         project.apply {
             name = projectUpdateDto.name ?: name
             description = projectUpdateDto.description ?: description
+            maxAttendees = projectUpdateDto.maxAttendees?: maxAttendees
             startDate = projectUpdateDto.startDate ?: startDate
             endDate = projectUpdateDto.endDate ?: endDate
         }
