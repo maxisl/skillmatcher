@@ -114,14 +114,14 @@ fun dropDownMenu(navigator: DestinationsNavigator?){
             onDismissRequest = { expanded =false },
         modifier= Modifier.width(with(LocalDensity.current){textFieldSize.width.toDp()})
         ) {
-            list.forEach{label ->
+            /*list.forEach{label ->
                 androidx.compose.material.DropdownMenuItem(onClick = {
                     selectedItem= label
                     expanded= false
                     navigator?.navigate(OwnProjectOverviewPageDestination())}) {
                    Text(text=label)
                 }
-            }
+            }*/
         }
     }
 }

@@ -394,7 +394,11 @@ fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
         override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
             // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
             Log.d("getProjectsByUserEmail", response.body().toString())
-            result.value = response.body() as MutableList<Project>
+            try{
+                result.value = response.body() as MutableList<Project>
+            }catch(e :Exception){
+                Log.d("getProjectsByUserEmail", "CATCHED ERROR !!! $result")
+            }
             Log.d("getProjectsByUserEmail", "Projects as List: $result")
         }
 

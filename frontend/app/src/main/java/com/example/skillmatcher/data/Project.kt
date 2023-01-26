@@ -1,6 +1,8 @@
 package com.example.skillmatcher.data
 
 import android.graphics.Bitmap
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 data class ProjectModel(
@@ -15,6 +17,7 @@ data class ProjectModel(
 )
 
 // use this model for getAllProjects
+@Parcelize
 data class Project(
     var name: String,
     var description: String,
@@ -23,4 +26,4 @@ data class Project(
     val endDate: String,
     val image: Bitmap?,
     val requiredSkillsIds: List<Long>?
-)
+) : Parcelable

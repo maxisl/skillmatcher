@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
@@ -24,7 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,15 +38,18 @@ import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
-fun RegisterPage() {
+fun RegisterPage(navigator: DestinationsNavigator) {
     val ctx = LocalContext.current
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -72,6 +79,9 @@ fun RegisterPage() {
     var isSomethingWrong by rememberSaveable { mutableStateOf(false) }
 
     var listOfSelectedSkills = remember { mutableListOf<Skill?>() }
+
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var passwordSecondVisibility by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -141,9 +151,24 @@ fun RegisterPage() {
                     value = pw.value,
                     onValueChange = { pw.value = it },
                     placeholder = { Text(text = "Enter Password") },
+                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier
                         .padding(16.dp),
                     singleLine = true,
+                    trailingIcon = {
+                        val image = if (passwordVisibility)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        val description =
+                            if (passwordVisibility) "Hide password" else "Show password"
+
+                        IconButton(onClick = {
+                            passwordVisibility = !passwordVisibility
+                        }) {
+                            Icon(imageVector = image, description)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -152,9 +177,23 @@ fun RegisterPage() {
                     value = pwSecond.value,
                     onValueChange = { pwSecond.value = it },
                     placeholder = { Text(text = "Repeat Password") },
+                    visualTransformation = if (passwordSecondVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier
                         .padding(16.dp),
                     singleLine = true,
+                    trailingIcon = {
+                        val image = if (passwordSecondVisibility)
+                            Icons.Filled.Visibility
+                        else Icons.Filled.VisibilityOff
+
+                        val description = if (passwordSecondVisibility) "Hide password" else "Show password"
+
+                        IconButton(onClick = {
+                            passwordSecondVisibility = !passwordSecondVisibility}){
+                            Icon(imageVector  = image, description)
+                        }
+                    },
+
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -174,7 +213,8 @@ fun RegisterPage() {
                     listOfSelectedSkills,
                     profileImage,
                     result,
-                    ctx
+                    ctx,
+                    navigator
                 )
 
                 LaunchedEffect(interactionSource) {
@@ -352,7 +392,8 @@ fun registerUserButton(
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
     result: MutableState<String>,
-    ctx: Context
+    ctx: Context,
+    navigator: DestinationsNavigator
 ) {
     var error by remember { mutableStateOf(false) }
 
@@ -363,6 +404,11 @@ fun registerUserButton(
         error = errorNotifications.error
         if (!error) {
             createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
+            navigator.navigate(
+                SideBarDestination(
+                    id = 1,
+                )
+            )
         }
     }) {
         Text(text = "Register")
