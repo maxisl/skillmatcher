@@ -48,16 +48,25 @@ class ProjectService(
         )
 
     fun getAttendeesById(id: Long): List<User> {
-        val attendees = projectRepository.findProjectAttendeesById(id)
-        if (attendees.isNotEmpty()) {
-            return attendees
-        } else {
+        val project = projectRepository.findById(id)
+        if (!project.isPresent) {
             throw ResponseStatusException(
                 HttpStatus.NOT_FOUND,
-                "No attendees for project with this Id found!"
+                "No project with this Id found!"
             )
+        } else {
+            val attendees = projectRepository.findProjectAttendeesById(id)
+            if (attendees.isNotEmpty()) {
+                return attendees
+            } else {
+                throw ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No attendees for project with this Id found!"
+                )
+            }
         }
     }
+
 
     fun create(projectRequest: ProjectRequest): Project {
         val project = Project(
@@ -135,7 +144,10 @@ class ProjectService(
         val skills = skillRepository.findAllById(skillIds)
         skills.removeIf(Objects::isNull)
         if (skills.isEmpty()) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid request, all skill ids are null")
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Invalid request, all skill ids are null"
+            )
         }
         project.ifPresent {
             it.requiredSkills.addAll(skills)
