@@ -28,9 +28,12 @@ class SkillService(val repository: SkillRepository) {
         )
 
     fun create(name: String): Skill {
+        if (name.isBlank()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill name cannot be null or blank")
+        }
+
         val skillAvailable: Skill? =
             repository.findSkillByName(name)
-
         if (skillAvailable != null) {
             throw ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -40,13 +43,11 @@ class SkillService(val repository: SkillRepository) {
 
         val skill = Skill()
         skill.name = name
-        println("Newly created Skill: $skill")
 
         return repository.save(skill)
     }
 
 
-    // TODO HttpRequestMethodNotSupportedException: Request method 'PUT' not supported
     fun update(id: Long, name: String): ResponseEntity<String> {
         val skillAvailable: Skill? =
             repository.findSkillByName(name)
