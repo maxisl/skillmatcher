@@ -96,6 +96,9 @@ class ProjectController(
 
     @PostMapping("/{id}/requiredSkills")
     fun addRequiredSkillsToProject(@PathVariable id: Long, @RequestBody skillIds: List<Long>) {
+        if (skillIds == null || skillIds.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "skillIds cannot be null or empty")
+        }
         projectService.addRequiredSkillsToProject(id, skillIds)
     }
 

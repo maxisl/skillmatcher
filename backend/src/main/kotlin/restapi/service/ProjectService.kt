@@ -3,6 +3,7 @@ package restapi.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
@@ -11,6 +12,7 @@ import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
 import java.lang.Exception
+import java.util.*
 
 
 @Service
@@ -71,6 +73,7 @@ class ProjectService(
         val requiredSkillsIds = projectRequest.requiredSkillsIds
         if (requiredSkillsIds != null) {
             val skills = skillRepository.findAllById(requiredSkillsIds)
+            skills.removeIf(Objects::isNull)
             project.requiredSkills.addAll(skills)
         }
         return projectRepository.save(project)
@@ -126,12 +129,20 @@ class ProjectService(
 
     fun addRequiredSkillsToProject(projectId: Long, skillIds: List<Long>) {
         val project = projectRepository.findById(projectId)
+        if (skillIds == null || skillIds.isEmpty()) {
+            throw IllegalArgumentException("skillIds cannot be null or empty")
+        }
         val skills = skillRepository.findAllById(skillIds)
+        skills.removeIf(Objects::isNull)
+        if (skills.isEmpty()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid request, all skill ids are null")
+        }
         project.ifPresent {
             it.requiredSkills.addAll(skills)
             projectRepository.save(it)
         }
     }
+
 
     fun getRequiredSkills(project: Project): List<SkillDTO> {
         return project.requiredSkills.map { skill -> SkillDTO(skill.id!!, skill.name) }
