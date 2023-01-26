@@ -28,7 +28,14 @@ class ProjectService(
         return projects
     }
 
-    fun getAllByName(id: String): MutableList<Project> = projectRepository.findByNameContaining(id)
+    // LEGACY
+    /*    fun getAllByName(name: String): MutableList<Project> {
+            val projects =  projectRepository.findByNameContaining(name)
+            projects.forEach {
+                it.attendees.size
+            }
+            return projects
+        }*/
 
 
     fun getById(id: Long): Project =
@@ -38,7 +45,15 @@ class ProjectService(
         )
 
     fun getAttendeesById(id: Long): List<User> {
-        return projectRepository.findProjectAttendeesById(id)
+        val attendees = projectRepository.findProjectAttendeesById(id)
+        if (attendees.isNotEmpty()) {
+            return attendees
+        } else {
+            throw ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No attendees for project with this Id found!"
+            )
+        }
     }
 
     fun create(projectRequest: ProjectRequest): Project {

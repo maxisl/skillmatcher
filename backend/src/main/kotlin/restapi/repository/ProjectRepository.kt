@@ -9,7 +9,7 @@ import javax.validation.constraints.Email
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long> {
-    fun findByNameContaining(name: String): MutableList<Project>
+    // fun findByNameContaining(name: String): MutableList<Project>
 
     // fun findByEmail(userEmail: String): MutableList<Project>
     @Query("SELECT p.attendees FROM Project p WHERE p.id = :id")

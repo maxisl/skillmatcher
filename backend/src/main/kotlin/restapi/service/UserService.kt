@@ -33,7 +33,11 @@ class UserService(
 
     fun getUserSkillsByEmail(email: String): MutableList<Skill> {
         val user =
-            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+            userRepository.findUserByEmail(email)
+                ?: throw ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "User not found"
+                )
         return user.skills
     }
 
@@ -60,16 +64,16 @@ class UserService(
     }
 
     fun addSkill(email: String, skillIds: List<Long>) {
-        val user = userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        val user =
+            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
         val newSkills = skillRepository.findAllById(skillIds)
         val existingSkills = user.skills.toMutableList()
         newSkills.forEach { skill ->
             if (!existingSkills.contains(skill)) {
                 existingSkills.add(skill)
                 skill.usersWithSkill.add(user)
-            }
-            else {
-                throw Exception("Skill already added")
+            } else {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill already added")
             }
         }
         user.skills = existingSkills

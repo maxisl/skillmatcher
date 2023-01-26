@@ -36,8 +36,6 @@ public class JwtTokenProvider {
     }
 
     public String getUserMailFromToken(String token) {
-        System.out.println("Token: "+ token);
-        System.out.println("Secret: "+ jwtSecret);
         Claims claims = Jwts
                 .parser()
                 .setSigningKey(jwtSecret)
