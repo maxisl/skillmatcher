@@ -18,11 +18,11 @@ data class Project(
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Name is mandatory")
-    val name: String,
+    var name: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Description is mandatory")
-    val description: String,
+    var description: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
@@ -35,11 +35,11 @@ data class Project(
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Start date is mandatory")
-    val startDate: String,
+    var startDate: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "End date is mandatory")
-    val endDate: String,
+    var endDate: String,
 
     @JsonView(DataView.Project::class)
     @Lob
@@ -69,4 +69,12 @@ data class ProjectRequest(
     val image: Blob?,
     val requiredSkillsIds: List<Long>?
 )
+
+data class ProjectUpdateDto(
+    var name: String?,
+    var description: String?,
+    var startDate: String?,
+    var endDate: String?
+)
+
 

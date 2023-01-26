@@ -88,18 +88,26 @@ class ProjectService(
         return projectRepository.save(project)
     }
 
-    fun remove(id: Long) {
+    // deactivated - only delete projects by leaving
+    /*fun remove(id: Long) {
         if (projectRepository.existsById(id)) projectRepository.deleteById(id)
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
+    }*/
+
+    // TODO "Content type 'application/json;charset=UTF-8' not supported"
+    fun updateProject(id: Long, projectUpdateDto: ProjectUpdateDto): ResponseEntity<Project> {
+        val project = projectRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found") }
+
+        project.apply {
+            name = projectUpdateDto.name ?: name
+            description = projectUpdateDto.description ?: description
+            startDate = projectUpdateDto.startDate ?: startDate
+            endDate = projectUpdateDto.endDate ?: endDate
+        }
+        return ResponseEntity.ok(projectRepository.save(project))
     }
 
-    // TODO check if works
-    fun update(id: Long, project: Project): Project {
-        return if (projectRepository.existsById(id)) {
-            project.id = id
-            projectRepository.save(project)
-        } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
-    }
 
     fun attendProject(userId: Long, projectId: Long) {
         val user =
@@ -123,9 +131,9 @@ class ProjectService(
 
     fun leaveProject(userId: Long, projectId: Long) {
         val user =
-            userRepository.findById(userId).orElseThrow { NotFoundException("User not found") }
+            userRepository.findById(userId).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "User not found") }
         val project = projectRepository.findById(projectId)
-            .orElseThrow { NotFoundException("Project not found") }
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found") }
         project.attendees.remove(user)
         user.projects.remove(project)
         if (project.attendees.size == 0) {

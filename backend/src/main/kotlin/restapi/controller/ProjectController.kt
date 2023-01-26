@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
 import restapi.jsonView.DataView
 import restapi.model.ProjectRequest
+import restapi.model.ProjectUpdateDto
 import restapi.model.SkillDTO
 import restapi.repository.ProjectRepository
 import restapi.repository.UserRepository
@@ -106,21 +107,23 @@ class ProjectController(
     ********************************** PUT **********************************
     */
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @JsonView(DataView.Project::class)
     @PutMapping("/{id}")
-    fun updateProject(@PathVariable id: Long, @RequestBody project: Project) =
-        projectService.update(id, project)
+    fun updateProject(@PathVariable id: Long, @RequestBody projectUpdateDto: ProjectUpdateDto): ResponseEntity<Project> {
+        return projectService.updateProject(id, projectUpdateDto)
+    }
 
     /*
     ********************************** DELETE **********************************
     */
 
-    @DeleteMapping("/{id}")
+    // TODO deactivate? only enable automatic deletion when everyone has left the project?
+    /*@DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
         projectService.remove(id)
-        return ResponseEntity.ok("Project successfully deleted!")
-    }
+        return ResponseEntity.ok("Project with id $id successfully deleted!")
+    }*/
 
     @JsonView(DataView.Project::class)
     @DeleteMapping("/{projectId}/attendees/{userId}")
