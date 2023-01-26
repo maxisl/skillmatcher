@@ -10,6 +10,7 @@ import restapi.model.*
 import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
+import java.lang.Exception
 
 
 @Service
@@ -95,9 +96,31 @@ class ProjectService(
         val project =
             projectRepository.findById(projectId)
                 .orElseThrow { NotFoundException("Project not found") }
-        project.attendees.add(user)
-        user.projects.add(project)
-        projectRepository.save(project)
+        if (project.attendees.contains(user)) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "User already attends this project"
+            )
+        } else {
+            project.attendees.add(user)
+            user.projects.add(project)
+            projectRepository.save(project)
+            userRepository.save(user)
+        }
+    }
+
+    fun leaveProject(userId: Long, projectId: Long) {
+        val user =
+            userRepository.findById(userId).orElseThrow { NotFoundException("User not found") }
+        val project = projectRepository.findById(projectId)
+            .orElseThrow { NotFoundException("Project not found") }
+        project.attendees.remove(user)
+        user.projects.remove(project)
+        if (project.attendees.size == 0) {
+            projectRepository.delete(project)
+        } else {
+            projectRepository.save(project)
+        }
         userRepository.save(user)
     }
 

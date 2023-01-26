@@ -84,6 +84,7 @@ class ProjectController(
         return ResponseEntity.ok(projectRepository.save(project))
     }
 
+    @JsonView(DataView.Project::class)
     @PostMapping("/{projectId}/attendees/{userId}")
     fun attendProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
         projectService.attendProject(userId, projectId)
@@ -112,6 +113,12 @@ class ProjectController(
     fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
         projectService.remove(id)
         return ResponseEntity.ok("Project successfully deleted!")
+    }
+
+    @JsonView(DataView.Project::class)
+    @DeleteMapping("/{projectId}/attendees/{userId}")
+    fun leaveProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
+        projectService.leaveProject(userId, projectId)
     }
 
 }
