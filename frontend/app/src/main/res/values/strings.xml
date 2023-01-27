@@ -12,4 +12,8 @@
     <string name="screen_1">Screen 1</string>
     <string name="screen_2">Screen 2</string>
     <string name="screen_3">Screen 3</string>
+
+    <string name="api_key">pkbgx74wqa9s</string>
+    <string name="jwt_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibG11In0.sJN3rNFhAUc_f7UTeeAAtYb5_A7o9H2cgvPMN_4X-mk</string>
+
 </resources>
