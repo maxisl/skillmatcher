@@ -1,21 +1,16 @@
 package com.example.skillmatcher.views
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.material.Scaffold
-import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.time.LocalDateTime
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -25,14 +20,16 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skillmatcher.data.User
-// import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
+import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.data.Skill
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
-import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-
 import com.example.skillmatcher.ui.theme.*
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @RootNavGraph(start = true)
 @Destination()
@@ -149,6 +146,10 @@ fun postData(navigator: DestinationsNavigator) {
     }
     var passwordVisibility by remember { mutableStateOf(false) }
 
+    val userResponse = remember {
+        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),null))
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -195,8 +196,9 @@ fun postData(navigator: DestinationsNavigator) {
                 val description = if (passwordVisibility) "Hide password" else "Show password"
 
                 IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility}){
-                    Icon(imageVector  = image, description)
+                    passwordVisibility = !passwordVisibility
+                }) {
+                    Icon(imageVector = image, description)
                 }
             }
         )
@@ -205,13 +207,20 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
+
                 postLoginUserData(
                     ctx, userName, job, response
                 )
+                suspend {
+                    try {
+                        getUser(userResponse)
+                    } catch (e: Exception) {
+                        Log.d("ExceptionInHome: ", e.toString())
+                    }
+                }
+                val user = userResponse.value
                 navigator.navigate(
-                    SideBarDestination(
-                        id = 1,
-                    )
+                    SideBarDestination(id = 1,user)
                 )
             },
             modifier = Modifier
@@ -223,7 +232,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx,userName.value.text, job.value.text, response)
+                registerUser(ctx, userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(

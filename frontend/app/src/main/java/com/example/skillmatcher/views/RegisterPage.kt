@@ -2,6 +2,7 @@ package com.example.skillmatcher.views
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.addSkillToUser
 import com.example.skillmatcher.api.getAvailableSkills
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
@@ -396,6 +398,8 @@ fun registerUserButton(
     navigator: DestinationsNavigator
 ) {
     var error by remember { mutableStateOf(false) }
+    val userResponse = remember {
+        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),null))}
 
     Button(interactionSource = interactionSource, onClick = {
 
@@ -404,9 +408,18 @@ fun registerUserButton(
         error = errorNotifications.error
         if (!error) {
             createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
+            suspend {
+                try {
+                    getUser(userResponse)
+                } catch (e: Exception) {
+                    Log.d("ExceptionInHome: ", e.toString())
+                }
+            }
+            val user = userResponse.value
             navigator.navigate(
                 SideBarDestination(
                     id = 1,
+                    user
                 )
             )
         }
@@ -454,7 +467,8 @@ private fun checkIfInputIsCorrect(
 }
 
 fun createUser(
-    eMail: String, pw: String,
+    eMail: String,
+    pw: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
     profileImage: Bitmap?,
@@ -462,13 +476,8 @@ fun createUser(
     ctx: Context
 ) {
 
-    val newUser = User(
-        eMail,
-        created = LocalDateTime.now(), pw, profileDescription, selectedSkills, profileImage
-    )
-
     addSkillToUser(eMail, selectedSkills as List<Long>)
-    registerUser(ctx,newUser.id,newUser.password,result) //Todo: restliche values hinzufügen
+    registerUser(ctx,eMail,pw,result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {

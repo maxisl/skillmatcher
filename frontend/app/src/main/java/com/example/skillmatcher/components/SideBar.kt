@@ -15,16 +15,18 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.R
-import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.components.*
+import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
-fun SideBar(id: Int, // <-- required navigation argument
+fun SideBar(id: Int,
+            user: User,
             navigator: DestinationsNavigator?
 ) {
     SkillMatcherTheme {
@@ -75,7 +77,7 @@ fun SideBar(id: Int, // <-- required navigation argument
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (navigator != null) {
-                            NavHost(navController = navController,navigator)
+                            NavHost(navController = navController,navigator,user)
                         }
                     }
                 },

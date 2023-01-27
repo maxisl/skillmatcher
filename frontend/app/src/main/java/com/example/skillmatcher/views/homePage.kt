@@ -25,7 +25,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getProjectsByUserEmail
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
 import com.example.skillmatcher.views.formatStringToDate
 import com.ramcosta.composedestinations.annotation.Destination
@@ -36,17 +38,17 @@ import java.io.ByteArrayOutputStream
 @Destination
 @Composable
 fun HomePage(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    user: User
 ) {
-    var response = remember {
+    var projectResponse = remember {
         mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
     }
 
     var userProjects: List<Project> = emptyList()
-
     try {
-        getProjectsByUserEmail(response)
-        userProjects = response.value
+        getProjectsByUserEmail(projectResponse)
+        userProjects = projectResponse.value
     } catch (e: Exception) {
         Log.d("ExceptionInHome: ", e.toString())
     }

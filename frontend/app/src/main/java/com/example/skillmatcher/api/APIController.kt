@@ -34,8 +34,8 @@ interface BackendAPI {
     @GET("user")
     fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
 
-    @GET("user/{email}")
-    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
+    @GET("user/byMail/{email}")
+    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<User>
 
     /*************************************************** PROJECT *******************************************/
 
@@ -233,22 +233,22 @@ fun getAllUsers() {
     })
 }
 
-fun getUser() {
+fun getUser(result: MutableState<User>) {
     val retrofitAPI = createRetrofitInstance()
     Log.d("getUser ", "Executed")
 
-    val call: Call<ApiUser> = retrofitAPI.getUser(
+    val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
         "${preferencesManager.getMail()}"
     )
     //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
-    call!!.enqueue(object : Callback<ApiUser> {
-        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+    call!!.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
             val user = response.body()
             Log.d("User Info", user.toString())
         }
 
-        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+        override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
@@ -257,12 +257,12 @@ fun getUser() {
 
 fun getUserMail(result: MutableState<String>) {
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<ApiUser> = retrofitAPI.getUser(
+    val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
         "${preferencesManager.getMail()}"
     )
-    call!!.enqueue(object : Callback<ApiUser> {
-        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+    call!!.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
             val userMail = preferencesManager.getMail()
             Log.d("User Mail: ", userMail.toString())
             if (userMail != null) {
@@ -270,7 +270,7 @@ fun getUserMail(result: MutableState<String>) {
             }
         }
 
-        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+        override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
