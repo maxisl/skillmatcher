@@ -1,14 +1,12 @@
 package com.example.skillmatcher.api
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.input.TextFieldValue
-import com.example.skillmatcher.data.ApiUser
-import com.example.skillmatcher.data.Project
-import com.example.skillmatcher.data.UserLoginModel
+import com.example.skillmatcher.data.*
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,12 +15,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
-
-// TODO: Wie hier machen: https://stackoverflow.com/questions/30180957/send-post-request-with-params-using-retrofit
-// TODO: BACKEND liefer bei login dirc alle daten!
-
 // define an interface that represents the API we want to access => use this interface to make requests to the API
 interface BackendAPI {
+
+    /*************************************************** USER *******************************************/
+
     @POST("auth/login")
     // add "suspend" in front of "fun" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
@@ -30,6 +27,7 @@ interface BackendAPI {
     @POST("auth/register")
     fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
 
+    // DEACTIVATED - TEST ONLY
     //@GET("excluded")
     //fun getAllUsers(): Call<List<ApiUser>>
 
@@ -38,6 +36,8 @@ interface BackendAPI {
 
     @GET("user/{email}")
     fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
+
+    /*************************************************** PROJECT *******************************************/
 
     @POST("projects/{email}")
     fun createProject(
@@ -48,6 +48,25 @@ interface BackendAPI {
 
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
+
+    // LEGACY
+    /*@POST("/projects/{projectId}/requiredSkills")
+    fun addRequiredSkillsToProject(
+        @Header("Authorization") jwt: String,
+        @Path("projectId") projectId: Long,
+        @Body id: List<Long>
+    ): Call<Project>*/
+
+    /*************************************************** SKILL *******************************************/
+
+    @GET("skill/")
+    fun getAllSkills(): Call<List<Skill>>
+
+    @POST("/user/{email}/skill/")
+    fun addSkillToUser(
+        @Path("email") email: String,
+        @Body id: List<Long>
+    ): Call<ApiUser>
 }
 
 var token = ""
@@ -56,7 +75,7 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    // "http://10.0.2.2:8080/"
+//    "http://10.0.2.2:8080/"
     "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
@@ -84,7 +103,7 @@ fun postLoginUserData(
     job: MutableState<TextFieldValue>,          // job = user password
     result: MutableState<String>
 ) {
-    Log.i("APIController", "Post login data!")
+    Log.d("postLoginUserData", "Executed")
 
     val retrofitAPI = createRetrofitInstance()
 
@@ -92,7 +111,7 @@ fun postLoginUserData(
     try {
         // pass data from text fields
         val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
-        // call a method (asynchronously) to create an update and pass our model class
+        // call a method (asynchronously) to create an update and pass model class
         val call: Call<String>? = retrofitAPI.loginUser(userLoginModel)
         // execute request asynchronously
         call!!.enqueue(object : Callback<String> {
@@ -144,33 +163,35 @@ fun postLoginUserData(
 
 fun registerUser(
     ctx: Context,
-    userName: MutableState<TextFieldValue>,
+    userName: String,
     // job = user password
-    job: MutableState<TextFieldValue>,
+    job: String,
     result: MutableState<String>
 ) {
     val retrofitAPI = createRetrofitInstance()
 
     try {
-        val userLoginModel = UserLoginModel(userName.value.text, job.value.text)
+        val userLoginModel = UserLoginModel(userName, job)
         val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
         call.enqueue(object : Callback<ApiUser> {
             override fun onResponse(
                 call: Call<ApiUser>,
                 response: Response<ApiUser>
             ) {
-                Log.i(
-                    "Executing call to function: ",
-                    "register user"
+                Log.d(
+                    "registerUser",
+                    "Executed"
                 )
                 if (response.code() == 400) {
+                    Toast.makeText(ctx, "User already exists", Toast.LENGTH_SHORT).show()
                     val resp = "User already exists"
                     result.value = resp
                 } else if (response.code() == 200) {
+                    Toast.makeText(ctx, "User created", Toast.LENGTH_SHORT).show()
                     val resp = "User created"
                     result.value = resp
                 }
-                Log.d("Response: ", response.body().toString())
+                Log.d("registerUser", response.body().toString())
             }
 
             // error handling
@@ -250,16 +271,19 @@ fun getUserMail(result: MutableState<String>) {
     })
 }
 
+// TODO add image
 fun createProject(
     ctx: Context,
     name: String,
     description: String,
     maxAttendees: String,
-    // startDate: String, TODO add start / end date as soon as db schema is updated
-    // endDate: String,
+    startDate: String,
+    endDate: String,
+    image: Bitmap?,
+    skillIds: List<Long>
 ) {
     Log.d("createProject", "Executed")
-    val project = Project(name, description, maxAttendees)
+    val project = Project(name, description, maxAttendees, startDate, endDate, image, skillIds)
     Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(
@@ -270,8 +294,9 @@ fun createProject(
     call!!.enqueue(object : Callback<Project> {
         override fun onResponse(call: Call<Project>, response: Response<Project>) {
             Log.d("createProject", "Created $response")
-            if (response.code() == 201) {
+            if (response.code() == 200) {
                 Toast.makeText(ctx, "Project $name created", Toast.LENGTH_SHORT).show()
+                Log.d("createProject", "Response Code ${response.code()}")
             } else {
                 Toast.makeText(ctx, "Failed to create project", Toast.LENGTH_SHORT).show()
             }
@@ -296,8 +321,92 @@ fun getAllProjects(result: MutableState<List<Project>>) {
             result.value = response.body() as MutableList<Project>
             Log.d("getAllProjects", "Projects as List: $result")
         }
+
         override fun onFailure(call: Call<List<Project>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })
 }
+
+fun getAvailableSkills(ctx: Context, result: MutableState<List<Skill>>) {
+    Log.d("getAvailableSkills", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    preferencesManager = PreferencesManager(ctx)
+    // preferencesManager = PreferencesManager(ctx)
+    val call: Call<List<Skill>> =
+        retrofitAPI.getAllSkills(/*"Bearer ${preferencesManager.getJWT()}"*/)
+    call!!.enqueue(object : Callback<List<Skill>> {
+        override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
+            Log.d("getAvailableSkills", "Http-Code: ${response.code()}") // debug only
+            Log.d("getAvailableSkills", response.body().toString())
+            result.value = response.body() as MutableList<Skill>
+            Log.d("getAvailableSkills", "Skills as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
+            t.message?.let { Log.d("getAvailableSkills", it) }
+        }
+    })
+}
+
+fun addSkillToUser(
+    email: String,
+    skillIds: List<Long>
+) {
+    Log.d("addSkillsToUser", "Executed")
+    Log.d("addSkillsToUser", "Skills to add: $skillIds")
+    Log.d("addSkillsToUser", "Email: $email")
+    val retrofitAPI = createRetrofitInstance()
+
+    val call: Call<ApiUser> = retrofitAPI.addSkillToUser(
+        email, skillIds
+    )
+    call!!.enqueue(object : Callback<ApiUser> {
+        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+            Log.d("addSkillsToUser", "Created $response")
+            if (response.code() == 201) {
+                Log.d("addSkillsToUser", "Response Code ${response.code()}")
+            } else {
+                Log.d("addSkillsToUser", "Failed: Response Code ${response.code()}")
+            }
+        }
+
+        // TODO Error: End of input at line 1 column 1 path $ (works though)
+        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
+        }
+
+    })
+}
+
+// LEGACY: required skills are automatically added to project upon creation
+/*fun addRequiredSkillsToProject(
+    skillIds: List<Long>
+) {
+    Log.d("addRequiredSkillsToProject", "Executed")
+    Log.d("addRequiredSkillsToProject", "Skills to add: $skillIds")
+    val retrofitAPI = createRetrofitInstance()
+
+    val call: Call<Project> = retrofitAPI.addRequiredSkillsToProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        projectId,
+        skillIds
+    )
+    Log.d("addRequiredSkillsToProject", "Email: ${preferencesManager.getMail()}")
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("addRequiredSkillsToProject", "Created $response")
+            if (response.code() == 201) {
+                Log.d("addRequiredSkillsToProject", "Response Code ${response.code()}")
+            } else {
+                Log.d("addRequiredSkillsToProject", "Failed: Response Code ${response.code()}")
+            }
+        }
+
+        // TODO Error: End of input at line 1 column 1 path $ (works though)
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("addRequiredSkillsToProject", "Error: $it") }
+        }
+
+    })
+}*/

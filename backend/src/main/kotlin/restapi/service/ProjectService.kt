@@ -1,60 +1,101 @@
 package restapi.service
 
-import restapi.model.Project
-import restapi.repository.UserRepository
-import restapi.repository.ProjectRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-
-/**
- * @author  Simon Burmer
- * @date  02/12/22
- * @version 1.0
- */
+import org.webjars.NotFoundException
+import restapi.model.*
+import restapi.repository.ProjectRepository
+import restapi.repository.SkillRepository
+import restapi.repository.UserRepository
 
 
 @Service
 class ProjectService(
-    @Autowired val repository: ProjectRepository,
-    @Autowired val userService: UserService
-    ) {
+    @Autowired val projectRepository: ProjectRepository,
+    @Autowired val userRepository: UserRepository,
+    private val skillRepository: SkillRepository,
+    private val userService: UserService,
+) {
 
-    fun getAll(): MutableList<Project> = repository.findAll()
+    fun getAll(): MutableList<Project> {
+        val projects = projectRepository.findAll()
+        projects.forEach {
+            it.attendees.size
+        }
+        return projects
+    }
 
-    fun getAllByUser(userEmail: String): MutableList<Project> = repository.findByOwnerEmail(userEmail);
+    fun getAllByName(id: String): MutableList<Project> = projectRepository.findByNameContaining(id)
 
-    fun getAllByName(id: String): MutableList<Project> = repository.findByNameContaining(id)
 
-    fun getById(id: Long): Project = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND,"No project with this Id found!")
+    fun getById(id: Long): Project =
+        projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No project with this Id found!"
+        )
 
-    fun create(userEmail: String, project: Project): Project {
-        var user = userService.getByEmail(userEmail)
-        project.owner = user
-        project.attendees = mutableListOf(user)
-        return repository.save(project)
+    fun getAttendeesById(id: Long): List<User> {
+        return projectRepository.findProjectAttendeesById(id)
+    }
+
+    fun create(projectRequest: ProjectRequest): Project {
+        val project = Project(
+            id = null,
+            name = projectRequest.name,
+            description = projectRequest.description,
+            maxAttendees = projectRequest.maxAttendees,
+            attendees = mutableListOf(),
+            startDate = projectRequest.startDate,
+            endDate = projectRequest.endDate,
+            image = projectRequest.image
+        )
+        val requiredSkillsIds = projectRequest.requiredSkillsIds
+        if (requiredSkillsIds != null) {
+            val skills = skillRepository.findAllById(requiredSkillsIds)
+            project.requiredSkills.addAll(skills)
+        }
+        return projectRepository.save(project)
     }
 
     fun remove(id: Long) {
-        if (repository.existsById(id)) repository.deleteById(id)
+        if (projectRepository.existsById(id)) projectRepository.deleteById(id)
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
+    // TODO check if works
     fun update(id: Long, project: Project): Project {
-        return if (repository.existsById(id)) {
+        return if (projectRepository.existsById(id)) {
             project.id = id
-            repository.save(project)
+            projectRepository.save(project)
         } else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
     }
 
-    fun attend(id: Long, userEmail: String): Project { // TODO: User should not be able to attend two times!
-        var project = this.getById(id) // TODO: Maybe this code belongs to the controller?
-        var user = userService.getByEmail(userEmail) // TODO: Maybe this code belongs to the controller?
+    fun attendProject(userId: Long, projectId: Long) {
+        val user =
+            userRepository.findById(userId)
+                .orElseThrow { NotFoundException("User not found") }
+        val project =
+            projectRepository.findById(projectId)
+                .orElseThrow { NotFoundException("Project not found") }
+        project.attendees.add(user)
+        user.projects.add(project)
+        projectRepository.save(project)
+        userRepository.save(user)
+    }
 
-        project.attendees?.add(user)
-        repository.save(project)
-        return project
+    fun addRequiredSkillsToProject(projectId: Long, skillIds: List<Long>) {
+        val project = projectRepository.findById(projectId)
+        val skills = skillRepository.findAllById(skillIds)
+        project.ifPresent {
+            it.requiredSkills.addAll(skills)
+            projectRepository.save(it)
+        }
+    }
+
+    fun getRequiredSkills(project: Project): List<SkillDTO> {
+        return project.requiredSkills.map { skill -> SkillDTO(skill.id!!, skill.name) }
     }
 }

@@ -1,33 +1,80 @@
 package restapi.service
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import restapi.model.ApiUser
+import org.webjars.NotFoundException
+import restapi.model.Project
+import restapi.model.Skill
+import restapi.model.User
+import restapi.repository.ProjectRepository
+import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
-import java.util.*
 
 
 @Service
-class UserService(val repository: UserRepository) {
+class UserService(
+    val userRepository: UserRepository,
+    private val projectRepository: ProjectRepository,
+    private val skillRepository: SkillRepository
+) {
 
-    fun getAll(): List<ApiUser> = repository.findAll()
+    fun getAll(): List<User> = userRepository.findAll()
 
-    // fun getById(id: Long): ApiUser = repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+    fun getById(id: Long): User =
+        userRepository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
-    fun getByEmail(email: String): ApiUser =
-        repository.findUserByEmail(email) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No User with this Email found!")
+    fun getByEmail(email: String): User =
+        userRepository.findUserByEmail(email) ?: throw ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No User with this Email found!"
+        )
 
-    fun update(email: String, user: ApiUser): ApiUser {
+    fun getUserSkillsByEmail(email: String): MutableList<Skill> {
+        val user =
+            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        return user.skills
+    }
+
+    fun getUserProjects(userId: Long): MutableList<Project> //= userRepository.findByEmail(userEmail);
+    {
+        val user = userRepository.findById(userId)
+        return user.map { it.projects }.orElse(mutableListOf())
+    }
+
+    fun update(email: String, user: User): User {
         val dbUser = this.getByEmail(email);
         user.id = dbUser.id;
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     fun remove(email: String) {
-        val dbUser = this.getByEmail(email);
-        dbUser.id?.let { repository.deleteById(it) };
+        val user = this.getByEmail(email);
+        user.id.let { userRepository.deleteById(it) };
         return
+    }
+
+    fun addSkill(email: String, skillIds: List<Long>) {
+        val user = userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+        val newSkills = skillRepository.findAllById(skillIds)
+        val existingSkills = user.skills.toMutableList()
+        newSkills.forEach { skill ->
+            if (!existingSkills.contains(skill)) {
+                existingSkills.add(skill)
+                skill.usersWithSkill.add(user)
+            }
+            else {
+                throw Exception("Skill already added")
+            }
+        }
+        user.skills = existingSkills
+        userRepository.save(user)
+    }
+
+    fun getUsersBySkillId(skillId: Long): List<User> {
+        val skill = skillRepository.findByIdOrNull(skillId) ?: throw Exception("Skill not found")
+        return skill.usersWithSkill
     }
 
 

@@ -20,7 +20,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skillmatcher.R
 import com.example.skillmatcher.data.User
 // import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
@@ -193,11 +192,6 @@ fun postData(navigator: DestinationsNavigator) {
                 navigator.navigate(
                     SideBarDestination(
                         id = 1,
-                        User(
-                            name = "Chris P. Bacon",
-                            id = "userid",
-                            created = LocalDateTime.now()
-                        )
                     )
                 )
             },
@@ -210,7 +204,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx, userName, job, response)
+                registerUser(ctx,userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(

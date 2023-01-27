@@ -7,6 +7,7 @@ import com.example.skillmatcher.*
 import com.example.skillmatcher.views.IndividualSkillsPage
 import com.example.skillmatcher.views.ProjectCreationPage
 import com.example.skillmatcher.views.ProjectPage
+import com.example.skillmatcher.views.SelectProject
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 // TODO: Routen hier festlegen
@@ -31,8 +32,8 @@ fun NavHost(navController: NavHostController, navigator: DestinationsNavigator) 
         composable(ScreensRoute.TEST.name) {
             ProjectPage()
         }
-        composable(ScreensRoute.SCREEN_OWN_PROJECT.name) {
-            OwnProjectOverviewPage(navigator = navigator)
+        composable(ScreensRoute.SCREEN_SELECT_PROJECT.name) {
+            SelectProject(navigator = navigator)
         }
     }
 }

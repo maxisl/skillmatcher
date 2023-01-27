@@ -7,47 +7,107 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
-import java.security.Principal
-import javax.validation.Valid
+import restapi.model.ProjectRequest
+import restapi.model.SkillDTO
+import restapi.repository.ProjectRepository
+import restapi.repository.UserRepository
+import restapi.service.UserService
 
 
 @RequestMapping("projects")
 @RestController
-class ProjectController(val service: ProjectService) {
-
+class ProjectController(
+    val projectService: ProjectService,
+    val projectRepository: ProjectRepository,
+    val userRepository: UserRepository,
+    private val userService: UserService
+) {
+    /*
+            ********************************** GET **********************************
+            */
     @JsonView(DataView.ProjectWithOwner::class)
     @GetMapping
-    fun getAllProjects() = service.getAll()
+    fun getAllProjects() = projectService.getAll()
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/{id}")
-    fun getProject(@PathVariable id: Long) = service.getById(id)
+    fun getProject(@PathVariable id: Long) = projectService.getById(id)
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
     @GetMapping("/byUserEmail/{userEmail}")
-    fun getAllProjectsFromUserEmail(@PathVariable userEmail: String) = service.getAllByUser(userEmail)
-
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @GetMapping("/byName/{name}")
-    fun findByNameContaining(@PathVariable name: String) = service.getAllByName(name)
-
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @PostMapping("/{userEmail}")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createProject(@PathVariable userEmail: String,@Valid @RequestBody project: Project): Project = service.create(userEmail,project)
-
-    @DeleteMapping("/{id}") // TODO: Only owner can delete projects
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
-        service.remove(id)
-        return ResponseEntity.ok("Project successfully deleted!")
+    fun getAllProjectsByUserEmail(@PathVariable userEmail: String): ResponseEntity<List<Project>> {
+        val userId = userService.getByEmail(userEmail).id
+        val projects = userService.getUserProjects(userId)
+        return if (projects.isNotEmpty()) {
+            ResponseEntity.ok(projects)
+        } else {
+            ResponseEntity.notFound().build()
+        }
     }
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @PutMapping("/{id}") // TODO:Not Working Jet / Only owner should can alter project!
-    fun updateProject(@PathVariable id: Long, @RequestBody project: Project) = service.update(id, project)
+    @GetMapping("/byName/{name}")
+    fun findByNameContaining(@PathVariable name: String) = projectService.getAllByName(name)
 
     @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
-    @PutMapping("/attend/{id}")
-    fun attendProject(@PathVariable id: Long, principal: Principal) = service.attend(id,principal.getName())
+    @GetMapping("/attendees/{projectId}")
+    fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
+
+    @GetMapping("/{id}/requiredSkills")
+    fun getRequiredSkills(@PathVariable id: Long): ResponseEntity<List<SkillDTO>> {
+        val project = projectService.getById(id)
+        val requiredSkills = projectService.getRequiredSkills(project)
+        return ResponseEntity.ok(requiredSkills)
+    }
+    /*
+    ********************************** POST **********************************
+     */
+
+    // TODO adapt JSON View? old interface
+    @JsonView(DataView.ProjectWithOwner::class)
+    @PostMapping("/{userEmail}")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createProject(
+        @PathVariable userEmail: String,
+        @RequestBody projectRequest: ProjectRequest
+    ): ResponseEntity<Project> {
+        val user = userRepository.findUserByEmail(userEmail)
+        val project = projectService.create(projectRequest)
+        if (user != null) {
+            project.attendees.add(user)
+            user.projects.add(project)
+        }
+        return ResponseEntity.ok(projectRepository.save(project))
+    }
+
+    @PostMapping("/{projectId}/attendees/{userId}")
+    fun attendProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
+        projectService.attendProject(userId, projectId)
+    }
+
+    @PostMapping("/{id}/requiredSkills")
+    fun addRequiredSkillsToProject(@PathVariable id: Long, @RequestBody skillIds: List<Long>) {
+        projectService.addRequiredSkillsToProject(id, skillIds)
+    }
+
+    /*
+    ********************************** PUT **********************************
+    */
+
+    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @PutMapping("/{id}")
+    fun updateProject(@PathVariable id: Long, @RequestBody project: Project) =
+        projectService.update(id, project)
+
+    /*
+    ********************************** DELETE **********************************
+    */
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
+        projectService.remove(id)
+        return ResponseEntity.ok("Project successfully deleted!")
+    }
+
 }

@@ -47,7 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { //TODO: fix d
       "/v3/api-docs/**",
       "/swagger-ui/**",
       // whitelist "/excluded" route for testing
-      "/excluded"
+      "/excluded",
+      "/auth/login",
+      "/skill/",
+      "/user/*/skill/*"
       // other public endpoints of your API may be appended to this array
   };
 
