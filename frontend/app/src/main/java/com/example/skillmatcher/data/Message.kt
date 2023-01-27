@@ -1,7 +1,7 @@
 package com.example.skillmatcher.data
 
 import java.util.Calendar
-//messages
+//messages we dont need this, it was more for the SQL Chat instance
 data class Message(
     var text:String?=null,
     var recipient_id: String,

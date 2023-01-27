@@ -202,7 +202,6 @@ fun ChatButton() {
     val mContext = LocalContext.current
     Button(
         onClick = {
-            //mContext.startActivity(MessageActivity.getIntent(mContext, channel.cid ))
             startActivity(mContext,Intent(mContext,ChannelListActivity::class.java),null)
 
         },
@@ -228,26 +227,8 @@ fun LeaveProjectButton(navigator: DestinationsNavigator?) {
     }
 }
 
-@Composable
-fun projectChat(applicationContext: Context){
-
-        ChatTheme {
-            ChannelsScreen(
-                title = stringResource(id = R.string.app_name),
-                isShowingSearch = true,
-                onItemClick = {channel ->
-                    applicationContext.startActivity(MessageActivity.getIntent(applicationContext, channel.cid))
-                }
-                //onBackPressed = { finish() }
-            )
-        }
-
-// Check if the user is not already set
-
-}
 
 
-//, wer teilnehmer sind, Chat Button
 
 
 

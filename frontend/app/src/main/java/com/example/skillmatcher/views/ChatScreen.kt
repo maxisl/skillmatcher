@@ -36,7 +36,7 @@ import com.example.skillmatcher.data.message_dummy
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-
+//we dont need this
 @Composable
 @Preview
 fun ChatScreen(){
