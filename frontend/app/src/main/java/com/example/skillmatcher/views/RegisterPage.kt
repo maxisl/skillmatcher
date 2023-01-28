@@ -61,7 +61,7 @@ fun RegisterPage() {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0,false)))
+        mutableStateOf(listOf(Skill("", 0, false)))
     }
 
     val result = remember {
@@ -163,7 +163,7 @@ fun RegisterPage() {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSKillCards(listOfSelectedSkills = listOfSelectedSkills,ctx, response)
+                createSKillCards(listOfSelectedSkills = listOfSelectedSkills, ctx, response)
 
                 registerUserButton(
                     interactionSource = interactionSource,
@@ -221,29 +221,26 @@ fun createSKillCards(
 ): MutableList<Skill?> {
 
     var selectedSkill: Skill?
-    val listOfSkills = getSkills(ctx,response)
+    val listOfSkills = getSkills(ctx, response)
     Column() {
         LazyRow() {
             listOfSkills.iterator().forEach { skill ->
                 item() {
                     selectedSkill = drawSkill(skill)
                     if (selectedSkill != null) {
-                        if (selectedSkill!!.isSelected and !isSkillAlreadySelected(
-                                listOfSelectedSkills, selectedSkill!!
-                            )
-                        ) {
-                            listOfSelectedSkills.add(selectedSkill)
-                        } else if (!selectedSkill!!.isSelected and isSkillAlreadySelected(
-                                listOfSelectedSkills,
-                                selectedSkill!!
-                            )
-                        ) {
-                            listOfSelectedSkills.removeAt(
-                                returnSelectedSkillPosition(
-                                    listOfSelectedSkills,
-                                    selectedSkill!!
+                        if (selectedSkill!!.isSelected) {
+                            if (!isSkillAlreadySelected(listOfSelectedSkills, selectedSkill!!)) {
+                                listOfSelectedSkills.add(selectedSkill)
+                            }
+                        } else {
+                            if (isSkillAlreadySelected(listOfSelectedSkills, selectedSkill!!)) {
+                                listOfSelectedSkills.removeAt(
+                                    returnSelectedSkillPosition(
+                                        listOfSelectedSkills,
+                                        selectedSkill!!
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }
@@ -252,6 +249,7 @@ fun createSKillCards(
     }
     return listOfSelectedSkills
 }
+
 
 fun isSkillAlreadySelected(listOfSkills: MutableList<Skill?>, selectedSkill: Skill): Boolean {
     for (i in listOfSkills.indices) {
@@ -362,7 +360,7 @@ fun registerUserButton(
             checkIfInputIsCorrect(eMail, pw, pwSecond, selectedSkills)
         error = errorNotifications.error
         if (!error) {
-            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
+            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result, ctx)
         }
     }) {
         Text(text = "Register")
@@ -422,7 +420,7 @@ fun createUser(
     )
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
-    registerUser(ctx,newUser.id,newUser.password,result) //Todo: restliche values hinzufügen
+    registerUser(ctx, newUser.id, newUser.password, result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {

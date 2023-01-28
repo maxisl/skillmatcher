@@ -41,6 +41,7 @@ data class Project(
     @NotBlank(message = "End date is mandatory")
     var endDate: String,
 
+    @Column(length = 2500)
     @JsonView(DataView.Project::class)
     var image: String?,
 

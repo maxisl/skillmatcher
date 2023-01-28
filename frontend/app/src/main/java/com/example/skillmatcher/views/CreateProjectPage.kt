@@ -375,19 +375,6 @@ fun imagePicker(): String {
     return base64Image
 }
 
-// helper functions for image conversion
-fun Bitmap.toBase64(): String {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    this.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-    val byteArray = byteArrayOutputStream.toByteArray()
-    return Base64.encodeToString(byteArray, Base64.DEFAULT)
-}
-
-fun String.toBitmap(): Bitmap {
-    val decodedString = Base64.decode(this, Base64.DEFAULT)
-    return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-}
-
 @Composable
 fun saveButton(
     interactionSource: MutableInteractionSource,
@@ -506,3 +493,21 @@ fun formatStringToDate(dateString: String): LocalDate {
     return date
 }
 
+
+// helper functions for image conversion
+fun Bitmap.toBase64(): String {
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    val scaledBitmap = Bitmap.createScaledBitmap(this, 100, 100, true)
+    scaledBitmap.compress(Bitmap.CompressFormat.PNG, 25, byteArrayOutputStream)
+    val byteArray = byteArrayOutputStream.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.DEFAULT)
+}
+
+fun String.toBitmap(): Bitmap {
+    val decodedString = Base64.decode(this, Base64.DEFAULT)
+    return if (decodedString != null) {
+        BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+    } else {
+        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+    }
+}

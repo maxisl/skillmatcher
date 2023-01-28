@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
+import com.example.skillmatcher.views.toBase64
+import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 
 // TODO projects is empty
@@ -67,10 +71,16 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
 }
 
 @Composable
-fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
+fun ProjectCard(cardIcon: Int, project: Project) {
     val projectName = project.name
     val projectAttendees = project.maxAttendees
     val projectDescription = project.description
+    val projectStartDate = project.startDate
+    val projectEndDate = project.endDate
+    val projectImage = project.image
+
+    val bitmap = projectImage?.toBitmap()
+    val base64 = bitmap?.toBase64()
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -84,14 +94,18 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-
             Row {
-                Image(
-                    modifier = Modifier.size(80.dp),
-                    painter = painterResource(id = cardIcon),
-                    // bitmap = ImageBitmap.imageResource(id = icon),
-                    contentDescription = "Project_card"
-                )
+                if (bitmap != null) {
+                    Image(
+                        painter = BitmapPainter(bitmap.asImageBitmap()),
+                        contentDescription = "Project_card"
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = cardIcon),
+                        contentDescription = "Project_card"
+                    )
+                }
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
@@ -108,7 +122,13 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
                             )
                         )
                         Text(
-                            text = "Date: 10.01.2023",
+                            text = "Start Date: $projectStartDate",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                            )
+                        )
+                        Text(
+                            text = "End Date: $projectEndDate",
                             style = TextStyle(
                                 fontSize = 16.sp,
                             )
