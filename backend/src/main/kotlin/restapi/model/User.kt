@@ -48,9 +48,11 @@ data class User(
     )
     @JsonBackReference
     var skills: MutableList<Skill> = mutableListOf(),
+/*
 
     @OneToMany(mappedBy = "sender")
     var messages: List<ChatMessage> = emptyList()
+*/
 
 )
 

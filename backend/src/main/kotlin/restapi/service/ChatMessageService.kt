@@ -1,3 +1,4 @@
+/*
 package restapi.service
 
 import org.springframework.stereotype.Service
@@ -38,4 +39,4 @@ class ChatMessageService(
         )
         return chatMessageRepository.save(chatMessage)
     }
-}
+}*/

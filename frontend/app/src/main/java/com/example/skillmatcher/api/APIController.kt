@@ -1,7 +1,6 @@
 package com.example.skillmatcher.api
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -75,8 +74,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-//    "http://10.0.2.2:8080/"
-    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    "http://10.0.2.2:8080/"
+//    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -279,7 +278,7 @@ fun createProject(
     maxAttendees: String,
     startDate: String,
     endDate: String,
-    image: Bitmap?,
+    image: String?,
     skillIds: List<Long>
 ) {
     Log.d("createProject", "Executed")

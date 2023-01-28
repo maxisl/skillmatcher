@@ -350,7 +350,7 @@ fun registerUserButton(
     eMail: String, pw: String, pwSecond: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
-    profileImage: Bitmap?,
+    profileImage: String?,
     result: MutableState<String>,
     ctx: Context
 ) {
@@ -411,7 +411,7 @@ fun createUser(
     eMail: String, pw: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
-    profileImage: Bitmap?,
+    profileImage: String?,
     result: MutableState<String>,
     ctx: Context
 ) {

@@ -1,3 +1,4 @@
+/*
 package restapi.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
@@ -9,3 +10,4 @@ interface ChatMessageRepository : JpaRepository<ChatMessage, Long> {
     fun findByProjectId(projectId: Long): List<ChatMessage>
     fun findBySenderEmail(email: String): List<ChatMessage>
 }
+*/

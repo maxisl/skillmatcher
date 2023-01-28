@@ -42,8 +42,7 @@ data class Project(
     var endDate: String,
 
     @JsonView(DataView.Project::class)
-    @Lob
-    var image: Blob? = null,
+    var image: String?,
 
     @ManyToMany
     @JoinTable(
@@ -53,10 +52,12 @@ data class Project(
     )
     @JsonBackReference
     var requiredSkills: MutableList<Skill> = mutableListOf(),
+/*
 
     @OneToMany(mappedBy = "project")
     @JsonManagedReference
     var chatMessages: List<ChatMessage> = emptyList()
+*/
 
 )
 
@@ -66,7 +67,7 @@ data class ProjectRequest(
     val maxAttendees: String,
     val startDate: String,
     val endDate: String,
-    val image: Blob?,
+    var image: String?,
     val requiredSkillsIds: List<Long>?
 )
 

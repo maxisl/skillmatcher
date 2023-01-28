@@ -21,6 +21,6 @@ data class Project(
     var maxAttendees: String,
     val startDate: String,
     val endDate: String,
-    val image: Bitmap?,
+    val image: String?,
     val requiredSkillsIds: List<Long>?
 )

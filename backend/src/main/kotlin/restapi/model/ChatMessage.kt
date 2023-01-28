@@ -1,3 +1,4 @@
+/*
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
@@ -42,4 +43,4 @@ data class ChatMessageRequest(
     val projectId: Long,
     val message: String,
     val senderEmail: String
-)
+)*/

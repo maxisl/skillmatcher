@@ -2,6 +2,7 @@ package com.example.skillmatcher.views
 
 import android.app.DatePickerDialog
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -43,6 +44,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+import android.util.Base64
+import java.io.ByteArrayOutputStream
+
 
 @Destination
 @Composable
@@ -55,7 +59,7 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
     val interactions = remember { mutableStateListOf<Interaction>() }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0,false)))
+        mutableStateOf(listOf(Skill("", 0, false)))
     }
 
     Column(
@@ -63,11 +67,6 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
             .fillMaxSize()
             .background(Color(Color.Black.value))
     ) {
-//        TopBar(
-//            title = "Home",
-//            buttonIcon = Icons.Filled.Menu,
-//            onButtonClicked = { openDrawer() }
-//        )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -322,21 +321,19 @@ fun numberInput(): Int {
 
 
 @Composable
-fun imagePicker(): Bitmap? {
+fun imagePicker(): String {
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
     val context = LocalContext.current
-    val bitmap = remember {
-        mutableStateOf<Bitmap?>(null)
-    }
+    var base64Image by remember { mutableStateOf("") }
 
     val launcher = rememberLauncherForActivityResult(
-        contract =
-        ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
     }
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -349,34 +346,46 @@ fun imagePicker(): Bitmap? {
 
         imageUri?.let {
             if (Build.VERSION.SDK_INT < 28) {
-                bitmap.value = MediaStore.Images
+                val bitmap = MediaStore.Images
                     .Media.getBitmap(context.contentResolver, it)
+                base64Image = bitmap.toBase64()
 
             } else {
                 val source = ImageDecoder
                     .createSource(context.contentResolver, it)
-                bitmap.value = ImageDecoder.decodeBitmap(source)
+                val bitmap = ImageDecoder.decodeBitmap(source)
+                base64Image = bitmap.toBase64()
             }
 
             val borderWidth = 4.dp
-            bitmap.value?.let { btm ->
-                Image(
-                    bitmap = btm.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(150.dp)
-                        .border(
-                            BorderStroke(borderWidth, LMUGreen),
-                            CircleShape
-                        )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
-            }
+            Image(
+                bitmap = base64Image.toBitmap().asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(150.dp)
+                    .border(
+                        BorderStroke(borderWidth, LMUGreen),
+                        CircleShape
+                    )
+                    .padding(borderWidth)
+                    .clip(CircleShape)
+            )
         }
-
     }
-    return bitmap.value
+    return base64Image
+}
+
+// helper functions for image conversion
+fun Bitmap.toBase64(): String {
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    val byteArray = byteArrayOutputStream.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.DEFAULT)
+}
+
+fun String.toBitmap(): Bitmap {
+    val decodedString = Base64.decode(this, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 }
 
 @Composable
@@ -387,7 +396,7 @@ fun saveButton(
     startDate: String,
     endDate: String,
     attendees: Int,
-    image: Bitmap?,
+    image: String?,
     listOfSelectedSkills: MutableList<Skill?>
 ) {
     val ctx = LocalContext.current
@@ -401,9 +410,6 @@ fun saveButton(
                 .fillMaxWidth()
                 .padding(16.dp),
             onClick = {
-                // TODO id and owner_id generated in backend?
-                var id = UUID.randomUUID()
-                var owner_id = UUID.randomUUID()
 
                 var errorNotification: InputCheck = checkIfInputIsCorrect(
                     name, description,
@@ -414,8 +420,24 @@ fun saveButton(
                 if (!error) {
                     // duplicate to fit data type of Project (not ProjectModel)
                     //TODO: Image und Skills müssen noch übergeben werden
-                    val randomIDs= listOf<Long>(1,2)
-                    createProject(ctx, name, description, attendees.toString(),startDate,endDate,image,randomIDs)
+                    val randomIDs = listOf<Long>(1, 2)
+
+                    /*val stream = ByteArrayOutputStream()
+                    image?.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                    val imageByteArray = stream.toByteArray()
+                    val imageBase64 = Base64.encodeToString(imageByteArray, Base64.DEFAULT)*/
+
+                    createProject(
+                        ctx,
+                        name,
+                        description,
+                        attendees.toString(),
+                        startDate,
+                        endDate,
+                        image,
+                        randomIDs
+                    )
+
                 }
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))

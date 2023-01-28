@@ -5,6 +5,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
 import restapi.model.*
@@ -20,7 +21,6 @@ class ProjectService(
     @Autowired val projectRepository: ProjectRepository,
     @Autowired val userRepository: UserRepository,
     private val skillRepository: SkillRepository,
-    private val userService: UserService,
 ) {
 
     fun getAll(): MutableList<Project> {
@@ -31,7 +31,7 @@ class ProjectService(
         return projects
     }
 
-    // LEGACY
+    // LEGACY - deactivated - name is not unique? does it still make sense? maybe if we enable search function for projects
     /*    fun getAllByName(name: String): MutableList<Project> {
             val projects =  projectRepository.findByNameContaining(name)
             projects.forEach {

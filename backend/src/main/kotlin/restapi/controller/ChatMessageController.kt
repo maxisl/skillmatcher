@@ -1,3 +1,4 @@
+/*
 package restapi.controller
 
 import com.fasterxml.jackson.annotation.JsonView
@@ -18,9 +19,11 @@ class ChatMessageController(
     private val chatMessageService: ChatMessageService,
 ) {
 
-    /*
+    */
+/*
     ********************************** GET **********************************
-     */
+     *//*
+
 
     // TODO check if user attends projects before returning messages for that project?
     @JsonView(DataView.ChatMessage::class)
@@ -42,9 +45,11 @@ class ChatMessageController(
         }
     }
 
-    /*
+    */
+/*
     ********************************** POST **********************************
-     */
+     *//*
+
 
     @JsonView(DataView.ChatMessage::class)
     @PostMapping("/")
@@ -53,4 +58,4 @@ class ChatMessageController(
     ): ResponseEntity<ChatMessage> {
         return ResponseEntity.ok(chatMessageService.create(messageRequest))
     }
-}
+}*/

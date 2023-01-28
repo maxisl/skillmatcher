@@ -6,6 +6,7 @@ import restapi.service.ProjectService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 import org.webjars.NotFoundException
 import restapi.jsonView.DataView
@@ -15,6 +16,8 @@ import restapi.model.SkillDTO
 import restapi.repository.ProjectRepository
 import restapi.repository.UserRepository
 import restapi.service.UserService
+import java.util.*
+import javax.validation.Valid
 
 
 @RequestMapping("projects")
@@ -71,12 +74,12 @@ class ProjectController(
      */
 
     // TODO adapt JSON View? old interface
-    @JsonView(DataView.ProjectWithOwner::class)
+    @JsonView(DataView.Project::class)
     @PostMapping("/{userEmail}")
     @ResponseStatus(HttpStatus.CREATED)
     fun createProject(
         @PathVariable userEmail: String,
-        @RequestBody projectRequest: ProjectRequest
+        @Valid @RequestBody projectRequest: ProjectRequest
     ): ResponseEntity<Project> {
         val user = userRepository.findUserByEmail(userEmail)
         val project = projectService.create(projectRequest)
@@ -98,7 +101,10 @@ class ProjectController(
     @PostMapping("/{id}/requiredSkills")
     fun addRequiredSkillsToProject(@PathVariable id: Long, @RequestBody skillIds: List<Long>) {
         if (skillIds == null || skillIds.isEmpty()) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "skillIds cannot be null or empty")
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "skillIds cannot be null or empty"
+            )
         }
         projectService.addRequiredSkillsToProject(id, skillIds)
     }
@@ -109,7 +115,10 @@ class ProjectController(
 
     @JsonView(DataView.Project::class)
     @PutMapping("/{id}")
-    fun updateProject(@PathVariable id: Long, @RequestBody projectUpdateDto: ProjectUpdateDto): ResponseEntity<Project> {
+    fun updateProject(
+        @PathVariable id: Long,
+        @RequestBody projectUpdateDto: ProjectUpdateDto
+    ): ResponseEntity<Project> {
         return projectService.updateProject(id, projectUpdateDto)
     }
 
@@ -130,5 +139,16 @@ class ProjectController(
     fun leaveProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
         projectService.leaveProject(userId, projectId)
     }
+
+    // helper function
+    fun base64ToByteArray(base64: String): ByteArray {
+        return Base64.getDecoder().decode(base64)
+    }
+
+    fun fromBase64(base64: String): ByteArray {
+        return Base64.getDecoder().decode(base64)
+    }
+
+
 
 }
