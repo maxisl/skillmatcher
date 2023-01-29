@@ -469,7 +469,7 @@ fun createUser(
 ) {
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
-    registerUser(ctx, eMail, pw, result) //Todo: restliche values hinzufügen
+    registerUser(ctx, eMail, pw, profileImage, result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {

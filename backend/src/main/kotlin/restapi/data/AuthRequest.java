@@ -15,4 +15,6 @@ public class AuthRequest { //TODO: Replace AuthRequest with APIUser
     @SerializedName("password")
     private String password;
 
+    private String image;
+
 }

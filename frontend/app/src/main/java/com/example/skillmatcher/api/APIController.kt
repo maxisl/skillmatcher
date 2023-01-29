@@ -24,7 +24,7 @@ interface BackendAPI {
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
 
     @POST("auth/register")
-    fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
+    fun registerUser(@Body userRegisterModel: UserRegisterModel): Call<User>
 
     // DEACTIVATED - TEST ONLY
     //@GET("excluded")
@@ -177,17 +177,18 @@ fun registerUser(
     userName: String,
     // job = user password
     job: String,
+    image: String?,
     result: MutableState<String>
 ) {
     val retrofitAPI = createRetrofitInstance()
 
     try {
-        val userLoginModel = UserLoginModel(userName, job)
-        val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
-        call.enqueue(object : Callback<ApiUser> {
+        val userRegisterModel = UserRegisterModel(userName, job, image)
+        val call: Call<User> = retrofitAPI.registerUser(userRegisterModel)
+        call.enqueue(object : Callback<User> {
             override fun onResponse(
-                call: Call<ApiUser>,
-                response: Response<ApiUser>
+                call: Call<User>,
+                response: Response<User>
             ) {
                 Log.d(
                     "registerUser",
@@ -206,7 +207,7 @@ fun registerUser(
             }
 
             // error handling
-            override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 result.value = "Error found is: \n" + t.message
                 t.message?.let { Log.i("Error found is : ", it) }
             }
@@ -250,6 +251,9 @@ fun getUser(result: MutableState<User>) {
     call!!.enqueue(object : Callback<User> {
         override fun onResponse(call: Call<User>, response: Response<User>) {
             val user = response.body()
+            if (user != null) {
+                result.value = user
+            }
             Log.d("User Info", user.toString())
         }
 
@@ -294,7 +298,8 @@ fun createProject(
     skillIds: List<Long>
 ) {
     Log.d("createProject", "Executed")
-    val project = ProjectRequest(name, description, maxAttendees, startDate, endDate, image, skillIds)
+    val project =
+        ProjectRequest(name, description, maxAttendees, startDate, endDate, image, skillIds)
     Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(

@@ -25,9 +25,9 @@ data class User(
     @JsonIgnore // do not show on request
     var password: String? = null,
 
+    @Column(length = 2500)
     @JsonView(DataView.Project::class)
-    @Lob
-    var image: Blob? = null,
+    var image: String?,
 
     @JsonView(DataView.User::class)
     @ManyToMany(cascade = [CascadeType.ALL])

@@ -30,13 +30,8 @@ data class UserLoginModel(
     var password: String,
 )
 
-/*data class UserModel(
+data class UserRegisterModel(
     var email: String,
-    var ytw: String,
-    var projects: String,
-)*/
-
-data class UserModel(
-    var jwt: String,
-    var token_value: String
+    var password: String,
+    var image: String?
 )

@@ -232,7 +232,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx, userName.value.text, job.value.text, response)
+                // registerUser(ctx, userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(
