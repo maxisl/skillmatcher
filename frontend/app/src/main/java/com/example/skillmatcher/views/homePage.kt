@@ -30,6 +30,7 @@ import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
 import com.example.skillmatcher.views.formatStringToDate
+import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.io.ByteArrayOutputStream
@@ -41,7 +42,7 @@ fun HomePage(
     navigator: DestinationsNavigator,
     user: User
 ) {
-    var projectResponse = remember {
+    val projectResponse = remember {
         mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
     }
 
@@ -164,18 +165,18 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-
-            if (checkForImage(userProject.image)) {
+            val projectImage = userProject.image?.toBitmap()
+            if (checkForImage(projectImage)) {
                 val bos = ByteArrayOutputStream()
-                userProject.image?.compress(
+                projectImage?.compress(
                     Bitmap.CompressFormat.PNG,
-                    0,
+                    25,
                     bos
                 ) // YOU can also save it in JPEG
                 val imageProfilByteArray = bos.toByteArray()
 
-                val bitmapIamge: Bitmap? = userProject.image
-                bitmapIamge?.let { btm ->
+                val bitmapImage: Bitmap? = projectImage
+                bitmapImage?.let { btm ->
                     Image(
                         bitmap = btm.asImageBitmap(),
                         contentDescription = null,
@@ -233,11 +234,7 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
 }
 
 fun checkForImage(image: Bitmap?): Boolean {
-    if (image != null) {
-        return true
-    } else {
-        return false
-    }
+    return image != null
 }
 
 fun imageBitmapFromBytes(encodedImageData: ByteArray): ImageBitmap {

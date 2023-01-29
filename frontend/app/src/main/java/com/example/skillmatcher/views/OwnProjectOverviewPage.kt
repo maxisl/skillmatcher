@@ -29,6 +29,7 @@ import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.example.skillmatcher.views.toBitmap
 
 @Destination
 @Composable
@@ -49,7 +50,8 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                         .padding(5.dp)
                 )
                 Divider(color = Color(White.value), thickness = 1.dp)
-                LogoSection(project.image)
+                val imageBitmap = project.image?.toBitmap()
+                LogoSection(imageBitmap)
                 NameSection(project.name)
                 ExpandableCard(title = "Participants", description = "navi, jason")
                 DescriptionSection(project.description)

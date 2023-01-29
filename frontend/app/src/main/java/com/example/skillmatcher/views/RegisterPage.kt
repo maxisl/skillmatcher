@@ -397,7 +397,7 @@ fun registerUserButton(
 ) {
     var error by remember { mutableStateOf(false) }
     val userResponse = remember {
-        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),null))}
+        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))}
 
     Button(interactionSource = interactionSource, onClick = {
 
