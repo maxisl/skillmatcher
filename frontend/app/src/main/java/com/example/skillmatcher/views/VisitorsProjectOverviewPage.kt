@@ -23,7 +23,7 @@ fun VisitorsProjectOverviewPage(
     ) {
         Text(text = "Post Screen")
         Button(onClick = {
-            navigator.navigate(OwnProjectOverviewPageDestination)
+           // navigator.navigate(OwnProjectOverviewPageDestination)
         }) {
             Text("Go to OwnProjectOverviewPage")
         }

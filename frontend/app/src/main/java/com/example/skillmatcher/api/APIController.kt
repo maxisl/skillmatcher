@@ -33,8 +33,8 @@ interface BackendAPI {
     @GET("user")
     fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
 
-    @GET("user/{email}")
-    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<ApiUser>
+    @GET("user/byMail/{email}")
+    fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<User>
 
     /*************************************************** PROJECT *******************************************/
 
@@ -47,6 +47,12 @@ interface BackendAPI {
 
     @GET("projects")
     fun getAllProjects(@Header("Authorization") jwt: String): Call<List<Project>>
+
+    @GET("projects/byUserEmail/{email}")
+    fun getProjectsByUserEmail(
+        @Header("Authorization") jwt: String,
+        @Path("email") email: String,
+        ): Call<List<Project>>
 
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
@@ -226,22 +232,22 @@ fun getAllUsers() {
     })
 }
 
-fun getUser() {
+fun getUser(result: MutableState<User>) {
     val retrofitAPI = createRetrofitInstance()
     Log.d("getUser ", "Executed")
 
-    val call: Call<ApiUser> = retrofitAPI.getUser(
+    val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
         "${preferencesManager.getMail()}"
     )
     //val call: Call<ApiUser> = retrofitAPI.getUser("Bearer $jwt", email)
-    call!!.enqueue(object : Callback<ApiUser> {
-        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+    call!!.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
             val user = response.body()
             Log.d("User Info", user.toString())
         }
 
-        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+        override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
@@ -250,12 +256,12 @@ fun getUser() {
 
 fun getUserMail(result: MutableState<String>) {
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<ApiUser> = retrofitAPI.getUser(
+    val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
         "${preferencesManager.getMail()}"
     )
-    call!!.enqueue(object : Callback<ApiUser> {
-        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+    call!!.enqueue(object : Callback<User> {
+        override fun onResponse(call: Call<User>, response: Response<User>) {
             val userMail = preferencesManager.getMail()
             Log.d("User Mail: ", userMail.toString())
             if (userMail != null) {
@@ -263,7 +269,7 @@ fun getUserMail(result: MutableState<String>) {
             }
         }
 
-        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+        override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
@@ -375,6 +381,29 @@ fun addSkillToUser(
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
 
+    })
+}
+
+fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
+    Log.d("getProjectsByUserEmail: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Project>> =
+        retrofitAPI.getProjectsByUserEmail("Bearer ${preferencesManager.getJWT()}", "${preferencesManager.getMail()}")
+    call!!.enqueue(object : Callback<List<Project>> {
+        override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+            // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
+            Log.d("getProjectsByUserEmail", response.body().toString())
+            try{
+                result.value = response.body() as MutableList<Project>
+            }catch(e :Exception){
+                Log.d("getProjectsByUserEmail", "CATCHED ERROR !!! $result")
+            }
+            Log.d("getProjectsByUserEmail", "Projects as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
     })
 }
 

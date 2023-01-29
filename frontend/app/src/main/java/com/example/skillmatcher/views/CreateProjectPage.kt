@@ -62,6 +62,8 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
         mutableStateOf(listOf(Skill("", 0, false)))
     }
 
+    //var imageBitmap by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
