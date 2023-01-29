@@ -80,7 +80,6 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     val projectImage = project.image
 
     val bitmap = projectImage?.toBitmap()
-    val base64 = bitmap?.toBase64()
 
     Card(
         shape = RoundedCornerShape(14.dp),
