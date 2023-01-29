@@ -106,7 +106,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                var profileImage = imagePicker()
+                val profileImage = imagePicker()
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -137,15 +137,6 @@ fun RegisterPage(navigator: DestinationsNavigator) {
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
-
-                /*OutlinedTextField(
-                    value = userName.value,
-                    onValueChange = { userName.value = it },
-                    placeholder = { Text(text = "Enter Username") },
-                    modifier = Modifier
-                        .padding(16.dp),
-                    singleLine = true,
-                )*/
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -188,15 +179,17 @@ fun RegisterPage(navigator: DestinationsNavigator) {
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
 
-                        val description = if (passwordSecondVisibility) "Hide password" else "Show password"
+                        val description =
+                            if (passwordSecondVisibility) "Hide password" else "Show password"
 
                         IconButton(onClick = {
-                            passwordSecondVisibility = !passwordSecondVisibility}){
-                            Icon(imageVector  = image, description)
+                            passwordSecondVisibility = !passwordSecondVisibility
+                        }) {
+                            Icon(imageVector = image, description)
                         }
                     },
 
-                )
+                    )
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -397,7 +390,8 @@ fun registerUserButton(
 ) {
     var error by remember { mutableStateOf(false) }
     val userResponse = remember {
-        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))}
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
 
     Button(interactionSource = interactionSource, onClick = {
 
@@ -405,7 +399,7 @@ fun registerUserButton(
             checkIfInputIsCorrect(eMail, pw, pwSecond, selectedSkills)
         error = errorNotifications.error
         if (!error) {
-            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
+            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result, ctx)
             suspend {
                 try {
                     getUser(userResponse)
@@ -475,7 +469,7 @@ fun createUser(
 ) {
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
-    registerUser(ctx,eMail,pw,result) //Todo: restliche values hinzufügen
+    registerUser(ctx, eMail, pw, result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {

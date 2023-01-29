@@ -42,6 +42,8 @@ fun HomePage(
     navigator: DestinationsNavigator,
     user: User
 ) {
+    // TODO loading icon until getProjects succeeded
+
     val projectResponse = remember {
         mutableStateOf(listOf(Project(0,"", "", "", "", "", null, listOf())))
     }

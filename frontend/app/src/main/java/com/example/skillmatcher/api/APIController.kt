@@ -473,3 +473,9 @@ fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
         }
     })
 }
+
+fun getLocalUserEmail(): String? {
+    return preferencesManager.getMail()
+}
+
+

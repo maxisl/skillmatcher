@@ -510,6 +510,7 @@ fun String.toBitmap(): Bitmap {
     return if (decodedString != null) {
         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     } else {
+        // if decoded String is null, create empty Bitmap
         Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
     }
 }
