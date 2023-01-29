@@ -43,7 +43,7 @@ fun HomePage(
     user: User
 ) {
     val projectResponse = remember {
-        mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
+        mutableStateOf(listOf(Project(0,"", "", "", "", "", null, listOf())))
     }
 
     var userProjects: List<Project> = emptyList()

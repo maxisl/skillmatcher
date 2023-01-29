@@ -1,6 +1,5 @@
 package com.example.skillmatcher
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-import com.example.skillmatcher.views.toBase64
 import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 
@@ -33,11 +31,11 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun AllProjectsListPage(
 ) {
-    val response = remember {
-        mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
+    val projectListResponse = remember {
+        mutableStateOf(listOf(Project(0, "", "", "", "", "", null, listOf())))
     }
-    getAllProjects(response)
-    val projects = response.value
+    getAllProjects(projectListResponse)
+    val projects = projectListResponse.value
     SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -78,6 +76,12 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     val projectStartDate = project.startDate
     val projectEndDate = project.endDate
     val projectImage = project.image
+    val projectSkills = project.requiredSkillsIds
+
+    val projectSkillsResponse = remember {
+        mutableStateOf(listOf(com.example.skillmatcher.data.Skill("", 0, false)))
+    }
+
 
     val bitmap = projectImage?.toBitmap()
 
