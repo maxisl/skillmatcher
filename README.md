@@ -8,8 +8,7 @@ Server:
 - ssh praktikum@msp-ws2223-5.dev.mobile.ifi.lmu.de -p 2416
 - Usgp$~}THj0zK)S#
 
-Swagger-UI:
-http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
+
 
 # How it works
 1. Post your project requirements to our platform.
@@ -28,35 +27,11 @@ http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
 
 --- 
 
-# Backend API
+# REST API
 
-### Post requests:
-- Post Login credentials (view 1)
-- Post New user (view 2)
-- Post Userdata update ()
-- Post New  project (view 3)
-- Post Apply for project (view 6.1)
+The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI):
 
-
-### Get requests:
-- Get list of all projects (View 5)
-    - Projects name
-    - Projects description 
-    - Projects skills needed 
-
-
-- Get details of a project visitor (view 6.1)
-    - Projects full description 
-    - Project owner 
-    - Project skills needed
-    
-
-- Get details of a project member/owner (view 6.2)
-  - Projects full description
-  - Project owner
-  - Project skills needed
-  - Project member
-  - Project progress      
+http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
 
 ---
 # Editing this README
