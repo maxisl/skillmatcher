@@ -167,9 +167,9 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-            val projectImage = userProject.image?.toBitmap()
-            if (checkForImage(projectImage)) {
-                val bos = ByteArrayOutputStream()
+            //val projectImage = userProject.image?.toBitmap()
+            if (checkForImageString(userProject.image)) {
+                /*val bos = ByteArrayOutputStream()
                 projectImage?.compress(
                     Bitmap.CompressFormat.PNG,
                     25,
@@ -185,10 +185,10 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                         modifier = Modifier
                             .size(140.dp)
                     )
-                }
+                }*/
                 Image(
                     modifier = Modifier.size(140.dp),
-                    bitmap = imageBitmapFromBytes(imageProfilByteArray),
+                    bitmap = imageBitmapFromBytes(userProject.image!!.toByteArray()),
                     // bitmap = ImageBitmap.imageResource(id = icon),
                     contentDescription = "Project_card"
                 )
@@ -237,6 +237,15 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
 
 fun checkForImage(image: Bitmap?): Boolean {
     return image != null
+}
+
+fun checkForImageString(image: String?): Boolean{
+    if(image != null){
+        if(image.isNotEmpty()) {
+            return true
+        }
+    }
+    return false
 }
 
 fun imageBitmapFromBytes(encodedImageData: ByteArray): ImageBitmap {
