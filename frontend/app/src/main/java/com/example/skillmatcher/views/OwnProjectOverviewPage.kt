@@ -2,6 +2,9 @@ package com.example.skillmatcher
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
+import android.content.Context
+import android.content.Intent
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,12 +27,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.data.Project
+import androidx.core.content.ContextCompat.startActivity
+import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
 
 @Destination
 @Composable
@@ -189,9 +196,11 @@ fun ProjectDescription(
 
 @Composable
 fun ChatButton() {
+    val mContext = LocalContext.current
     Button(
         onClick = {
-            //kommt man zur Chatseite
+            startActivity(mContext,Intent(mContext, ChannelListActivity::class.java),null)
+
         },
         modifier = Modifier
             .fillMaxWidth()

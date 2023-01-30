@@ -12,6 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -22,8 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.*
-import com.example.skillmatcher.data.Project
-import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
@@ -31,6 +32,7 @@ import com.example.skillmatcher.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RootNavGraph(start = true)
@@ -142,10 +144,62 @@ fun postData(navigator: DestinationsNavigator) {
                         Log.d("ExceptionInHome: ", e.toString())
                     }
                 }
-                val user = userResponse.value
+                val userLogin = userResponse.value
                 navigator.navigate(
-                    SideBarDestination(id = 1,user)
+                    SideBarDestination(id = 1,userLogin)
                 )
+
+                val client = ChatClient.instance()
+
+                val uname= userName.value.text
+                Log.d("username", uname)
+                val uname2= uname.replace(".", "")
+                Log.d("username2", uname2)
+               //val uname3 =uname2.replace("@", "")
+                val user = io.getstream.chat.android.client.models.User(
+
+                    id = uname2,
+                    role= "admin",
+                    name = userName.value.text,
+                    image = "https://bit.ly/321RmWb",
+                )
+
+                client.updateUser(user)
+                val token1= client.devToken(user.id)
+
+                client.connectUser(
+                    user = user,
+                    token = token1
+                ).enqueue { result ->
+                    if (result.isSuccess) {
+                        Log.d("Successful", "Successful")
+                    } else {
+                        Log.d("fail", "fail")
+                    }
+                }
+
+
+                val channelClient = client.channel(channelType = "messaging", channelId = "NewId")
+
+                channelClient.create(memberIds = listOf(user.id), extraData = emptyMap()).enqueue { result ->
+                    if (result.isSuccess) {
+                        val newChannel: Channel = result.data()
+
+                        //Log.d("newChannel",newChannel)
+                        Log.d("chanelle", "channel wurde erstellt")
+                    } else {
+                        Log.d("channel", "channel fail")
+                    }
+                }
+
+                //channelClient.watch().enqueue()
+                /**channelClient.addMembers(listOf("lmu")).enqueue { result ->
+                    if (result.isSuccess) {
+                        val channel: Channel = result.data()
+                    } else {
+                        // Handle result.error()
+                    }
+                }*/
             },
             modifier = Modifier
                 .fillMaxWidth()

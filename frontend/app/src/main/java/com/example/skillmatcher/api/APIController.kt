@@ -383,6 +383,12 @@ fun addSkillToUser(
         }
 
     })
+
+
+}
+
+fun getLocalUserEmail(): String? {
+    return preferencesManager.getMail()
 }
 
 fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
