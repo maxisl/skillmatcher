@@ -44,8 +44,6 @@ import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import io.getstream.chat.android.client.ChatClient
-import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -392,7 +390,7 @@ fun registerUserButton(
     eMail: String, pw: String, pwSecond: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
-    profileImage: Bitmap?,
+    profileImage: String,
     result: MutableState<String>,
     ctx: Context,
     navigator: DestinationsNavigator
@@ -471,13 +469,13 @@ fun createUser(
     pw: String,
     profileDescription: String,
     selectedSkills: MutableList<Skill?>,
-    profileImage: Bitmap?,
+    profileImage: String?,
     result: MutableState<String>,
     ctx: Context
 ) {
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
-    registerUser(ctx,eMail,pw,result) //Todo: restliche values hinzufügen
+    registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
 }
 
 fun validateEmail(email: String): Boolean {
