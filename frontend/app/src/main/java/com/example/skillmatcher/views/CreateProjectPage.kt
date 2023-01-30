@@ -507,7 +507,7 @@ fun Bitmap.toBase64(): String {
 
 fun String.toBitmap(): Bitmap {
     val decodedString = Base64.decode(this, Base64.DEFAULT)
-    return if (decodedString != null) {
+    return if (decodedString.size != null) {
         BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     } else {
         // if decoded String is null, create empty Bitmap

@@ -45,7 +45,7 @@ class UserController(
 /*
 ********************************** PUT **********************************
  */
-    // TODO: Not working yet
+    // TODO: Not working yet - necessary or discard?
     @JsonView(DataView.User::class)
     @PutMapping("/byMail/{email}")
     fun updateUser(@PathVariable email: String, @RequestBody user: User) =
@@ -62,6 +62,8 @@ class UserController(
 /*
 ********************************** DELETE **********************************
  */
+
+    // TODO deactivate? - should not be possible to delete users
     @DeleteMapping("/byMail/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
@@ -71,11 +73,11 @@ class UserController(
 }
 
 // TODO can be deleted after testing: test route that is unauthorized - does not require JWT
-@RequestMapping("excluded")
+/*@RequestMapping("excluded")
 @RestController
 class UserTestController(val service: UserService) {
     @JsonView(DataView.User::class)
     @GetMapping()
     fun getUsers() = service.getAll()
-}
+}*/
 

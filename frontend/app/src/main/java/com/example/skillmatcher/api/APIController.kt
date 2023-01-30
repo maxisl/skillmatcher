@@ -86,8 +86,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-    "http://10.0.2.2:8080/"
-//    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+//    "http://10.0.2.2:8080/"
+    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -241,7 +241,7 @@ fun getAllUsers() {
 
 fun getUser(result: MutableState<User>) {
     val retrofitAPI = createRetrofitInstance()
-    Log.d("getUser ", "Executed")
+    Log.d("getUser", "Executed")
 
     val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
@@ -254,14 +254,18 @@ fun getUser(result: MutableState<User>) {
             if (user != null) {
                 result.value = user
             }
-            Log.d("User Info", user.toString())
+            Log.d("getUser", "User Info ${user.toString()}")
         }
+
+
 
         override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
     })
+    // TODO save image in sharedPrefs upon login?
+    // preferencesManager.saveImage()
 }
 
 fun getUserMail(result: MutableState<String>) {
