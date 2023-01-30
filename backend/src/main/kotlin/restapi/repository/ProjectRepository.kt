@@ -4,12 +4,15 @@ import restapi.model.Project
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import restapi.model.Skill
 import restapi.model.User
 import javax.validation.constraints.Email
 
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long> {
     // fun findByNameContaining(name: String): MutableList<Project>
+
+    fun findByName(name: String): Project?
 
     // fun findByEmail(userEmail: String): MutableList<Project>
     @Query("SELECT p.attendees FROM Project p WHERE p.id = :id")

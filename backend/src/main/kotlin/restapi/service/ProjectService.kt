@@ -79,6 +79,14 @@ class ProjectService(
             endDate = projectRequest.endDate,
             image = projectRequest.image
         )
+        val projectAvailable: Project? =
+            projectRepository.findByName(projectRequest.name)
+        if (projectAvailable != null) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Project with this name already exists!"
+            )
+        }
         val requiredSkillsIds = projectRequest.requiredSkillsIds
         if (requiredSkillsIds != null) {
             val skills = skillRepository.findAllById(requiredSkillsIds)
