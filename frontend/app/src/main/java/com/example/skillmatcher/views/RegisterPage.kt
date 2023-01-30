@@ -2,6 +2,7 @@ package com.example.skillmatcher.views
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
+import io.getstream.chat.android.client.ChatClient
 import java.time.LocalDateTime
 
 
@@ -423,6 +425,38 @@ fun createUser(
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
     registerUser(ctx,newUser.id,newUser.password,result) //Todo: restliche values hinzufügen
+
+    //User hinzufügen in Stream.io nach dem ein User erstellt wurde
+
+    val client = ChatClient.instance()
+
+    val uname= newUser.id
+    Log.d("username", uname)
+    val uname2= uname.replace(".", "")
+    Log.d("username2", uname2)
+    //val uname3 =uname2.replace("@", "")
+    val user = io.getstream.chat.android.client.models.User(
+
+        id = uname2,
+        role= "admin",
+        name = newUser.id,
+        image = "https://bit.ly/321RmWb",
+    )
+
+    client.updateUser(user)
+    val token1= client.devToken(user.id)
+
+    client.connectUser(
+        user = user,
+        token = token1
+    ).enqueue { result ->
+        if (result.isSuccess) {
+            Log.d("Successful", "Successful")
+        } else {
+            Log.d("fail", "fail")
+        }
+    }
+
 }
 
 fun validateEmail(email: String): Boolean {

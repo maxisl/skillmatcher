@@ -6,8 +6,13 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.Colors
+import androidx.compose.ui.graphics.Color
+import com.example.skillmatcher.ui.theme.LMUGreen
 import io.getstream.chat.android.compose.ui.messages.MessagesScreen
 import io.getstream.chat.android.compose.ui.theme.ChatTheme
+import io.getstream.chat.android.compose.ui.theme.StreamColors
+
 //ChannelID
 class MessageActivity : ComponentActivity() {
 
@@ -20,7 +25,14 @@ class MessageActivity : ComponentActivity() {
             return
         }
         setContent{
-            ChatTheme {
+            ChatTheme (
+                //Farbe geändert vom Chat bei dem Messages
+                colors= StreamColors.defaultColors().copy(
+                    appBackground = Color.Black,
+                    ownMessagesBackground = Color(LMUGreen.value)
+
+                )
+                    ){
                 MessagesScreen(channelId = channelId,
                 messageLimit = 30,
                 onBackPressed={finish() }

@@ -377,6 +377,12 @@ fun addSkillToUser(
         }
 
     })
+
+
+}
+
+fun getLocalUserEmail(): String? {
+    return preferencesManager.getMail()
 }
 
 // LEGACY: required skills are automatically added to project upon creation
