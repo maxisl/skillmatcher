@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -32,7 +33,11 @@ fun AllProjectsListPage(
     val response = remember {
         mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
     }
-    getAllProjects(response)
+    try{
+        getAllProjects(response)}
+    catch(e: Exception){
+
+    }
     val projects = response.value
     SkillMatcherTheme {
         Surface(
@@ -58,9 +63,17 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
             .background(Color(Color.Black.value)),
     ) {
         items(1) {
-            projects.forEach { Project ->
-                ProjectCard(cardIcon, project = Project)
-                // ProjectCard(cardIcon)
+            projects.forEach { project ->
+                if (project.name.isNotEmpty()) {
+                    ProjectCard(cardIcon, project = project)
+                    // ProjectCard(cardIcon)
+                }else{
+                    Column(horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                        Text(
+                            text = "You don't have any projects jet.")
+                    }
+                }
             }
         }
     }

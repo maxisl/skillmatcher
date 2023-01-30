@@ -1,5 +1,6 @@
 package com.example.skillmatcher.views
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,6 +32,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RootNavGraph(start = true)
 @Destination()
 @Composable
@@ -43,86 +45,8 @@ fun LoginPage(navigator: DestinationsNavigator) {
         ) {
 
             Scaffold(
-
-
                 content = {
                     postData(navigator)
-                    /*TODO deactivated due to error: "Multiple Destinations with 'individual_skills_page' as their route name"*/
-                    /*Button(onClick = {
-                        navigator.navigate(
-                            SideBarDestination(
-                                id = 1,
-                                User(
-                                    name = "Chris P. Bacon",
-                                    id = "userid",
-                                    created = LocalDateTime.now()
-                                )
-                            )
-                        )
-                    }) {
-                        Text("Go to IndividualSkillsPage")
-                    }*/
-
-                    /**
-                    Column(
-                    modifier = Modifier.fillMaxSize().background(Color(Black.value)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    val image: Painter = painterResource(id = R.drawable.lmulogo)
-                    Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // to change color : colors = ButtonDefaults.buttonColors(Grey10)
-                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content Color
-                    // In my case i define the Text Color by Text()
-                    Button(onClick = {
-                    navigator.navigate(
-                    SideBarDestination(id = 1,
-                    User(
-                    name = "Chris P. Bacon",
-                    id = "userid",
-                    created = LocalDateTime.now()
-                    )
-                    )
-                    )
-                    }) {
-                    // define here Text-Color  color = Grey99
-                    Text("Go to IndividualSkillsPage")
-                    }
-                    }
-                     */
-
-
-                    /**
-                    Column(
-                    modifier = Modifier.fillMaxSize().background(Color(Black.value)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    val image: Painter = painterResource(id = R.drawable.lmulogo)
-                    Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // to change color : colors = ButtonDefaults.buttonColors(Grey10)
-                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content Color
-                    // In my case i define the Text Color by Text()
-                    Button(onClick = {
-                    navigator.navigate(
-                    SideBarDestination(id = 1,
-                    User(
-                    name = "Chris P. Bacon",
-                    id = "userid",
-                    created = LocalDateTime.now()
-                    )
-                    )
-                    )
-                    }) {
-                    // define here Text-Color  color = Grey99
-                    Text("Go to IndividualSkillsPage")
-                    }
-                    }
-                     */
                 }
             )
         }
