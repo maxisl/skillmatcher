@@ -43,6 +43,8 @@ import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
 import java.time.LocalDateTime
 
 
@@ -476,13 +478,12 @@ fun createUser(
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
     registerUser(ctx,eMail,pw,result) //Todo: restliche values hinzufügen
-    registerUser(ctx,newUser.id,newUser.password,result) //Todo: restliche values hinzufügen
 
     //User hinzufügen in Stream.io nach dem ein User erstellt wurde
 
     val client = ChatClient.instance()
 
-    val uname= newUser.id
+    val uname= eMail
     Log.d("username", uname)
     val uname2= uname.replace(".", "")
     Log.d("username2", uname2)
@@ -491,7 +492,7 @@ fun createUser(
 
         id = uname2,
         role= "admin",
-        name = newUser.id,
+        name = eMail,
         image = "https://bit.ly/321RmWb",
     )
 

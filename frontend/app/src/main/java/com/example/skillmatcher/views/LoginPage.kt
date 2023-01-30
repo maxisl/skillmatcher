@@ -32,6 +32,8 @@ import com.example.skillmatcher.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
