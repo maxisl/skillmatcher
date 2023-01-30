@@ -1,7 +1,6 @@
 package com.example.skillmatcher.api
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
@@ -25,7 +24,7 @@ interface BackendAPI {
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
 
     @POST("auth/register")
-    fun registerUser(@Body userLoginModel: UserLoginModel): Call<ApiUser>
+    fun registerUser(@Body userRegisterModel: UserRegisterModel): Call<User>
 
     // DEACTIVATED - TEST ONLY
     //@GET("excluded")
@@ -43,7 +42,7 @@ interface BackendAPI {
     fun createProject(
         @Header("Authorization") jwt: String,
         @Path("email") email: String,
-        @Body project: Project
+        @Body project: ProjectRequest
     ): Call<Project>
 
     @GET("projects")
@@ -53,7 +52,13 @@ interface BackendAPI {
     fun getProjectsByUserEmail(
         @Header("Authorization") jwt: String,
         @Path("email") email: String,
-        ): Call<List<Project>>
+    ): Call<List<Project>>
+
+    @GET("projects/{projectId}/requiredSkills")
+    fun getRequiredSkills(
+        @Header("Authorization") jwt: String,
+        @Path("{projectId}") projectId: Long,
+    ): Call<List<Skill>>
 
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
@@ -172,17 +177,18 @@ fun registerUser(
     userName: String,
     // job = user password
     job: String,
+    image: String?,
     result: MutableState<String>
 ) {
     val retrofitAPI = createRetrofitInstance()
 
     try {
-        val userLoginModel = UserLoginModel(userName, job)
-        val call: Call<ApiUser> = retrofitAPI.registerUser(userLoginModel)
-        call.enqueue(object : Callback<ApiUser> {
+        val userRegisterModel = UserRegisterModel(userName, job, image)
+        val call: Call<User> = retrofitAPI.registerUser(userRegisterModel)
+        call.enqueue(object : Callback<User> {
             override fun onResponse(
-                call: Call<ApiUser>,
-                response: Response<ApiUser>
+                call: Call<User>,
+                response: Response<User>
             ) {
                 Log.d(
                     "registerUser",
@@ -201,7 +207,7 @@ fun registerUser(
             }
 
             // error handling
-            override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 result.value = "Error found is: \n" + t.message
                 t.message?.let { Log.i("Error found is : ", it) }
             }
@@ -235,7 +241,7 @@ fun getAllUsers() {
 
 fun getUser(result: MutableState<User>) {
     val retrofitAPI = createRetrofitInstance()
-    Log.d("getUser ", "Executed")
+    Log.d("getUser", "Executed")
 
     val call: Call<User> = retrofitAPI.getUser(
         "Bearer ${preferencesManager.getJWT()}",
@@ -245,14 +251,21 @@ fun getUser(result: MutableState<User>) {
     call!!.enqueue(object : Callback<User> {
         override fun onResponse(call: Call<User>, response: Response<User>) {
             val user = response.body()
-            Log.d("User Info", user.toString())
+            if (user != null) {
+                result.value = user
+            }
+            Log.d("getUser", "User Info ${user.toString()}")
         }
+
+
 
         override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
 
     })
+    // TODO save image in sharedPrefs upon login?
+    // preferencesManager.saveImage()
 }
 
 fun getUserMail(result: MutableState<String>) {
@@ -285,11 +298,12 @@ fun createProject(
     maxAttendees: String,
     startDate: String,
     endDate: String,
-    image: Bitmap?,
+    image: String?,
     skillIds: List<Long>
 ) {
     Log.d("createProject", "Executed")
-    val project = Project(name, description, maxAttendees, startDate, endDate, image, skillIds)
+    val project =
+        ProjectRequest(name, description, maxAttendees, startDate, endDate, image, skillIds)
     Log.d("createProject", "Project: $project")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<Project> = retrofitAPI.createProject(
@@ -395,14 +409,17 @@ fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
     Log.d("getProjectsByUserEmail: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<List<Project>> =
-        retrofitAPI.getProjectsByUserEmail("Bearer ${preferencesManager.getJWT()}", "${preferencesManager.getMail()}")
+        retrofitAPI.getProjectsByUserEmail(
+            "Bearer ${preferencesManager.getJWT()}",
+            "${preferencesManager.getMail()}"
+        )
     call!!.enqueue(object : Callback<List<Project>> {
         override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
             // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
             Log.d("getProjectsByUserEmail", response.body().toString())
-            try{
+            try {
                 result.value = response.body() as MutableList<Project>
-            }catch(e :Exception){
+            } catch (e: Exception) {
                 Log.d("getProjectsByUserEmail", "CATCHED ERROR !!! $result")
             }
             Log.d("getProjectsByUserEmail", "Projects as List: $result")
@@ -445,3 +462,35 @@ fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
 
     })
 }*/
+
+fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
+    Log.d("getRequiredSkills: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Skill>> =
+        retrofitAPI.getRequiredSkills(
+            "Bearer ${preferencesManager.getJWT()}",
+            projectId
+        )
+    call!!.enqueue(object : Callback<List<Skill>> {
+        override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
+            // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
+            Log.d("getRequiredSkills", response.body().toString())
+            try {
+                result.value = response.body() as MutableList<Skill>
+            } catch (e: Exception) {
+                Log.d("getRequiredSkills", "CATCHED ERROR !!! $result")
+            }
+            Log.d("getRequiredSkills", "Projects as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}
+
+fun getLocalUserEmail(): String? {
+    return preferencesManager.getMail()
+}
+
+

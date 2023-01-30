@@ -1,5 +1,6 @@
 package com.example.skillmatcher
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,14 +8,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,16 +32,36 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllUsers
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
+import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.ui.theme.White
+import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
+import kotlinx.coroutines.*
 
 @Preview
-@Destination()
+@Destination
 @Composable
 fun LandingPage() {
-    Column(
+    // TODO pass all relevant attributes to different sections
+    // TODO create co routine to load user info and avoid app crash
+
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+
+    getUser(getUserResponse)
+    val user = getUserResponse.value
+
+    Log.d("user image", user.toString())
+
+    val userImage = user.image
+
+    Log.d("user image", userImage)
+
+    /*Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(Black.value))
@@ -46,7 +71,7 @@ fun LandingPage() {
                 .padding(10.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        ProfileSection()
+        ProfileSection(user)
         Spacer(modifier = Modifier.height(4.dp))
         SkillSection()
         Spacer(modifier = Modifier.height(4.dp))
@@ -58,9 +83,25 @@ fun LandingPage() {
         Spacer(modifier = Modifier.height(4.dp))
         ProgrammiersprachenHeader()
         Spacer(modifier = Modifier.height(4.dp))
+    }*/
+
+    SkillMatcherTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = // MaterialTheme.colorScheme.background
+            (Color(Color.Black.value))
+        ) {
+            Column {
+                Row {
+                    // ProfileSection(user)
+                }
+            }
+        }
     }
 
 }
+
+
 
 @Composable
 fun TopBar(
@@ -84,8 +125,9 @@ fun TopBar(
 
 @Composable
 fun ProfileSection(
-    modifier: Modifier = Modifier
+    user: User
 ) {
+    val modifier = Modifier
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -93,14 +135,30 @@ fun ProfileSection(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
         ) {
-            RoundImage(
-                image = painterResource(id = R.drawable.nice_cat), modifier = Modifier
-                    .size(120.dp)
-                    .weight(3f)
-            )
+
+            SetImage(user)
+
+
             Spacer(modifier = Modifier.width(16.dp))
             StatSection(modifier = Modifier.weight(7f))
         }
+    }
+}
+
+@Composable
+fun SetImage(user: User) {
+    val userImage = user.image
+    if (userImage != null) {
+        val bitmap = userImage.toBitmap()
+        Image(
+            painter = BitmapPainter(bitmap.asImageBitmap()),
+            contentDescription = "Project_card"
+        )
+    } else {
+        Image(
+            painter = painterResource(id = R.drawable.mern_icon),
+            contentDescription = "Project_card"
+        )
     }
 }
 

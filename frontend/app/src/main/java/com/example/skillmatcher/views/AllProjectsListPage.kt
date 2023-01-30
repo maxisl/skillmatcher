@@ -12,6 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
+import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 
 // TODO projects is empty
@@ -30,15 +33,16 @@ import com.ramcosta.composedestinations.annotation.Destination
 @Composable
 fun AllProjectsListPage(
 ) {
-    val response = remember {
-        mutableStateOf(listOf(Project("", "", "", "", "", null, listOf())))
+    val projectListResponse = remember {
+        mutableStateOf(listOf(Project(0, "", "", "", "", "", null, listOf())))
     }
-    try{
-        getAllProjects(response)}
+    try {
+        getAllProjects(projectListResponse)
+    }
     catch(e: Exception){
 
     }
-    val projects = response.value
+    val projects = projectListResponse.value
     SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -80,10 +84,21 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
 }
 
 @Composable
-fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
+fun ProjectCard(cardIcon: Int, project: Project) {
     val projectName = project.name
     val projectAttendees = project.maxAttendees
     val projectDescription = project.description
+    val projectStartDate = project.startDate
+    val projectEndDate = project.endDate
+    val projectImage = project.image
+    val projectSkills = project.requiredSkillsIds
+
+    val projectSkillsResponse = remember {
+        mutableStateOf(listOf(com.example.skillmatcher.data.Skill("", 0, false)))
+    }
+
+
+    val bitmap = projectImage?.toBitmap()
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -97,14 +112,18 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-
             Row {
-                Image(
-                    modifier = Modifier.size(80.dp),
-                    painter = painterResource(id = cardIcon),
-                    // bitmap = ImageBitmap.imageResource(id = icon),
-                    contentDescription = "Project_card"
-                )
+                if (bitmap != null) {
+                    Image(
+                        painter = BitmapPainter(bitmap.asImageBitmap()),
+                        contentDescription = "Project_card"
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = cardIcon),
+                        contentDescription = "Project_card"
+                    )
+                }
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {
@@ -121,7 +140,13 @@ fun ProjectCard(cardIcon: Int, project: Project) { //Project: Projects
                             )
                         )
                         Text(
-                            text = "Date: 10.01.2023",
+                            text = "Start Date: $projectStartDate",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                            )
+                        )
+                        Text(
+                            text = "End Date: $projectEndDate",
                             style = TextStyle(
                                 fontSize = 16.sp,
                             )

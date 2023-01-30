@@ -14,7 +14,7 @@ data class User(
    // val description: String,
     val skills: MutableList<Skill?>,
     var projects: MutableList<Project>,
-    val image: Bitmap?
+    val image: String
 ): Parcelable
 
 // for get all users in REST controller - this declaration fits the model defined in backend(model/ApiUser), above User does not!
@@ -30,13 +30,8 @@ data class UserLoginModel(
     var password: String,
 )
 
-/*data class UserModel(
+data class UserRegisterModel(
     var email: String,
-    var ytw: String,
-    var projects: String,
-)*/
-
-data class UserModel(
-    var jwt: String,
-    var token_value: String
+    var password: String,
+    var image: String?
 )

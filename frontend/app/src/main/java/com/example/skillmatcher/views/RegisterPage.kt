@@ -478,38 +478,6 @@ fun createUser(
 
     addSkillToUser(eMail, selectedSkills as List<Long>)
     registerUser(ctx,eMail,pw,result) //Todo: restliche values hinzufügen
-
-    //User hinzufügen in Stream.io nach dem ein User erstellt wurde
-
-    val client = ChatClient.instance()
-
-    val uname= eMail
-    Log.d("username", uname)
-    val uname2= uname.replace(".", "")
-    Log.d("username2", uname2)
-    //val uname3 =uname2.replace("@", "")
-    val user = io.getstream.chat.android.client.models.User(
-
-        id = uname2,
-        role= "admin",
-        name = eMail,
-        image = "https://bit.ly/321RmWb",
-    )
-
-    client.updateUser(user)
-    val token1= client.devToken(user.id)
-
-    client.connectUser(
-        user = user,
-        token = token1
-    ).enqueue { result ->
-        if (result.isSuccess) {
-            Log.d("Successful", "Successful")
-        } else {
-            Log.d("fail", "fail")
-        }
-    }
-
 }
 
 fun validateEmail(email: String): Boolean {

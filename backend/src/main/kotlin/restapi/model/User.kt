@@ -14,7 +14,7 @@ data class User(
     @JsonView(DataView.User::class)
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long,
+    var id: Long?,
 
     // user email
     @JsonView(DataView.User::class)
@@ -25,9 +25,9 @@ data class User(
     @JsonIgnore // do not show on request
     var password: String? = null,
 
+    @Column(length = 2500)
     @JsonView(DataView.Project::class)
-    @Lob
-    var image: Blob? = null,
+    var image: String?,
 
     @JsonView(DataView.User::class)
     @ManyToMany(cascade = [CascadeType.ALL])
@@ -48,9 +48,11 @@ data class User(
     )
     @JsonBackReference
     var skills: MutableList<Skill> = mutableListOf(),
+/*
 
     @OneToMany(mappedBy = "sender")
-    var sentMessages: List<ChatMessage> = listOf()
+    var messages: List<ChatMessage> = emptyList()
+*/
 
 )
 

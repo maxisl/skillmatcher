@@ -75,7 +75,7 @@ fun postData(navigator: DestinationsNavigator) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
     val userResponse = remember {
-        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),null))
+        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))
     }
 
     Column(
@@ -212,7 +212,7 @@ fun postData(navigator: DestinationsNavigator) {
 
         Button(
             onClick = {
-                registerUser(ctx, userName.value.text, job.value.text, response)
+                // registerUser(ctx, userName.value.text, job.value.text, response)
 
                 navigator.navigate(
                     RegisterPageDestination(

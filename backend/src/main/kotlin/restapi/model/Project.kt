@@ -1,6 +1,7 @@
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
 import java.sql.Blob
@@ -17,15 +18,15 @@ data class Project(
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Name is mandatory")
-    val name: String,
+    var name: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Description is mandatory")
-    val description: String,
+    var description: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "MaxAttendees is mandatory")
-    val maxAttendees: String,
+    var maxAttendees: String,
 
     @JsonView(DataView.Project::class)
     @ManyToMany(mappedBy = "projects")
@@ -34,15 +35,15 @@ data class Project(
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "Start date is mandatory")
-    val startDate: String,
+    var startDate: String,
 
     @JsonView(DataView.Project::class)
     @NotBlank(message = "End date is mandatory")
-    val endDate: String,
+    var endDate: String,
 
+    @Column(length = 2500)
     @JsonView(DataView.Project::class)
-    @Lob
-    var image: Blob? = null,
+    var image: String?,
 
     @ManyToMany
     @JoinTable(
@@ -51,7 +52,13 @@ data class Project(
         inverseJoinColumns = [JoinColumn(name = "skill_id", referencedColumnName = "id")]
     )
     @JsonBackReference
-    var requiredSkills: MutableList<Skill> = mutableListOf()
+    var requiredSkills: MutableList<Skill> = mutableListOf(),
+/*
+
+    @OneToMany(mappedBy = "project")
+    @JsonManagedReference
+    var chatMessages: List<ChatMessage> = emptyList()
+*/
 
 )
 
@@ -61,7 +68,16 @@ data class ProjectRequest(
     val maxAttendees: String,
     val startDate: String,
     val endDate: String,
-    val image: Blob?,
+    var image: String?,
     val requiredSkillsIds: List<Long>?
 )
+
+data class ProjectUpdateDto(
+    var name: String?,
+    var description: String?,
+    var maxAttendees: String?,
+    var startDate: String?,
+    var endDate: String?
+)
+
 
