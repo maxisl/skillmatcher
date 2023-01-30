@@ -35,4 +35,5 @@ object AppModule {
     fun providedChatClient(@ApplicationContext context: Context, offlinePluginFactory: StreamOfflinePluginFactory )=
         ChatClient.Builder(context.getString(R.string.api_key), context).withPlugin(offlinePluginFactory)
             .logLevel(ChatLogLevel.ALL).build()
-}*/
+}
+        */

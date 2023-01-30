@@ -1,18 +1,17 @@
 package com.example.skillmatcher.views
 
+// import com.example.skillmatcher.destinations.SideBarDestination
+
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.time.LocalDateTime
-import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -20,14 +19,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skillmatcher.data.User
-// import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.api.*
 import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
-import com.example.skillmatcher.ui.theme.SkillMatcherTheme
-
 import com.example.skillmatcher.ui.theme.*
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
+import java.util.*
 
 @RootNavGraph(start = true)
 @Destination()
@@ -131,6 +132,7 @@ fun LoginPage(navigator: DestinationsNavigator) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun postData(navigator: DestinationsNavigator) {
+
     val ctx = LocalContext.current
 
     val userName = remember {
@@ -194,6 +196,58 @@ fun postData(navigator: DestinationsNavigator) {
                         id = 1,
                     )
                 )
+
+                val client = ChatClient.instance()
+
+                val uname= userName.value.text
+                Log.d("username", uname)
+                val uname2= uname.replace(".", "")
+                Log.d("username2", uname2)
+               //val uname3 =uname2.replace("@", "")
+                val user = io.getstream.chat.android.client.models.User(
+
+                    id = uname2,
+                    role= "admin",
+                    name = userName.value.text,
+                    image = "https://bit.ly/321RmWb",
+                )
+
+                client.updateUser(user)
+                val token1= client.devToken(user.id)
+
+                client.connectUser(
+                    user = user,
+                    token = token1
+                ).enqueue { result ->
+                    if (result.isSuccess) {
+                        Log.d("Successful", "Successful")
+                    } else {
+                        Log.d("fail", "fail")
+                    }
+                }
+
+
+                val channelClient = client.channel(channelType = "messaging", channelId = "NewId")
+
+                channelClient.create(memberIds = listOf(user.id), extraData = emptyMap()).enqueue { result ->
+                    if (result.isSuccess) {
+                        val newChannel: Channel = result.data()
+
+                        //Log.d("newChannel",newChannel)
+                        Log.d("chanelle", "channel wurde erstellt")
+                    } else {
+                        Log.d("channel", "channel fail")
+                    }
+                }
+
+                //channelClient.watch().enqueue()
+                /**channelClient.addMembers(listOf("lmu")).enqueue { result ->
+                    if (result.isSuccess) {
+                        val channel: Channel = result.data()
+                    } else {
+                        // Handle result.error()
+                    }
+                }*/
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -205,7 +259,6 @@ fun postData(navigator: DestinationsNavigator) {
         Button(
             onClick = {
                 registerUser(ctx,userName.value.text, job.value.text, response)
-
                 navigator.navigate(
                     RegisterPageDestination(
 

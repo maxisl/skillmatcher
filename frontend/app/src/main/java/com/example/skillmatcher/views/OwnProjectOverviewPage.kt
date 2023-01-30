@@ -202,7 +202,7 @@ fun ChatButton() {
     val mContext = LocalContext.current
     Button(
         onClick = {
-            startActivity(mContext,Intent(mContext,ChannelListActivity::class.java),null)
+            startActivity(mContext,Intent(mContext, ChannelListActivity::class.java),null)
 
         },
         modifier = Modifier
