@@ -86,8 +86,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-//    "http://10.0.2.2:8080/"
-    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    "http://10.0.2.2:8080/"
+//    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -319,6 +319,7 @@ fun createProject(
                 Log.d("createProject", "Response Code ${response.code()}")
             } else {
                 Toast.makeText(ctx, "Failed to create project", Toast.LENGTH_SHORT).show()
+                Log.d("createProject", "Response Code ${response.code()}")
             }
         }
 
