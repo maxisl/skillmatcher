@@ -96,7 +96,7 @@ class ProjectService(
         return projectRepository.save(project)
     }
 
-    // deactivated - only delete projects by leaving
+    // DEACTIVATED - only delete projects by leaving
     /*fun remove(id: Long) {
         if (projectRepository.existsById(id)) projectRepository.deleteById(id)
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "No Project with this Id found!")
@@ -108,7 +108,7 @@ class ProjectService(
         project.apply {
             name = projectUpdateDto.name ?: name
             description = projectUpdateDto.description ?: description
-            maxAttendees = projectUpdateDto.maxAttendees?: maxAttendees
+            maxAttendees = projectUpdateDto.maxAttendees ?: maxAttendees
             startDate = projectUpdateDto.startDate ?: startDate
             endDate = projectUpdateDto.endDate ?: endDate
         }
@@ -119,14 +119,21 @@ class ProjectService(
     fun attendProject(userId: Long, projectId: Long) {
         val user =
             userRepository.findById(userId)
-                .orElseThrow { NotFoundException("User not found") }
+                .orElseThrow {
+                    ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"
+                    )
+                }
         val project =
             projectRepository.findById(projectId)
-                .orElseThrow { NotFoundException("Project not found") }
+                .orElseThrow {
+                    ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Project not found"
+                    )
+                }
         if (project.attendees.contains(user)) {
             throw ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "User already attends this project"
+                HttpStatus.BAD_REQUEST, "User already attends this project"
             )
         } else {
             project.attendees.add(user)
@@ -138,9 +145,23 @@ class ProjectService(
 
     fun leaveProject(userId: Long, projectId: Long) {
         val user =
-            userRepository.findById(userId).orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "User not found") }
+            userRepository.findById(userId)
+                .orElseThrow {
+                    ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"
+                    )
+                }
         val project = projectRepository.findById(projectId)
-            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found") }
+            .orElseThrow {
+                ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Project not found"
+                )
+            }
+        if (!project.attendees.contains(user)) {
+            throw ResponseStatusException(
+                HttpStatus.NOT_FOUND, "User not part of project"
+            )
+        }
         project.attendees.remove(user)
         user.projects.remove(project)
         if (project.attendees.size == 0) {

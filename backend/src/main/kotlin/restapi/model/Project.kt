@@ -72,6 +72,12 @@ data class ProjectRequest(
     val requiredSkillsIds: List<Long>?
 )
 
+@JsonView(DataView.Project::class)
+data class ProjectWithAttendees(
+    val project: Project,
+    val attendees: List<User>
+)
+
 data class ProjectUpdateDto(
     var name: String?,
     var description: String?,

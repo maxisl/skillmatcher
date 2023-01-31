@@ -31,15 +31,15 @@ class ProjectController(
     /*
     ********************************** GET **********************************
      */
-    @JsonView(DataView.ProjectWithOwner::class)
+    @JsonView(DataView.Project::class)
     @GetMapping
     fun getAllProjects() = projectService.getAll()
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @JsonView(DataView.Project::class)
     @GetMapping("/{id}")
     fun getProject(@PathVariable id: Long) = projectService.getById(id)
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+    @JsonView(DataView.Project::class)
     @GetMapping("/byUserEmail/{userEmail}")
     fun getAllProjectsByUserEmail(@PathVariable userEmail: String): ResponseEntity<List<Project>> {
         val userId = userService.getByEmail(userEmail).id
@@ -51,14 +51,15 @@ class ProjectController(
         }
     }
 
-    // LEGACY - DOES NOT MAKE SENSE? NAME IS NOT UNIQUE
+    // DEACTIVATED
     /*    @JsonView(DataView.Project::class)
         @GetMapping("/byName/{name}")
         fun findByNameContaining(@PathVariable name: String): ResponseEntity<List<Project>> {
             return ResponseEntity.ok(projectService.getAllByName(name))
         }*/
 
-    @JsonView(DataView.ProjectWithAttendeesAndOwner::class)
+
+    @JsonView(DataView.User::class)
     @GetMapping("/attendees/{projectId}")
     fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
 
@@ -73,7 +74,6 @@ class ProjectController(
     ********************************** POST **********************************
      */
 
-    // TODO adapt JSON View? old interface
     @JsonView(DataView.Project::class)
     @PostMapping("/{userEmail}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -126,7 +126,7 @@ class ProjectController(
     ********************************** DELETE **********************************
     */
 
-    // TODO deactivate? only enable automatic deletion when everyone has left the project?
+    // DEACTIVATED - only enable automatic deletion when everyone has left the project
     /*@DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProject(@PathVariable id: Long): ResponseEntity<String> {
@@ -139,16 +139,4 @@ class ProjectController(
     fun leaveProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
         projectService.leaveProject(userId, projectId)
     }
-
-    // helper function
-    fun base64ToByteArray(base64: String): ByteArray {
-        return Base64.getDecoder().decode(base64)
-    }
-
-    fun fromBase64(base64: String): ByteArray {
-        return Base64.getDecoder().decode(base64)
-    }
-
-
-
 }
