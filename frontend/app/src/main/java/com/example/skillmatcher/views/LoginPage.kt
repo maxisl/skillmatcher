@@ -12,9 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.*
+import com.example.skillmatcher.components.CircularIndeterminateProgressBar
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
@@ -77,6 +75,12 @@ fun postData(navigator: DestinationsNavigator) {
     val userResponse = remember {
         mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))
     }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)
+    }
+
+    var loading = false
 
     Column(
         modifier = Modifier
@@ -141,14 +145,16 @@ fun postData(navigator: DestinationsNavigator) {
                 )
                 suspend {
                     try {
-                        getUser(userResponse)
+                        getUser(userResponse,loadingResponse)
                     } catch (e: Exception) {
                         Log.d("ExceptionInHome: ", e.toString())
                     }
                 }
-                val userLogin = userResponse.value
+
+                loading = loadingResponse.value
+
                 navigator.navigate(
-                    SideBarDestination(id = 1,userLogin)
+                    SideBarDestination(id = 1)
                 )
 
                 val client = ChatClient.instance()
@@ -209,7 +215,6 @@ fun postData(navigator: DestinationsNavigator) {
         ) {
             Text(text = "Login", modifier = Modifier.padding(8.dp))
         }
-
         Button(
             onClick = {
                 // registerUser(ctx, userName.value.text, job.value.text, response)
@@ -226,6 +231,8 @@ fun postData(navigator: DestinationsNavigator) {
         ) {
             Text(text = "Register", modifier = Modifier.padding(8.dp))
         }
+
+        CircularIndeterminateProgressBar(isDisplayed = loading)
 
         Text(
             text = response.value,

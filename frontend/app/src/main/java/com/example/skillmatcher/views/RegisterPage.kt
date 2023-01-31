@@ -406,18 +406,9 @@ fun registerUserButton(
         error = errorNotifications.error
         if (!error) {
             createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
-            suspend {
-                try {
-                    getUser(userResponse)
-                } catch (e: Exception) {
-                    Log.d("ExceptionInHome: ", e.toString())
-                }
-            }
-            val user = userResponse.value
             navigator.navigate(
                 SideBarDestination(
                     id = 1,
-                    user
                 )
             )
         }

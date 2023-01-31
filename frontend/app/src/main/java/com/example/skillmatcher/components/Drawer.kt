@@ -1,5 +1,6 @@
 package com.example.skillmatcher.components
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,20 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.R
+import com.example.skillmatcher.data.User
+import com.example.skillmatcher.imageBitmapFromBytes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import com.example.skillmatcher.R
-
-import androidx.compose.material3.*
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-
-
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 
 
 @ExperimentalMaterial3Api
@@ -62,6 +58,7 @@ fun TopBar(
 
 @Composable
 fun DrawerBody(
+    user: User,
     menuItems: List<MenuItem>,
     scaffoldState: ScaffoldState,
     scope: CoroutineScope,
@@ -80,33 +77,52 @@ fun DrawerBody(
 
         item {
 
-            // user's image
-            Image(
-                modifier = Modifier
-                    .size(size = 120.dp)
-                    .clip(shape = CircleShape),
-                painter = painterResource(id = R.drawable.lmulogo),
-                contentDescription = "Profile Image"
-            )
+            if (user.image != null) {
+                if (user.image.isNotEmpty()) {
+                    Image(
+                        modifier = Modifier.size(140.dp),
+                        bitmap = imageBitmapFromBytes(user.image.toByteArray()),
+                        // bitmap = ImageBitmap.imageResource(id = icon),
+                        contentDescription = "Project_card"
+                    )
+                } else {
+                    Image(
+                        modifier = Modifier
+                            .size(size = 120.dp)
+                            .clip(shape = CircleShape),
+                        painter = painterResource(id = R.drawable.lmulogo),
+                        contentDescription = "Profile Image"
+                    )
+                }
+            } else {
+                // user's image
+                Image(
+                    modifier = Modifier
+                        .size(size = 120.dp)
+                        .clip(shape = CircleShape),
+                    painter = painterResource(id = R.drawable.lmulogo),
+                    contentDescription = "Profile Image"
+                )
+            }
 
             // user's name
             Text(
                 modifier = Modifier
                     .padding(top = 12.dp),
-                text = "Hermione",
+                text = user.email,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
 
-            // user's email
-            Text(
-                modifier = Modifier.padding(top = 8.dp, bottom = 30.dp),
-                text = "hermione@email.com",
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                color = Color.White
-            )
+            /*    // user's email
+                Text(
+                    modifier = Modifier.padding(top = 8.dp, bottom = 30.dp),
+                    text = "hermione@email.com",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    color = Color.White
+                )*/
         }
 
 
@@ -218,12 +234,12 @@ fun navigationDrawerItemList(): List<MenuItem> {
         )
     )
     itemsList.add(
-            MenuItem(
-                    image = painterResource(id = R.drawable.android_icon),
-                    label = "Test",
-                    showUnreadBubble = true,
-                    id = ScreensRoute.TEST,
-            )
+        MenuItem(
+            image = painterResource(id = R.drawable.android_icon),
+            label = "Test",
+            showUnreadBubble = true,
+            id = ScreensRoute.TEST,
+        )
     )
     itemsList.add(
         MenuItem(

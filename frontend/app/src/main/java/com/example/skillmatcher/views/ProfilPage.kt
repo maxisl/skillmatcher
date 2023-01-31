@@ -43,7 +43,11 @@ fun LandingPage() {
         mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
     }
 
-    getUser(getUserResponse)
+    val loadingResponse = remember {
+        mutableStateOf(false)
+    }
+
+    getUser(getUserResponse, loadingResponse)
     val user = getUserResponse.value
 
     Log.d("user image", user.toString())
