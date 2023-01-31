@@ -80,7 +80,7 @@ fun LandingPage() {
         Spacer(modifier = Modifier.height(4.dp))
         ProgrammiersprachenHeader()
         Spacer(modifier = Modifier.height(4.dp))
-    }*/
+    }
 
     SkillMatcherTheme {
         Surface(

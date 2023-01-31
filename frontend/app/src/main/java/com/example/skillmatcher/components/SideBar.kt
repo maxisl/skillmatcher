@@ -38,10 +38,14 @@ fun SideBar(id: Int,
     val loadingResponse = remember {
         mutableStateOf(false)
     }
+    var user: User = User(0,"", mutableListOf(),mutableListOf(),"")
 
-
+    try{
     getUser(userResponse,loadingResponse)
-    var user: User = userResponse.value
+    user = userResponse.value}
+    catch (e :Exception){
+
+    }
 
     SkillMatcherTheme {
         Surface(
@@ -92,7 +96,7 @@ fun SideBar(id: Int,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (navigator != null) {
-                            NavHost(navController = navController,navigator,user)
+                            NavHost(navController = navController,navigator)
                         }
                     }
                 },

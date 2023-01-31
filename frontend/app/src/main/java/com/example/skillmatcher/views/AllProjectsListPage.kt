@@ -66,7 +66,19 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
             // .weight(1f)
             .background(Color(Color.Black.value)),
     ) {
-        items(1) {
+
+        projects.iterator().forEach { project ->
+            item(){
+                if(project.name.isNotEmpty()){
+                    ProjectCard(cardIcon, project = project)
+                }
+            }
+        }
+
+       /* items(1) {
+
+
+
             projects.forEach { project ->
                 if (project.name.isNotEmpty()) {
                     ProjectCard(cardIcon, project = project)
@@ -79,7 +91,7 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
                     }
                 }
             }
-        }
+        }*/
     }
 }
 
@@ -98,8 +110,6 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     }
 
 
-    val bitmap = projectImage?.toBitmap()
-
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
@@ -113,17 +123,19 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                 .padding(10.dp),
         ) {
             Row {
-                if (bitmap != null) {
+                /*if (checkForImageString(project.image)) {
+                    val bitmap = project.image!!.toBitmap()
                     Image(
-                        painter = BitmapPainter(bitmap.asImageBitmap()),
+                       // bitmap = imageBitmapFromBytes(project.image!!.toByteArray()),
+                        painter = BitmapPainter(bitmap!!.asImageBitmap()),
                         contentDescription = "Project_card"
                     )
-                } else {
+                } else {*/
                     Image(
                         painter = painterResource(id = cardIcon),
                         contentDescription = "Project_card"
                     )
-                }
+                //}
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {

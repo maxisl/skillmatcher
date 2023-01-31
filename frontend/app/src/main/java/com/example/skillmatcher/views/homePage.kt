@@ -40,7 +40,6 @@ import java.io.ByteArrayOutputStream
 @Composable
 fun HomePage(
     navigator: DestinationsNavigator,
-    user: User
 ) {
     // TODO loading icon until getProjects succeeded
 

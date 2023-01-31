@@ -55,8 +55,8 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                         .padding(5.dp)
                 )
                 Divider(color = Color(White.value), thickness = 1.dp)
-                val imageBitmap = project.image?.toBitmap()
-                LogoSection(imageBitmap)
+                //val imageBitmap = project.image?.toBitmap()
+                LogoSection(project.image)
                 NameSection(project.name)
                 ExpandableCard(title = "Participants", description = "navi, jason")
                 DescriptionSection(project.description)
@@ -89,7 +89,7 @@ fun HeadBar(
 }
 
 @Composable
-fun LogoSection(image: Bitmap?) {
+fun LogoSection(image: String?) {
     Column() {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -102,18 +102,16 @@ fun LogoSection(image: Bitmap?) {
 
 @Composable
 fun ProjectLogo(
-    image: Bitmap?,
+    image: String?,
 ) {
-    if (checkForImage(image)) {
-        val bitmapImage: Bitmap? = image
-        bitmapImage?.let { btm ->
-            Image(
-                bitmap = btm.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(20.dp)
-            )
-        }
+    if (checkForImageString(image)) {
+       // val bitmapImage: Bitmap? = image
+        Image(
+            modifier = Modifier.size(20.dp),
+            bitmap = imageBitmapFromBytes(image!!.toByteArray()),
+            // bitmap = ImageBitmap.imageResource(id = icon),
+            contentDescription = "Project_card"
+        )
     } else {
         Image(
             painter = painterResource(id = R.drawable.mern_icon),
