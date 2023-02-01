@@ -40,17 +40,6 @@ fun SelectProject(navigator: DestinationsNavigator?) {
             .fillMaxSize()
             .background(Color(Black.value))
     ) {
-        Button(onClick = {
-            attendProject(ctx, 8)
-        }) {
-            Text(text = "Attend Project")
-        }
-
-        Button(onClick = {
-            leaveProject(ctx, 8)
-        }) {
-            Text(text = "Leave Project")
-        }
         /**HeadBar(
         name = "Choose Project", modifier = Modifier
         .padding(5.dp)
