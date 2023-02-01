@@ -41,7 +41,7 @@ class UserService(
         return user.skills
     }
 
-    fun getUserProjects(userId: Long): MutableList<Project> //= userRepository.findByEmail(userEmail);
+    fun getUserProjects(userId: Long): MutableList<Project>
     {
         val user = userRepository.findById(userId)
         return user.map { it.projects }.orElse(mutableListOf())

@@ -43,4 +43,5 @@ data class ChatMessageRequest(
     val projectId: Long,
     val message: String,
     val senderEmail: String
-)*/
+)
+*/

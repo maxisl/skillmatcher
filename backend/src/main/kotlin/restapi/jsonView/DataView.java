@@ -4,6 +4,8 @@ package restapi.jsonView;
 
 public class DataView {
     public interface User {}
+    public interface UserWithMinimalDetails{}
+    public interface UserWithAllDetails extends UserWithMinimalDetails{}
     public interface UserWithProjects extends User, Project{}
     public interface Project {}
     public interface Skill {}
@@ -11,7 +13,4 @@ public class DataView {
     public interface UserWithSkill extends User, Skill{}
 
     public interface ProjectWithSkill extends Project, Skill{}
-
-    public interface ProjectWithOwner extends Project, User {}
-    public interface ProjectWithAttendeesAndOwner extends ProjectWithOwner, User {}
 }

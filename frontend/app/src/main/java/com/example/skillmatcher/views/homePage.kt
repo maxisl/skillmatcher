@@ -20,12 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getProjectsByUserEmail
 import com.example.skillmatcher.api.getUser
+import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
