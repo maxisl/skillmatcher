@@ -36,7 +36,6 @@ public class ApiApplication implements CommandLineRunner {
   public void run(String... args) throws Exception {
 
     try {
-      // TODO change blockchain to shorter term? does not fit card
       List<String> Skills = Arrays.asList("Cloud", "AI", "React", "Java", "Python", "Scrum", "IoT",
           "R", "Web3", "C");
       if (skillRepository.count() <= 0) {

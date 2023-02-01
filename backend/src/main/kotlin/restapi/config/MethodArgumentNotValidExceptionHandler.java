@@ -19,8 +19,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 public class MethodArgumentNotValidExceptionHandler {
 
-    //TODO: In anderen Ordner?
-
     @ResponseStatus(BAD_REQUEST)
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -16,8 +16,7 @@ import java.security.Principal
 @RequestMapping("skill")
 @RestController
 class SkillController(
-    val skillService: SkillService,
-    private val skillRepository: SkillRepository
+    val skillService: SkillService
 ) {
 
     /*
