@@ -1,5 +1,6 @@
 package com.example.skillmatcher
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -34,7 +36,12 @@ fun AllProjectsListPage(
     val projectListResponse = remember {
         mutableStateOf(listOf(Project(0, "", "", "", "", "", null, listOf())))
     }
-    getAllProjects(projectListResponse)
+    try {
+        getAllProjects(projectListResponse)
+    }
+    catch(e: Exception){
+
+    }
     val projects = projectListResponse.value
     SkillMatcherTheme {
         Surface(
@@ -59,12 +66,32 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
             // .weight(1f)
             .background(Color(Color.Black.value)),
     ) {
-        items(1) {
-            projects.forEach { Project ->
-                ProjectCard(cardIcon, project = Project)
-                // ProjectCard(cardIcon)
+
+        projects.iterator().forEach { project ->
+            item(){
+                if(project.name.isNotEmpty()){
+                    ProjectCard(cardIcon, project = project)
+                }
             }
         }
+
+       /* items(1) {
+
+
+
+            projects.forEach { project ->
+                if (project.name.isNotEmpty()) {
+                    ProjectCard(cardIcon, project = project)
+                    // ProjectCard(cardIcon)
+                }else{
+                    Column(horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center) {
+                        Text(
+                            text = "You don't have any projects jet.")
+                    }
+                }
+            }
+        }*/
     }
 }
 
@@ -83,8 +110,6 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     }
 
 
-    val bitmap = projectImage?.toBitmap()
-
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
@@ -98,17 +123,19 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                 .padding(10.dp),
         ) {
             Row {
-                if (bitmap != null) {
+                /*if (checkForImageString(project.image)) {
+                    val bitmap = project.image!!.toBitmap()
                     Image(
-                        painter = BitmapPainter(bitmap.asImageBitmap()),
+                       // bitmap = imageBitmapFromBytes(project.image!!.toByteArray()),
+                        painter = BitmapPainter(bitmap!!.asImageBitmap()),
                         contentDescription = "Project_card"
                     )
-                } else {
+                } else {*/
                     Image(
                         painter = painterResource(id = cardIcon),
                         contentDescription = "Project_card"
                     )
-                }
+                //}
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {

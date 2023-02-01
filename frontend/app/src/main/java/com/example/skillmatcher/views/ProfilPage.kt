@@ -1,6 +1,5 @@
 package com.example.skillmatcher
 
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.ui.theme.White
@@ -45,16 +45,22 @@ fun LandingPage() {
         mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
     }
 
-    getUser(getUserResponse)
+    val loadingResponse = remember {
+        mutableStateOf(false)
+    }
+
+    getUser(getUserResponse, loadingResponse)
     val user = getUserResponse.value
 
     Log.d("user image", user.toString())
 
     val userImage = user.image
 
-    // Log.d("user image", userImage)
+    if (userImage != null) {
+        Log.d("user image", userImage)
+    }
 
-    /*Column(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(Black.value))
@@ -76,9 +82,9 @@ fun LandingPage() {
         Spacer(modifier = Modifier.height(4.dp))
         ProgrammiersprachenHeader()
         Spacer(modifier = Modifier.height(4.dp))
-    }*/
+    }
 
-    SkillMatcherTheme {
+    /*SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = // MaterialTheme.colorScheme.background
@@ -86,11 +92,11 @@ fun LandingPage() {
         ) {
             Column {
                 Row {
-                    // ProfileSection(user)
+                     ProfileSection(user)
                 }
             }
         }
-    }
+    }*/
 
 }
 
@@ -142,11 +148,18 @@ fun ProfileSection(
 fun SetImage(user: User) {
     val userImage = user.image
     if (userImage != null) {
-        val bitmap = userImage.toBitmap()
-        Image(
-            painter = BitmapPainter(bitmap.asImageBitmap()),
-            contentDescription = "Project_card"
-        )
+        if(userImage.isNotEmpty()) {
+            val bitmap = userImage.toBitmap()
+            Image(
+                painter = BitmapPainter(bitmap.asImageBitmap()),
+                contentDescription = "Project_card"
+            )
+        }else {
+            Image(
+                painter = painterResource(id = R.drawable.mern_icon),
+                contentDescription = "Project_card"
+            )
+        }
     } else {
         Image(
             painter = painterResource(id = R.drawable.mern_icon),

@@ -1,5 +1,6 @@
 package com.example.skillmatcher.components
 
+import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import com.example.skillmatcher.R
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.components.*
 import com.example.skillmatcher.data.Project
@@ -22,13 +24,29 @@ import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.ProjectCreationPageDestination
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SideBar(id: Int,
-            user: User,
             navigator: DestinationsNavigator?
 ) {
+    val userResponse = remember {
+        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))
+    }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)
+    }
+    var user: User = User(0,"", mutableListOf(),mutableListOf(),"")
+
+    try{
+    getUser(userResponse,loadingResponse)
+    user = userResponse.value}
+    catch (e :Exception){
+
+    }
+
     SkillMatcherTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -60,6 +78,7 @@ fun SideBar(id: Int,
                 drawerGesturesEnabled = true,
                 drawerContent = {
                     DrawerBody(
+                        user,
                         menuItems = navigationDrawerItemList(),
                         scaffoldState,
                         scope
@@ -77,7 +96,7 @@ fun SideBar(id: Int,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (navigator != null) {
-                            NavHost(navController = navController,navigator,user)
+                            NavHost(navController = navController,navigator)
                         }
                     }
                 },

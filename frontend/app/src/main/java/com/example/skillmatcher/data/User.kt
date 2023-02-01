@@ -1,10 +1,7 @@
 package com.example.skillmatcher.data
 
-import android.graphics.Bitmap
 import android.os.Parcelable
-import androidx.compose.runtime.MutableState
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
 
 @Parcelize
 data class User(
@@ -14,7 +11,7 @@ data class User(
    // val description: String,
     val skills: MutableList<Skill?>,
     var projects: MutableList<Project>,
-    val image: String
+    val image: String?
 ): Parcelable
 
 // for get all users in REST controller - this declaration fits the model defined in backend(model/ApiUser), above User does not!

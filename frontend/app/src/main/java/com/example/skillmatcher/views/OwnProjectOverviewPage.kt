@@ -2,6 +2,7 @@ package com.example.skillmatcher
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,6 +25,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.data.Project
+import androidx.core.content.ContextCompat.startActivity
+import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
@@ -30,6 +34,7 @@ import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.example.skillmatcher.views.toBitmap
+
 
 @Destination
 @Composable
@@ -50,8 +55,8 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                         .padding(5.dp)
                 )
                 Divider(color = Color(White.value), thickness = 1.dp)
-                val imageBitmap = project.image?.toBitmap()
-                LogoSection(imageBitmap)
+                //val imageBitmap = project.image?.toBitmap()
+                LogoSection(project.image)
                 NameSection(project.name)
                 ExpandableCard(title = "Participants", description = "navi, jason")
                 DescriptionSection(project.description)
@@ -84,7 +89,7 @@ fun HeadBar(
 }
 
 @Composable
-fun LogoSection(image: Bitmap?) {
+fun LogoSection(image: String?) {
     Column() {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -97,18 +102,16 @@ fun LogoSection(image: Bitmap?) {
 
 @Composable
 fun ProjectLogo(
-    image: Bitmap?,
+    image: String?,
 ) {
-    if (checkForImage(image)) {
-        val bitmapImage: Bitmap? = image
-        bitmapImage?.let { btm ->
-            Image(
-                bitmap = btm.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(20.dp)
-            )
-        }
+    if (checkForImageString(image)) {
+       // val bitmapImage: Bitmap? = image
+        Image(
+            modifier = Modifier.size(20.dp),
+            bitmap = imageBitmapFromBytes(image!!.toByteArray()),
+            // bitmap = ImageBitmap.imageResource(id = icon),
+            contentDescription = "Project_card"
+        )
     } else {
         Image(
             painter = painterResource(id = R.drawable.mern_icon),
@@ -191,9 +194,11 @@ fun ProjectDescription(
 
 @Composable
 fun ChatButton() {
+    val mContext = LocalContext.current
     Button(
         onClick = {
-            //kommt man zur Chatseite
+            startActivity(mContext,Intent(mContext, ChannelListActivity::class.java),null)
+
         },
         modifier = Modifier
             .fillMaxWidth()

@@ -14,14 +14,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 // TODO: Routen hier festlegen
 @Composable
-fun NavHost(navController: NavHostController, navigator: DestinationsNavigator, user: User
+fun NavHost(navController: NavHostController, navigator: DestinationsNavigator
 ) {
     androidx.navigation.compose.NavHost(
         navController = navController,
         startDestination = ScreensRoute.SCREEN_HOME.name
     ) {
         composable(ScreensRoute.SCREEN_HOME.name) {
-            HomePage(navigator, user)
+            HomePage(navigator)
         }
         composable(ScreensRoute.SCREEN_ALL_PROJECTS.name) {
             AllProjectsListPage()

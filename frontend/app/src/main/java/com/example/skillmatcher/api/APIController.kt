@@ -260,7 +260,8 @@ fun getAllUsers() {
     })
 }
 
-fun getUser(result: MutableState<User>) {
+fun getUser(result: MutableState<User>, loading: MutableState<Boolean>) {
+    loading.value = true
     val retrofitAPI = createRetrofitInstance()
     Log.d("getUser", "Executed")
 
@@ -286,6 +287,7 @@ fun getUser(result: MutableState<User>) {
     })
     // TODO save image in sharedPrefs upon login?
     // preferencesManager.saveImage()
+    loading.value = false
 }
 
 fun getUserMail(result: MutableState<String>) {
@@ -418,6 +420,8 @@ fun addSkillToUser(
         }
 
     })
+
+
 }
 
 fun getProjectsByUserEmail(result: MutableState<List<Project>>) {

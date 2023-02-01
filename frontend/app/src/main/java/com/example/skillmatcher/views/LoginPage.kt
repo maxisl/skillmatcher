@@ -1,5 +1,6 @@
 package com.example.skillmatcher.views
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,8 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.*
-import com.example.skillmatcher.data.Project
-import com.example.skillmatcher.data.Skill
+import com.example.skillmatcher.components.CircularIndeterminateProgressBar
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.RegisterPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
@@ -30,7 +30,11 @@ import com.example.skillmatcher.ui.theme.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
+import java.util.*
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RootNavGraph(start = true)
 @Destination()
 @Composable
@@ -43,86 +47,8 @@ fun LoginPage(navigator: DestinationsNavigator) {
         ) {
 
             Scaffold(
-
-
                 content = {
                     postData(navigator)
-                    /*TODO deactivated due to error: "Multiple Destinations with 'individual_skills_page' as their route name"*/
-                    /*Button(onClick = {
-                        navigator.navigate(
-                            SideBarDestination(
-                                id = 1,
-                                User(
-                                    name = "Chris P. Bacon",
-                                    id = "userid",
-                                    created = LocalDateTime.now()
-                                )
-                            )
-                        )
-                    }) {
-                        Text("Go to IndividualSkillsPage")
-                    }*/
-
-                    /**
-                    Column(
-                    modifier = Modifier.fillMaxSize().background(Color(Black.value)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    val image: Painter = painterResource(id = R.drawable.lmulogo)
-                    Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // to change color : colors = ButtonDefaults.buttonColors(Grey10)
-                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content Color
-                    // In my case i define the Text Color by Text()
-                    Button(onClick = {
-                    navigator.navigate(
-                    SideBarDestination(id = 1,
-                    User(
-                    name = "Chris P. Bacon",
-                    id = "userid",
-                    created = LocalDateTime.now()
-                    )
-                    )
-                    )
-                    }) {
-                    // define here Text-Color  color = Grey99
-                    Text("Go to IndividualSkillsPage")
-                    }
-                    }
-                     */
-
-
-                    /**
-                    Column(
-                    modifier = Modifier.fillMaxSize().background(Color(Black.value)),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    val image: Painter = painterResource(id = R.drawable.lmulogo)
-                    Image(painter = image, contentDescription = "", contentScale = ContentScale.FillBounds)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                    // to change color : colors = ButtonDefaults.buttonColors(Grey10)
-                    // colors = ButtonDefaults.textButtonColors(Red30, Grey99) Second Color is the content Color
-                    // In my case i define the Text Color by Text()
-                    Button(onClick = {
-                    navigator.navigate(
-                    SideBarDestination(id = 1,
-                    User(
-                    name = "Chris P. Bacon",
-                    id = "userid",
-                    created = LocalDateTime.now()
-                    )
-                    )
-                    )
-                    }) {
-                    // define here Text-Color  color = Grey99
-                    Text("Go to IndividualSkillsPage")
-                    }
-                    }
-                     */
                 }
             )
         }
@@ -149,6 +75,12 @@ fun postData(navigator: DestinationsNavigator) {
     val userResponse = remember {
         mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))
     }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)
+    }
+
+    var loading = false
 
     Column(
         modifier = Modifier
@@ -213,15 +145,69 @@ fun postData(navigator: DestinationsNavigator) {
                 )
                 suspend {
                     try {
-                        getUser(userResponse)
+                        getUser(userResponse,loadingResponse)
                     } catch (e: Exception) {
                         Log.d("ExceptionInHome: ", e.toString())
                     }
                 }
-                val user = userResponse.value
+
+                loading = loadingResponse.value
+
                 navigator.navigate(
-                    SideBarDestination(id = 1,user)
+                    SideBarDestination(id = 1)
                 )
+
+                val client = ChatClient.instance()
+
+                val uname= userName.value.text
+                Log.d("username", uname)
+                val uname2= uname.replace(".", "")
+                Log.d("username2", uname2)
+               //val uname3 =uname2.replace("@", "")
+                val user = io.getstream.chat.android.client.models.User(
+
+                    id = uname2,
+                    role= "admin",
+                    name = userName.value.text,
+                    image = "https://bit.ly/321RmWb",
+                )
+
+                client.updateUser(user)
+                val token1= client.devToken(user.id)
+
+                client.connectUser(
+                    user = user,
+                    token = token1
+                ).enqueue { result ->
+                    if (result.isSuccess) {
+                        Log.d("Successful", "Successful")
+                    } else {
+                        Log.d("fail", "fail")
+                    }
+                }
+
+
+                val channelClient = client.channel(channelType = "messaging", channelId = "NewId")
+
+                channelClient.create(memberIds = listOf(user.id), extraData = emptyMap()).enqueue { result ->
+                    if (result.isSuccess) {
+                        val newChannel: Channel = result.data()
+
+                        //Log.d("newChannel",newChannel)
+                        Log.d("chanelle", "channel wurde erstellt")
+                    } else {
+                        Log.d("channel", "channel fail")
+                    }
+                }
+
+                //channelClient.watch().enqueue()
+                /**channelClient.addMembers(listOf("lmu")).enqueue { result ->
+                    if (result.isSuccess) {
+                        val channel: Channel = result.data()
+                    } else {
+                        // Handle result.error()
+                    }
+                }*/
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -229,7 +215,6 @@ fun postData(navigator: DestinationsNavigator) {
         ) {
             Text(text = "Login", modifier = Modifier.padding(8.dp))
         }
-
         Button(
             onClick = {
                 // registerUser(ctx, userName.value.text, job.value.text, response)
@@ -246,6 +231,8 @@ fun postData(navigator: DestinationsNavigator) {
         ) {
             Text(text = "Register", modifier = Modifier.padding(8.dp))
         }
+
+        CircularIndeterminateProgressBar(isDisplayed = loading)
 
         Text(
             text = response.value,
