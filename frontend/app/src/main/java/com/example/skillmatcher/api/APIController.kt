@@ -60,6 +60,21 @@ interface BackendAPI {
         @Path("{projectId}") projectId: Long,
     ): Call<List<Skill>>
 
+    // TODO userId can potentially be changed to userEmail if necessary
+    @POST("/projects/{projectId}/attendees/{userId}")
+    fun attendProject(
+        @Header("Authorization") jwt: String,
+        @Path("{projectId}") projectId: Long,
+        @Path("{userId") userId: Long,
+    ): Call<Project>
+
+    @DELETE("/projects/{projectId}/attendees/{userId}")
+    fun leaveProject(
+        @Header("Authorization") jwt: String,
+        @Path("{projectId}") projectId: Long,
+        @Path("{userId") userId: Long,
+    ): Call<Project>
+
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
     fun addRequiredSkillsToProject(
@@ -484,8 +499,70 @@ fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
     })
 }
 
+
+
 fun getLocalUserEmail(): String? {
     return preferencesManager.getMail()
 }
 
+fun attendProject(
+    ctx: Context,
+    projectId: Long,
+    userId: Long
+) {
+    Log.d("attendProject", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<Project> = retrofitAPI.attendProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        projectId,
+        userId
+    )
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("attendProject", "Created $response")
+            if (response.code() == 200) {
+                Toast.makeText(ctx, "Attending project $projectId", Toast.LENGTH_SHORT).show()
+                Log.d("attendProject", "Response Code ${response.code()}")
+            } else {
+                Toast.makeText(ctx, "Failed to attend project", Toast.LENGTH_SHORT).show()
+                Log.d("attendProject", "Response Code ${response.code()}")
+            }
+        }
 
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("attendProject", "Error: $it") }
+        }
+
+    })
+}
+
+fun leaveProject(
+    ctx: Context,
+    projectId: Long,
+    userId: Long
+) {
+    Log.d("leaveProject", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<Project> = retrofitAPI.leaveProject(
+        "Bearer ${preferencesManager.getJWT()}",
+        projectId,
+        userId
+    )
+    call!!.enqueue(object : Callback<Project> {
+        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+            Log.d("leaveProject", "Response: $response")
+            if (response.code() == 200) {
+                Toast.makeText(ctx, "Left project $projectId", Toast.LENGTH_SHORT).show()
+                Log.d("leaveProject", "Response Code ${response.code()}")
+            } else {
+                Toast.makeText(ctx, "Failed to leave project", Toast.LENGTH_SHORT).show()
+                Log.d("leaveProject", "Response Code ${response.code()}")
+            }
+        }
+
+        override fun onFailure(call: Call<Project>, t: Throwable) {
+            t.message?.let { Log.d("leaveProject", "Error: $it") }
+        }
+
+    })
+}
