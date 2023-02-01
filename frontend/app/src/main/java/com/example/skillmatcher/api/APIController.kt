@@ -568,7 +568,10 @@ fun leaveProject(
     })
 }
 
-fun getAttendees(result: MutableState<List<User>>, projectId: Long) {
+fun getAttendees(
+    result: MutableState<List<User>>,
+    projectId: Long
+) {
     Log.d("getAttendees: ", "Executed")
     val retrofitAPI = createRetrofitInstance()
     val call: Call<List<User>> =

@@ -24,7 +24,9 @@ import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.skillmatcher.HeadBar
 import com.example.skillmatcher.OwnProjectOverviewPage
 import com.example.skillmatcher.api.attendProject
+import com.example.skillmatcher.api.getAttendees
 import com.example.skillmatcher.api.leaveProject
+import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
 import com.example.skillmatcher.ui.theme.Black
@@ -33,19 +35,27 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun SelectProject(navigator: DestinationsNavigator?) {
-    val ctx = LocalContext.current
+    // empty response variable that will hold user list after successful API call
+    val response = remember {
+        mutableStateOf(listOf(User(0, "", mutableListOf(), mutableListOf(), "")))
+    }
+
+    // call API and get response
+    // TODO projectId is hardcoded, should dynamically be set to project you want to get attendees of
+    getAttendees(response, 3)
+
+    // create new variable that contains API response as List<User>
+    val userList = response.value
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(Black.value))
     ) {
-        Button(onClick = {
-            attendProject(ctx, 3)
-        }) {
-            Text(text = "Attend Project")
-        }
-
+        Text("Attendees of project with id 3: ")
+        for (user in userList){
+            Text(text = user.email)
+    }
 
         /**HeadBar(
         name = "Choose Project", modifier = Modifier
