@@ -93,9 +93,15 @@ class ProjectController(
     }
 
     @JsonView(DataView.Project::class)
-    @PostMapping("/{projectId}/attendees/{userId}")
-    fun attendProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
-        projectService.attendProject(userId, projectId)
+    @PostMapping("/{projectId}/attendees/{userEmail}")
+    fun attendProject(@PathVariable userEmail: String, @PathVariable projectId: Long) {
+        val user = userRepository.findUserByEmail(userEmail)
+        val userId = user?.id
+        if (userId != null) {
+            projectService.attendProject(userId, projectId)
+        } else {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        }
     }
 
     @PostMapping("/{id}/requiredSkills")
@@ -135,8 +141,14 @@ class ProjectController(
     }*/
 
     @JsonView(DataView.Project::class)
-    @DeleteMapping("/{projectId}/attendees/{userId}")
-    fun leaveProject(@PathVariable userId: Long, @PathVariable projectId: Long) {
-        projectService.leaveProject(userId, projectId)
+    @DeleteMapping("/{projectId}/attendees/{userEmail}")
+    fun leaveProject(@PathVariable userEmail: String, @PathVariable projectId: Long) {
+        val user = userRepository.findUserByEmail(userEmail)
+        val userId = user?.id
+        if (userId != null) {
+            projectService.leaveProject(userId, projectId)
+        } else {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+        }
     }
 }

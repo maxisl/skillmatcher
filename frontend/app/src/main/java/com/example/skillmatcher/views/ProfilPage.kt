@@ -52,7 +52,7 @@ fun LandingPage() {
 
     val userImage = user.image
 
-    Log.d("user image", userImage)
+    // Log.d("user image", userImage)
 
     /*Column(
         modifier = Modifier

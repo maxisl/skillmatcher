@@ -57,23 +57,22 @@ interface BackendAPI {
     @GET("projects/{projectId}/requiredSkills")
     fun getRequiredSkills(
         @Header("Authorization") jwt: String,
-        @Path("{projectId}") projectId: Long,
+        @Path("projectId") projectId: Long,
     ): Call<List<Skill>>
 
-    // TODO userId can potentially be changed to userEmail if necessary
-    @POST("/projects/{projectId}/attendees/{userId}")
+    @POST("projects/{projectId}/attendees/{email}")
     fun attendProject(
         @Header("Authorization") jwt: String,
-        @Path("{projectId}") projectId: Long,
-        @Path("{userId") userId: Long,
-    ): Call<Project>
+        @Path("projectId") projectId: Long,
+        @Path("email") email: String
+    ): Call<Unit>
 
-    @DELETE("/projects/{projectId}/attendees/{userId}")
+    @DELETE("projects/{projectId}/attendees/{email}")
     fun leaveProject(
         @Header("Authorization") jwt: String,
-        @Path("{projectId}") projectId: Long,
-        @Path("{userId") userId: Long,
-    ): Call<Project>
+        @Path("projectId") projectId: Long,
+        @Path("email") email: String,
+    ): Call<Unit>
 
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
@@ -92,7 +91,7 @@ interface BackendAPI {
     fun addSkillToUser(
         @Path("email") email: String,
         @Body id: List<Long>
-    ): Call<ApiUser>
+    ): Call<Unit>
 }
 
 var token = ""
@@ -101,8 +100,8 @@ private lateinit var preferencesManager: PreferencesManager
 
 // change URL for testing - has to be http://10.0.2.2:8080/ when running local server
 const val url =
-//    "http://10.0.2.2:8080/"
-    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
+    "http://10.0.2.2:8080/"
+//    "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/"
 
 
 fun createRetrofitInstance(): BackendAPI {
@@ -273,7 +272,6 @@ fun getUser(result: MutableState<User>) {
         }
 
 
-
         override fun onFailure(call: Call<User>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
@@ -394,11 +392,11 @@ fun addSkillToUser(
     Log.d("addSkillsToUser", "Email: $email")
     val retrofitAPI = createRetrofitInstance()
 
-    val call: Call<ApiUser> = retrofitAPI.addSkillToUser(
+    val call: Call<Unit> = retrofitAPI.addSkillToUser(
         email, skillIds
     )
-    call!!.enqueue(object : Callback<ApiUser> {
-        override fun onResponse(call: Call<ApiUser>, response: Response<ApiUser>) {
+    call!!.enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
             Log.d("addSkillsToUser", "Created $response")
             if (response.code() == 201) {
                 Log.d("addSkillsToUser", "Response Code ${response.code()}")
@@ -408,7 +406,7 @@ fun addSkillToUser(
         }
 
         // TODO Error: End of input at line 1 column 1 path $ (works though)
-        override fun onFailure(call: Call<ApiUser>, t: Throwable) {
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
 
@@ -500,7 +498,6 @@ fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
 }
 
 
-
 fun getLocalUserEmail(): String? {
     return preferencesManager.getMail()
 }
@@ -508,20 +505,19 @@ fun getLocalUserEmail(): String? {
 fun attendProject(
     ctx: Context,
     projectId: Long,
-    userId: Long
 ) {
     Log.d("attendProject", "Executed")
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<Project> = retrofitAPI.attendProject(
+    val call: Call<Unit> = retrofitAPI.attendProject(
         "Bearer ${preferencesManager.getJWT()}",
         projectId,
-        userId
+        "${preferencesManager.getMail()}"
     )
-    call!!.enqueue(object : Callback<Project> {
-        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+    call!!.enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
             Log.d("attendProject", "Created $response")
             if (response.code() == 200) {
-                Toast.makeText(ctx, "Attending project $projectId", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             } else {
                 Toast.makeText(ctx, "Failed to attend project", Toast.LENGTH_SHORT).show()
@@ -529,7 +525,7 @@ fun attendProject(
             }
         }
 
-        override fun onFailure(call: Call<Project>, t: Throwable) {
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
             t.message?.let { Log.d("attendProject", "Error: $it") }
         }
 
@@ -539,17 +535,16 @@ fun attendProject(
 fun leaveProject(
     ctx: Context,
     projectId: Long,
-    userId: Long
 ) {
     Log.d("leaveProject", "Executed")
     val retrofitAPI = createRetrofitInstance()
-    val call: Call<Project> = retrofitAPI.leaveProject(
+    val call: Call<Unit> = retrofitAPI.leaveProject(
         "Bearer ${preferencesManager.getJWT()}",
         projectId,
-        userId
+        "${preferencesManager.getMail()}"
     )
-    call!!.enqueue(object : Callback<Project> {
-        override fun onResponse(call: Call<Project>, response: Response<Project>) {
+    call!!.enqueue(object : Callback<Unit> {
+        override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
             Log.d("leaveProject", "Response: $response")
             if (response.code() == 200) {
                 Toast.makeText(ctx, "Left project $projectId", Toast.LENGTH_SHORT).show()
@@ -560,7 +555,7 @@ fun leaveProject(
             }
         }
 
-        override fun onFailure(call: Call<Project>, t: Throwable) {
+        override fun onFailure(call: Call<Unit>, t: Throwable) {
             t.message?.let { Log.d("leaveProject", "Error: $it") }
         }
 
