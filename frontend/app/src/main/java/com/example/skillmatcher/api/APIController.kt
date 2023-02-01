@@ -60,6 +60,12 @@ interface BackendAPI {
         @Path("projectId") projectId: Long,
     ): Call<List<Skill>>
 
+    @GET("projects/attendees/{projectId}")
+    fun getAttendees(
+        @Header("Authorization") jwt: String,
+        @Path("projectId") projectId: Long,
+    ): Call<List<User>>
+
     @POST("projects/{projectId}/attendees/{email}")
     fun attendProject(
         @Header("Authorization") jwt: String,
@@ -73,6 +79,7 @@ interface BackendAPI {
         @Path("projectId") projectId: Long,
         @Path("email") email: String,
     ): Call<Unit>
+
 
     // LEGACY
     /*@POST("/projects/{projectId}/requiredSkills")
@@ -497,7 +504,6 @@ fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
     })
 }
 
-
 fun getLocalUserEmail(): String? {
     return preferencesManager.getMail()
 }
@@ -559,5 +565,26 @@ fun leaveProject(
             t.message?.let { Log.d("leaveProject", "Error: $it") }
         }
 
+    })
+}
+
+fun getAttendees(result: MutableState<List<User>>, projectId: Long) {
+    Log.d("getAttendees: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<User>> =
+        retrofitAPI.getAttendees(
+            "Bearer ${preferencesManager.getJWT()}",
+            projectId
+        )
+    call!!.enqueue(object : Callback<List<User>> {
+        override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
+            Log.d("getAttendees", response.body().toString())
+            result.value = response.body() as MutableList<User>
+            Log.d("getAttendees", "Attendees as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
     })
 }
