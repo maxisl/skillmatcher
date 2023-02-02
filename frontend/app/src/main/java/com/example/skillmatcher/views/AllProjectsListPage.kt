@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllProjects
+import com.example.skillmatcher.api.getRequiredSkills
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.views.toBitmap
@@ -105,9 +106,15 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     val projectImage = project.image
     val projectSkills = project.requiredSkillsIds
 
+    // get required skills of each project
     val projectSkillsResponse = remember {
         mutableStateOf(listOf(com.example.skillmatcher.data.Skill("", 0, false)))
     }
+    getRequiredSkills(projectSkillsResponse, project.id)
+    val requiredSkills = projectSkillsResponse.value
+
+    // transform required skills into String List
+    val skillNameList = requiredSkills.joinToString(", ") { it.name }
 
 
     Card(
@@ -181,7 +188,7 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                     Spacer(modifier = Modifier.height(7.dp))
 
                     Text(
-                        text = "Skills Needed: Express (JS), React (JS)",
+                        text = "Skills Needed: $skillNameList",
                         style = TextStyle(
                             fontSize = 16.sp,
                         )
