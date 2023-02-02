@@ -170,8 +170,8 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                 .padding(10.dp),
         ) {
             //val projectImage = userProject.image?.toBitmap()
-            if (checkForImageString(userProject.image)) {
-                /*val bos = ByteArrayOutputStream()
+            /*if (checkForImageString(userProject.image)) {
+                *//*val bos = ByteArrayOutputStream()
                 projectImage?.compress(
                     Bitmap.CompressFormat.PNG,
                     25,
@@ -187,21 +187,21 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                         modifier = Modifier
                             .size(140.dp)
                     )
-                }*/
+                }*//*
                 Image(
                     modifier = Modifier.size(140.dp),
                     bitmap = imageBitmapFromBytes(userProject.image!!.toByteArray()),
                     // bitmap = ImageBitmap.imageResource(id = icon),
                     contentDescription = "Project_card"
                 )
-            } else {
+            } else {*/
                 Image(
                     modifier = Modifier.size(140.dp),
                     painter = painterResource(id = cardIcon),
                     // bitmap = ImageBitmap.imageResource(id = icon),
                     contentDescription = "Project_card"
                 )
-            }
+            //}
         }
         Row(modifier = Modifier.padding(top = 20.dp)) {
             Column(modifier = Modifier.weight(1f)) {

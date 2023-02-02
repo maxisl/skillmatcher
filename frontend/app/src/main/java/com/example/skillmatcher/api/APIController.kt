@@ -414,7 +414,6 @@ fun addSkillToUser(
             }
         }
 
-        // TODO Error: End of input at line 1 column 1 path $ (works though)
         override fun onFailure(call: Call<Unit>, t: Throwable) {
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
