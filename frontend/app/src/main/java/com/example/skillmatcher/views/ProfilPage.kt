@@ -5,8 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
@@ -31,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
 import com.example.skillmatcher.api.getUserSkills
+import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.Black
@@ -56,22 +60,20 @@ fun LandingPage() {
         mutableStateOf(false)
     }
 
-    getUser(getUserResponse, loadingResponse)
-    val user = getUserResponse.value
-
-    val userProjectsList = user.projects
-
     val getUserSkillsResponse = remember {
         mutableStateOf(listOf(Skill("", 0, false)))
     }
 
+    getUser(getUserResponse, loadingResponse)
     getUserSkills(getUserSkillsResponse)
+
+    val user = getUserResponse.value
+    val userProjectsList = user.projects.map { it }
     val userSkillsList = getUserSkillsResponse.value
 
 
     Log.d("ProfilPage", "Skill List: $userSkillsList ")
     Log.d("ProfilPage", "User Infos: $user ")
-
     Log.d("user image", user.toString())
 
     val userImage = user.image
@@ -80,45 +82,32 @@ fun LandingPage() {
         Log.d("user image", userImage)
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(Black.value))
+            .background(Color(Color.Black.value)),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(
-            name = "Profile", modifier = Modifier
-                .padding(10.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        ProfileSection(user)
-        Spacer(modifier = Modifier.height(4.dp))
-        SkillSection(modifier = Modifier, userSkillsList)
-        Spacer(modifier = Modifier.height(4.dp))
-        ProjectList()
-        /*FrontendHeader()
-        Spacer(modifier = Modifier.height(4.dp))
-        BackendHeader()
-        Spacer(modifier = Modifier.height(4.dp))
-        DatenbankHeader()
-        Spacer(modifier = Modifier.height(4.dp))
-        ProgrammiersprachenHeader()
-        Spacer(modifier = Modifier.height(4.dp))*/
-    }
-
-    /*SkillMatcherTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = // MaterialTheme.colorScheme.background
-            (Color(Color.Black.value))
-        ) {
-            Column {
-                Row {
-                     ProfileSection(user)
-                }
-            }
+        item {
+            TopBar(
+                name = "Profile", modifier = Modifier
+                    .padding(10.dp)
+            )
+            Spacer(modifier = Modifier.height(15.dp))
         }
-    }*/
-
+        item {
+            ProfileSection(user)
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+        item {
+            SkillSection(userSkillsList)
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+        item {
+            ProjectList(userProjectsList)
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+    }
 }
 
 
@@ -179,8 +168,8 @@ fun SetImage(user: User) {
                 painter = painterResource(id = R.drawable.mern_icon),
                 contentDescription = "Project_card",
                 modifier = Modifier
-                    .height(50.dp)
-                    .width(50.dp)
+                    .height(90.dp)
+                    .width(90.dp)
             )
         }
     } else {
@@ -188,8 +177,8 @@ fun SetImage(user: User) {
             painter = painterResource(id = R.drawable.mern_icon),
             contentDescription = "Project_card",
             modifier = Modifier
-                .height(50.dp)
-                .width(50.dp)
+                .height(90.dp)
+                .width(90.dp)
         )
     }
 }
@@ -280,14 +269,18 @@ fun SkillCards(skillList: List<Skill>) {
 }
 
 @Composable
-fun SkillSection(modifier: Modifier = Modifier, SkillList: List<Skill>) {
-    Column(modifier = modifier.fillMaxWidth(2f)) {
+fun SkillSection(SkillList: List<Skill>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(2f)
+            .padding(10.dp)
+    ) {
         Text(
             text = "List of added skills:",
-            style = TextStyle(fontSize = 20.sp),
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(10.dp)
         )
-        SkillCards(SkillList)
+        SkillCards(skillList = SkillList)
     }
 }
 
@@ -555,12 +548,17 @@ fun ProjectList(projectList: List<Project>) {
             .fillMaxWidth()
             .padding(10.dp)
     ) {
+        Text(
+            text = "Currently attending projects:",
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(10.dp)
+        )
         if (projectList.isNotEmpty()) {
             for (project in projectList) {
-                Card(
+                Surface(
                     modifier = Modifier.padding(10.dp),
                     shape = RoundedCornerShape(5.dp),
-                    backgroundColor = Color.LightGray
+                    color = Color.DarkGray
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth()
