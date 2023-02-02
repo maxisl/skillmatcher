@@ -606,15 +606,14 @@ fun getUserSkills(result: MutableState<List<Skill>>){
     val call: Call<List<Skill>> =
         retrofitAPI.getUserSkills(
             "Bearer ${preferencesManager.getJWT()}",
-            "${
-                preferencesManager.getMail()}"
+            "${preferencesManager.getMail()}"
         )
     call!!.enqueue(object : Callback<List<Skill>> {
         override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
-            // Log.d("getProjectsByUserEmail", "Http-Code: ${response.code()}") // debug only
             Log.d("getUserSkills", response.body().toString())
             try {
                 result.value = response.body() as MutableList<Skill>
+                Log.d("getUserSkills", "User Skills ${response.body()}")
             } catch (e: Exception) {
                 Log.d("getUserSkills", "Error: $result")
             }

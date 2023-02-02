@@ -7,6 +7,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
+import com.example.skillmatcher.api.getUserSkills
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
 import com.example.skillmatcher.views.toBitmap
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Preview
@@ -53,6 +58,19 @@ fun LandingPage() {
 
     getUser(getUserResponse, loadingResponse)
     val user = getUserResponse.value
+
+    val userProjectsList = user.projects
+
+    val getUserSkillsResponse = remember {
+        mutableStateOf(listOf(Skill("", 0, false)))
+    }
+
+    getUserSkills(getUserSkillsResponse)
+    val userSkillsList = getUserSkillsResponse.value
+
+
+    Log.d("ProfilPage", "Skill List: $userSkillsList ")
+    Log.d("ProfilPage", "User Infos: $user ")
 
     Log.d("user image", user.toString())
 
@@ -74,16 +92,17 @@ fun LandingPage() {
         Spacer(modifier = Modifier.height(4.dp))
         ProfileSection(user)
         Spacer(modifier = Modifier.height(4.dp))
-        SkillSection()
+        SkillSection(modifier = Modifier, userSkillsList)
         Spacer(modifier = Modifier.height(4.dp))
-        FrontendHeader()
+        ProjectList()
+        /*FrontendHeader()
         Spacer(modifier = Modifier.height(4.dp))
         BackendHeader()
         Spacer(modifier = Modifier.height(4.dp))
         DatenbankHeader()
         Spacer(modifier = Modifier.height(4.dp))
         ProgrammiersprachenHeader()
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))*/
     }
 
     /*SkillMatcherTheme {
@@ -101,7 +120,6 @@ fun LandingPage() {
     }*/
 
 }
-
 
 
 @Composable
@@ -150,22 +168,28 @@ fun ProfileSection(
 fun SetImage(user: User) {
     val userImage = user.image
     if (userImage != null) {
-        if(userImage.isNotEmpty()) {
+        if (userImage.isNotEmpty()) {
             val bitmap = userImage.toBitmap()
             Image(
                 painter = BitmapPainter(bitmap.asImageBitmap()),
                 contentDescription = "Project_card"
             )
-        }else {
+        } else {
             Image(
                 painter = painterResource(id = R.drawable.mern_icon),
-                contentDescription = "Project_card"
+                contentDescription = "Project_card",
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
             )
         }
     } else {
         Image(
             painter = painterResource(id = R.drawable.mern_icon),
-            contentDescription = "Project_card"
+            contentDescription = "Project_card",
+            modifier = Modifier
+                .height(50.dp)
+                .width(50.dp)
         )
     }
 }
@@ -203,15 +227,13 @@ fun StatSection(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = modifier
     ) {
-        ProfileStat(userName, studies = "Computer Science", graduateLevel = "Masters")
+        ProfileStat(userName)
     }
 }
 
 @Composable
 fun ProfileStat(
     name: String,
-    studies: String,
-    graduateLevel: String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -223,43 +245,36 @@ fun ProfileStat(
             text = name,
             fontWeight = FontWeight.Bold,
             fontSize = 25.sp,
-            color = Color(LMUGreen.value)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = studies,
-            fontSize = 20.sp,
-            color = Color(White.value)
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = graduateLevel,
-            fontSize = 20.sp,
-            color = Color(White.value)
-
+            color = Color(LMUGreen.value),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
 
 @Composable
 fun SkillCards(skillList: List<Skill>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
+    FlowRow(
+        mainAxisSize = SizeMode.Expand,
+        crossAxisSpacing = 10.dp,
+        mainAxisSpacing = 10.dp
     ) {
-        for (skill in skillList) {
-            Surface(
-                modifier = Modifier.padding(10.dp),
-                shape = RoundedCornerShape(5.dp),
-                color = Color.LightGray
-            ) {
-                Text(
-                    text = skill.name,
-                    style = TextStyle(fontSize = 20.sp),
-                    modifier = Modifier.padding(10.dp)
-                )
+        if (skillList.isNotEmpty()) {
+            for (skill in skillList) {
+                Surface(
+                    modifier = Modifier.wrapContentSize(),
+                    shape = RoundedCornerShape(5.dp),
+                    color = Color.DarkGray
+                ) {
+                    Text(
+                        text = skill.name,
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
             }
+        } else {
+            Text(text = "No skills added so far")
         }
     }
 }
@@ -268,7 +283,7 @@ fun SkillCards(skillList: List<Skill>) {
 fun SkillSection(modifier: Modifier = Modifier, SkillList: List<Skill>) {
     Column(modifier = modifier.fillMaxWidth(2f)) {
         Text(
-            text = "What are my skills?",
+            text = "List of added skills:",
             style = TextStyle(fontSize = 20.sp),
             modifier = Modifier.padding(10.dp)
         )
@@ -349,7 +364,10 @@ fun FrontendHeader(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(2f)
     ) {
         //hier muss die Datenbankverknüpfung her
-        FrontendOverview(frontend = "Frontend: ", text = "JavaFX, AndroidStudio, UI/UX Design")
+        FrontendOverview(
+            frontend = "Frontend: ",
+            text = "JavaFX, AndroidStudio, UI/UX Design"
+        )
     }
 }
 
@@ -526,5 +544,42 @@ fun ProgrammiersprachenOverview(
             color = Color(White.value),
             fontSize = 25.sp,
         )
+    }
+}
+
+
+@Composable
+fun ProjectList(projectList: List<Project>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
+        if (projectList.isNotEmpty()) {
+            for (project in projectList) {
+                Card(
+                    modifier = Modifier.padding(10.dp),
+                    shape = RoundedCornerShape(5.dp),
+                    backgroundColor = Color.LightGray
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = project.name,
+                            style = TextStyle(fontSize = 20.sp),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                        Text(
+                            text = project.description,
+                            style = TextStyle(fontSize = 15.sp),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+            }
+        } else {
+            Text(text = "No projects joined yet")
+        }
     }
 }
