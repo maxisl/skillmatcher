@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +32,6 @@ import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
-import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.ui.theme.White
 import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
@@ -241,15 +242,37 @@ fun ProfileStat(
 }
 
 @Composable
-fun SkillSection(modifier: Modifier = Modifier, SkillList: List<Skill>) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier.fillMaxWidth(2f)
+fun SkillCards(skillList: List<Skill>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
     ) {
-        Skill(name = "What are my skills?")
-        /** Spacer(modifier = Modifier.height(4.dp))
-        SkillOverview(frontend = "Frontend", backend = "Backend" , database = "Database")*/
+        for (skill in skillList) {
+            Surface(
+                modifier = Modifier.padding(10.dp),
+                shape = RoundedCornerShape(5.dp),
+                color = Color.LightGray
+            ) {
+                Text(
+                    text = skill.name,
+                    style = TextStyle(fontSize = 20.sp),
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SkillSection(modifier: Modifier = Modifier, SkillList: List<Skill>) {
+    Column(modifier = modifier.fillMaxWidth(2f)) {
+        Text(
+            text = "What are my skills?",
+            style = TextStyle(fontSize = 20.sp),
+            modifier = Modifier.padding(10.dp)
+        )
+        SkillCards(SkillList)
     }
 }
 
