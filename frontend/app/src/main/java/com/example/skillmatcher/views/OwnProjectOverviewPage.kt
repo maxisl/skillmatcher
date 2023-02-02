@@ -1,5 +1,6 @@
 package com.example.skillmatcher
 
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import android.content.Intent
@@ -30,7 +31,9 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.data.Project
 import androidx.core.content.ContextCompat.startActivity
 import com.example.skillmatcher.activity.ChannelListActivity
+import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getAttendees
+import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.ui.theme.Black
@@ -44,12 +47,17 @@ import com.example.skillmatcher.views.toBitmap
 @Destination
 @Composable
 fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
+    // context for pop up notifications
+    val ctx = LocalContext.current
+
+    val projectId = project.id
+
     var projectAttendeesResponse = remember {
         mutableStateOf(
             listOf(User(0, "", mutableListOf(), mutableListOf(), ""))
         )
     }
-    getAttendees(projectAttendeesResponse, project.id)
+    getAttendees(projectAttendeesResponse, projectId)
     val projectAttendees = projectAttendeesResponse.value
 
     // transform attendees emails into String List
@@ -78,7 +86,9 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 DescriptionSection(project.description)
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
-                LeaveProjectButton(navigator)
+                AttendProjectButton(ctx, projectId)
+                LeaveProjectButton(navigator, ctx, projectId)
+
             }
         }
     }
@@ -230,10 +240,15 @@ fun ChatButton() {
 }
 
 @Composable
-fun LeaveProjectButton(navigator: DestinationsNavigator?) {
+fun LeaveProjectButton(
+    navigator: DestinationsNavigator?,
+    ctx: Context,
+    projectId: Long
+) {
     Button(
         onClick = {
             navigator?.navigate(AllProjectsListPageDestination())
+            leaveProject(ctx, projectId)
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -241,6 +256,27 @@ fun LeaveProjectButton(navigator: DestinationsNavigator?) {
     ) {
         androidx.compose.material3.Text(
             text = "Leave Project",
+            color = Color.White,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+@Composable
+fun AttendProjectButton(
+    ctx: Context,
+    projectId: Long
+) {
+    Button(
+        onClick = {
+            attendProject(ctx, projectId)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        androidx.compose.material3.Text(
+            text = "Attend Project",
             color = Color.White,
             modifier = Modifier.padding(8.dp)
         )

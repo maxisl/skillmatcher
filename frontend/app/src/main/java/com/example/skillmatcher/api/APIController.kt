@@ -529,7 +529,7 @@ fun attendProject(
                 Toast.makeText(ctx, "Attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             } else {
-                Toast.makeText(ctx, "Failed to attend project", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Failed: Already attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             }
         }

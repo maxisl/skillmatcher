@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
+import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
@@ -240,7 +241,7 @@ fun ProfileStat(
 }
 
 @Composable
-fun SkillSection(modifier: Modifier = Modifier) {
+fun SkillSection(modifier: Modifier = Modifier, SkillList: List<Skill>) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
