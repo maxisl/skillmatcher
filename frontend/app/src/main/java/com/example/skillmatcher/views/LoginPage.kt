@@ -73,7 +73,7 @@ fun postData(navigator: DestinationsNavigator) {
     var passwordVisibility by remember { mutableStateOf(false) }
 
     val userResponse = remember {
-        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),""))
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
     }
 
     val loadingResponse = remember {
@@ -145,7 +145,7 @@ fun postData(navigator: DestinationsNavigator) {
                 )
                 suspend {
                     try {
-                        getUser(userResponse,loadingResponse)
+                        getUser(userResponse, loadingResponse)
                     } catch (e: Exception) {
                         Log.d("ExceptionInHome: ", e.toString())
                     }
@@ -159,21 +159,21 @@ fun postData(navigator: DestinationsNavigator) {
 
                 val client = ChatClient.instance()
 
-                val uname= userName.value.text
+                val uname = userName.value.text
                 Log.d("username", uname)
-                val uname2= uname.replace(".", "")
+                val uname2 = uname.replace(".", "")
                 Log.d("username2", uname2)
-               //val uname3 =uname2.replace("@", "")
+                //val uname3 =uname2.replace("@", "")
                 val user = io.getstream.chat.android.client.models.User(
 
                     id = uname2,
-                    role= "admin",
+                    role = "admin",
                     name = userName.value.text,
                     image = "https://bit.ly/321RmWb",
                 )
 
                 client.updateUser(user)
-                val token1= client.devToken(user.id)
+                val token1 = client.devToken(user.id)
 
                 client.connectUser(
                     user = user,
@@ -189,24 +189,25 @@ fun postData(navigator: DestinationsNavigator) {
 
                 val channelClient = client.channel(channelType = "messaging", channelId = "NewId")
 
-                channelClient.create(memberIds = listOf(user.id), extraData = emptyMap()).enqueue { result ->
-                    if (result.isSuccess) {
-                        val newChannel: Channel = result.data()
+                channelClient.create(memberIds = listOf(user.id), extraData = emptyMap())
+                    .enqueue { result ->
+                        if (result.isSuccess) {
+                            val newChannel: Channel = result.data()
 
-                        //Log.d("newChannel",newChannel)
-                        Log.d("chanelle", "channel wurde erstellt")
-                    } else {
-                        Log.d("channel", "channel fail")
+                            //Log.d("newChannel",newChannel)
+                            Log.d("chanelle", "channel wurde erstellt")
+                        } else {
+                            Log.d("channel", "channel fail")
+                        }
                     }
-                }
 
                 //channelClient.watch().enqueue()
                 /**channelClient.addMembers(listOf("lmu")).enqueue { result ->
-                    if (result.isSuccess) {
-                        val channel: Channel = result.data()
-                    } else {
-                        // Handle result.error()
-                    }
+                if (result.isSuccess) {
+                val channel: Channel = result.data()
+                } else {
+                // Handle result.error()
+                }
                 }*/
             },
             modifier = Modifier
@@ -245,17 +246,5 @@ fun postData(navigator: DestinationsNavigator) {
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-
-        // TODO remove after testing: Button to test function
-        Button(
-            onClick = {
-                getAllUsers()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Get All Users", modifier = Modifier.padding(8.dp))
-        }
     }
 }

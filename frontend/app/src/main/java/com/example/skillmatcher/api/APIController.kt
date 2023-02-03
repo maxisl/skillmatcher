@@ -36,6 +36,9 @@ interface BackendAPI {
     @GET("user/byMail/{email}")
     fun getUser(@Header("Authorization") jwt: String, @Path("email") email: String): Call<User>
 
+    @GET("user/{email}/skills")
+    fun getUserSkills(@Header("Authorization") jwt: String, @Path("email") email: String): Call<List<Skill>>
+
     /*************************************************** PROJECT *******************************************/
 
     @POST("projects/{email}")
@@ -99,6 +102,8 @@ interface BackendAPI {
         @Path("email") email: String,
         @Body id: List<Long>
     ): Call<Unit>
+
+
 }
 
 var token = ""
@@ -414,7 +419,6 @@ fun addSkillToUser(
             }
         }
 
-        // TODO Error: End of input at line 1 column 1 path $ (works though)
         override fun onFailure(call: Call<Unit>, t: Throwable) {
             t.message?.let { Log.d("addSkillsToUser", "Error: $it") }
         }
@@ -530,7 +534,7 @@ fun attendProject(
                 Toast.makeText(ctx, "Attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             } else {
-                Toast.makeText(ctx, "Failed to attend project", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Failed: Already attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             }
         }
@@ -591,6 +595,32 @@ fun getAttendees(
         }
 
         override fun onFailure(call: Call<List<User>>, t: Throwable) {
+            t.message?.let { Log.i("Error found is : ", it) }
+        }
+    })
+}
+
+fun getUserSkills(result: MutableState<List<Skill>>){
+    Log.d("getUserSkills: ", "Executed")
+    val retrofitAPI = createRetrofitInstance()
+    val call: Call<List<Skill>> =
+        retrofitAPI.getUserSkills(
+            "Bearer ${preferencesManager.getJWT()}",
+            "${preferencesManager.getMail()}"
+        )
+    call!!.enqueue(object : Callback<List<Skill>> {
+        override fun onResponse(call: Call<List<Skill>>, response: Response<List<Skill>>) {
+            Log.d("getUserSkills", response.body().toString())
+            try {
+                result.value = response.body() as MutableList<Skill>
+                Log.d("getUserSkills", "User Skills ${response.body()}")
+            } catch (e: Exception) {
+                Log.d("getUserSkills", "Error: $result")
+            }
+            Log.d("getUserSkills", "Projects as List: $result")
+        }
+
+        override fun onFailure(call: Call<List<Skill>>, t: Throwable) {
             t.message?.let { Log.i("Error found is : ", it) }
         }
     })

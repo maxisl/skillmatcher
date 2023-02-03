@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.api.getAllProjects
+import com.example.skillmatcher.api.getRequiredSkills
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.views.toBitmap
@@ -38,8 +39,7 @@ fun AllProjectsListPage(
     }
     try {
         getAllProjects(projectListResponse)
-    }
-    catch(e: Exception){
+    } catch (e: Exception) {
 
     }
     val projects = projectListResponse.value
@@ -68,30 +68,30 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
     ) {
 
         projects.iterator().forEach { project ->
-            item(){
-                if(project.name.isNotEmpty()){
+            item() {
+                if (project.name.isNotEmpty()) {
                     ProjectCard(cardIcon, project = project)
                 }
             }
         }
 
-       /* items(1) {
+        /* items(1) {
 
 
 
-            projects.forEach { project ->
-                if (project.name.isNotEmpty()) {
-                    ProjectCard(cardIcon, project = project)
-                    // ProjectCard(cardIcon)
-                }else{
-                    Column(horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center) {
-                        Text(
-                            text = "You don't have any projects jet.")
-                    }
-                }
-            }
-        }*/
+             projects.forEach { project ->
+                 if (project.name.isNotEmpty()) {
+                     ProjectCard(cardIcon, project = project)
+                     // ProjectCard(cardIcon)
+                 }else{
+                     Column(horizontalAlignment = Alignment.CenterHorizontally,
+                     verticalArrangement = Arrangement.Center) {
+                         Text(
+                             text = "You don't have any projects jet.")
+                     }
+                 }
+             }
+         }*/
     }
 }
 
@@ -105,9 +105,15 @@ fun ProjectCard(cardIcon: Int, project: Project) {
     val projectImage = project.image
     val projectSkills = project.requiredSkillsIds
 
+    // get required skills of each project
     val projectSkillsResponse = remember {
         mutableStateOf(listOf(com.example.skillmatcher.data.Skill("", 0, false)))
     }
+    getRequiredSkills(projectSkillsResponse, project.id)
+    val requiredSkills = projectSkillsResponse.value
+
+    // transform required skills into String List
+    val skillNameList = requiredSkills.joinToString(", ") { it.name }
 
 
     Card(
@@ -131,10 +137,12 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                         contentDescription = "Project_card"
                     )
                 } else {*/
-                    Image(
-                        painter = painterResource(id = cardIcon),
-                        contentDescription = "Project_card"
-                    )
+                Image(
+                    painter = painterResource(id = cardIcon),
+                    contentDescription = "Project_card",
+                    // adjust image size to fit card
+                    modifier = Modifier.height(90.dp).width(90.dp)
+                )
                 //}
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
@@ -181,7 +189,7 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                     Spacer(modifier = Modifier.height(7.dp))
 
                     Text(
-                        text = "Skills Needed: Express (JS), React (JS)",
+                        text = "Skills Needed: $skillNameList",
                         style = TextStyle(
                             fontSize = 16.sp,
                         )

@@ -41,8 +41,7 @@ class UserService(
         return user.skills
     }
 
-    fun getUserProjects(userId: Long): MutableList<Project>
-    {
+    fun getUserProjects(userId: Long): MutableList<Project> {
         val user = userRepository.findById(userId)
         return user.map { it.projects }.orElse(mutableListOf())
     }
@@ -65,7 +64,8 @@ class UserService(
 
     fun addSkill(email: String, skillIds: List<Long>) {
         val user =
-            userRepository.findUserByEmail(email) ?: throw NotFoundException("User not found")
+            userRepository.findUserByEmail(email)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         val newSkills = skillRepository.findAllById(skillIds)
         val existingSkills = user.skills.toMutableList()
         newSkills.forEach { skill ->
