@@ -45,6 +45,10 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 import android.util.Base64
+import android.util.Log
+import com.example.skillmatcher.api.getLocalUserEmail
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
 import java.io.ByteArrayOutputStream
 
 
@@ -427,7 +431,24 @@ fun saveButton(
                         randomIDs
                     )
 
+                    val client= ChatClient.instance()
+                    val channelClient = client.channel(channelType = "messaging", channelId = name)
+                    val userID= getLocalUserEmail().toString()
+                    Log.d("userId", userID)
+                    val uname2= userID.replace(".", "")
+
+                    channelClient.create(memberIds = listOf(uname2), extraData = emptyMap()).enqueue { result ->
+                        if (result.isSuccess) {
+                            val newChannel: Channel = result.data()
+
+                            //Log.d("newChannel",newChannel)
+                            Log.d("channel erstellt", "channel wurde erstellt")
+                        } else {
+                            Log.d("channel", "channel fail")
+                        }
+                    }
                 }
+
             }) {
             Text(text = "Create Project", modifier = Modifier.padding(8.dp))
             if (error) {

@@ -37,8 +37,8 @@ class ChannelListActivity : ComponentActivity() {
 
         setContent{
             ChatTheme (colors= StreamColors.defaultColors().copy(
-                appBackground = Color.Black
-            )){
+                textHighEmphasis = Color(LMUGreen.value), appBackground = Color.Black,
+                primaryAccent = Color.White)){
                 /**var showDialog: Boolean by remember {
                     mutableStateOf(false)
                 }
@@ -52,7 +52,7 @@ class ChannelListActivity : ComponentActivity() {
                     )
                 }*/
                 ChannelsScreen(
-                    title ="Channel List",
+                    title ="Project List",
                     isShowingSearch = true,
                     onItemClick = {
                             channel ->
