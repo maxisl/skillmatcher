@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -141,7 +143,9 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                     painter = painterResource(id = cardIcon),
                     contentDescription = "Project_card",
                     // adjust image size to fit card
-                    modifier = Modifier.height(90.dp).width(90.dp)
+                    modifier = Modifier
+                        .height(90.dp)
+                        .width(90.dp)
                 )
                 //}
 
@@ -172,6 +176,28 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                             )
                         )
                     }
+                    Column() {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.background,
+                                    shape = RoundedCornerShape(7.dp)
+                                )
+                        ) {
+                            IconButton(onClick = {
+                                // TODO add as soon as navigation is available on this page
+                                /*navigator.navigate(
+                                    OwnProjectOverviewPageDestination(project))*/
+                            }){
+                                Icon(
+                                    Icons.Default.Add,
+                                    tint = Color.White,
+                                    modifier = Modifier.padding(10.dp),
+                                    contentDescription = "Project_card_icon"
+                                )
+                            }
+                        }
+                    }
                 }
 
             }
@@ -189,7 +215,7 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                     Spacer(modifier = Modifier.height(7.dp))
 
                     Text(
-                        text = "Skills Needed: $skillNameList",
+                        text = "Req. Skills: $skillNameList",
                         style = TextStyle(
                             fontSize = 16.sp,
                         )

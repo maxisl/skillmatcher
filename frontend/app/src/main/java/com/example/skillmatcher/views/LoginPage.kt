@@ -2,8 +2,10 @@ package com.example.skillmatcher.views
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -12,8 +14,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -21,6 +27,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.R
 import com.example.skillmatcher.api.*
 import com.example.skillmatcher.components.CircularIndeterminateProgressBar
 import com.example.skillmatcher.data.User
@@ -91,13 +98,15 @@ fun postData(navigator: DestinationsNavigator) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Login",
-            fontSize = 60.sp,
-            fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
+        Image(
+            modifier = Modifier
+                .aspectRatio(2.5f)
+                .padding(25.dp),
+            painter = painterResource(id = R.drawable.skillmatcher_logo),
+            contentDescription = "Logo Image"
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
+
 
         OutlinedTextField(
             value = userName.value,
