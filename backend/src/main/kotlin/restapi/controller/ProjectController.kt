@@ -98,7 +98,18 @@ class ProjectController(
         val user = userRepository.findUserByEmail(userEmail)
         val userId = user?.id
         if (userId != null) {
-            projectService.attendProject(userId, projectId)
+            val project = projectRepository.findById(projectId)
+            if (project.isPresent) {
+                val requiredSkills = project.get().requiredSkills
+                val userSkills = user.skills
+                if (userSkills.containsAll(requiredSkills)) {
+                    projectService.attendProject(userId, projectId)
+                } else {
+                    throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not have required skills")
+                }
+            } else {
+                throw ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found")
+            }
         } else {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         }

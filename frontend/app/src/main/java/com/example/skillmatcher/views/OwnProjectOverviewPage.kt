@@ -90,6 +90,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 LeaveProjectButton(navigator, ctx, projectId)
 
             }
+            // TODO add required skills of project
         }
     }
 }
