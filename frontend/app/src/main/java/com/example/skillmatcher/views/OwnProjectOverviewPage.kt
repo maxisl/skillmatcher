@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,6 +43,8 @@ import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.example.skillmatcher.views.toBitmap
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
 
 
 @Destination
@@ -51,6 +54,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
     val ctx = LocalContext.current
 
     val projectId = project.id
+
 
     var projectAttendeesResponse = remember {
         mutableStateOf(
@@ -86,7 +90,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 DescriptionSection(project.description)
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
-                AttendProjectButton(ctx, projectId)
+                AttendProjectButton(ctx, projectId, project.name)
                 LeaveProjectButton(navigator, ctx, projectId)
 
             }
@@ -266,11 +270,26 @@ fun LeaveProjectButton(
 @Composable
 fun AttendProjectButton(
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
     Button(
         onClick = {
             attendProject(ctx, projectId)
+            channelClient.addMembers("messaging", projectName, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                } else {
+                    Log.d("add", "Nutzer konnte nicht hinzugefügt werden.")
+                }
+            }
         },
         modifier = Modifier
             .fillMaxWidth()
