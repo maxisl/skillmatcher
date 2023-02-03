@@ -93,19 +93,15 @@ fun LandingPage() {
                 name = "Profile", modifier = Modifier
                     .padding(10.dp)
             )
-            Spacer(modifier = Modifier.height(15.dp))
         }
         item {
             ProfileSection(user)
-            Spacer(modifier = Modifier.height(15.dp))
         }
         item {
             SkillSection(userSkillsList)
-            Spacer(modifier = Modifier.height(15.dp))
         }
         item {
             ProjectList(userProjectsList)
-            Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }
@@ -129,6 +125,7 @@ fun TopBar(
             color = Color(LMUGreen.value)
         )
     }
+    Spacer(modifier = Modifier.height(15.dp))
 }
 
 @Composable
@@ -143,14 +140,13 @@ fun ProfileSection(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
         ) {
-
             SetImage(user)
-
 
             Spacer(modifier = Modifier.width(16.dp))
             StatSection(modifier = Modifier.weight(7f))
         }
     }
+    Spacer(modifier = Modifier.height(15.dp))
 }
 
 @Composable
@@ -243,27 +239,39 @@ fun ProfileStat(
 
 @Composable
 fun SkillCards(skillList: List<Skill>) {
-    FlowRow(
-        mainAxisSize = SizeMode.Expand,
-        crossAxisSpacing = 10.dp,
-        mainAxisSpacing = 10.dp
-    ) {
-        if (skillList.isNotEmpty()) {
-            for (skill in skillList) {
+    Box {
+        FlowRow(
+            mainAxisSize = SizeMode.Expand,
+            crossAxisSpacing = 10.dp,
+            mainAxisSpacing = 10.dp
+        ) {
+            if (skillList.isNotEmpty()) {
+                for (skill in skillList) {
+                    Surface(
+                        modifier = Modifier.wrapContentSize(),
+                        shape = RoundedCornerShape(5.dp),
+                        color = Color.DarkGray
+                    ) {
+                        Text(
+                            text = skill.name,
+                            style = TextStyle(fontSize = 20.sp),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+            } else {
                 Surface(
                     modifier = Modifier.wrapContentSize(),
                     shape = RoundedCornerShape(5.dp),
                     color = Color.DarkGray
                 ) {
                     Text(
-                        text = skill.name,
+                        text = "No Skills added so far",
                         style = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.padding(10.dp)
                     )
                 }
             }
-        } else {
-            Text(text = "No skills added so far")
         }
     }
 }
@@ -282,264 +290,8 @@ fun SkillSection(SkillList: List<Skill>) {
         )
         SkillCards(skillList = SkillList)
     }
+    Spacer(modifier = Modifier.height(15.dp))
 }
-
-@Composable
-fun SkillHeaders(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier
-    ) {
-        SkillOverview(frontend = "Frontend", backend = "Backend", database = "Database")
-    }
-}
-
-@Composable
-fun SkillOverview(
-    frontend: String,
-    backend: String,
-    database: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = frontend,
-            fontWeight = FontWeight.Bold,
-            color = Color(LMUGreen.value),
-            fontSize = 30.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = backend,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = database,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp
-        )
-    }
-}
-
-@Composable
-fun Skill(
-    name: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = name,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color(LMUGreen.value)
-        )
-    }
-}
-
-@Composable
-fun FrontendHeader(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier.fillMaxWidth(2f)
-    ) {
-        //hier muss die Datenbankverknüpfung her
-        FrontendOverview(
-            frontend = "Frontend: ",
-            text = "JavaFX, AndroidStudio, UI/UX Design"
-        )
-    }
-}
-
-
-@Composable
-fun FrontendOverview(
-    frontend: String,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = frontend,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color(LMUGreen.value)
-        )
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Text(
-            text = text,
-            color = Color(White.value),
-            fontSize = 25.sp
-        )
-    }
-}
-
-@Composable
-fun BackendHeader(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier
-    ) {
-        //hier muss die Datenbankverknüpfung her
-        BackendOverview(backend = "Backend: ", text = "Gradle, Springboot")
-    }
-}
-
-
-@Composable
-fun BackendOverview(
-    backend: String,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = backend,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color(LMUGreen.value)
-        )
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Text(
-            text = text,
-            color = Color(White.value),
-            fontSize = 25.sp
-        )
-    }
-}
-
-@Composable
-fun DatenbankHeader(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier
-    ) {
-        //hier muss die Datenbankverknüpfung her
-        DatenbankOverview(datenbank = "Datenbank: ", text = "Oracle")
-        DatenbankOverview(datenbank = "", text = "MySQL")
-
-    }
-}
-
-
-@Composable
-fun DatenbankOverview(
-    datenbank: String,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = datenbank,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color(LMUGreen.value)
-        )
-
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = text,
-            color = Color(White.value),
-            fontSize = 25.sp
-        )
-    }
-}
-
-
-@Composable
-fun ProgrammiersprachenHeader(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = modifier.fillMaxWidth(2f)
-    ) {
-        //hier muss die Datenbankverknüpfung her
-        ProgrammiersprachenOverview(
-            programmiersprache = "Programmiersprache: ",
-            text = "Java, Kotlin, Python"
-        )
-    }
-}
-
-
-@Composable
-fun ProgrammiersprachenOverview(
-    programmiersprache: String,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = programmiersprache,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp,
-            color = Color(LMUGreen.value)
-        )
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Text(
-            text = text,
-            color = Color(White.value),
-            fontSize = 25.sp,
-        )
-    }
-}
-
 
 @Composable
 fun ProjectList(projectList: List<Project>) {
@@ -577,7 +329,17 @@ fun ProjectList(projectList: List<Project>) {
                 }
             }
         } else {
-            Text(text = "No projects joined yet")
+            Surface(
+                modifier = Modifier.wrapContentSize(),
+                shape = RoundedCornerShape(5.dp),
+                color = Color.DarkGray
+            ) {
+                Text(
+                    text = "Not attending any projects so far",
+                    style = TextStyle(fontSize = 20.sp),
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
     }
 }
