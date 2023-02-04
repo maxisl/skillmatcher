@@ -18,7 +18,16 @@ Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect 
 3. Start connecting with potential team members via the chat 
 
 
-# Documentation (Wireframes, API, Steckbrief, Technologies)
+# Documentation (SQL Schema, Wireframes, API, Steckbrief, Technologies)
+
+## SQL Schema 
+![SQL Schema](/docs/skillmatcher-datascheme.png)
+
+The backend uses a MySQL Mariadb schema that connects project, user, and skill tables in a many-to-many relationship.
+
+The schema manages project information, user information, and skill information. 
+
+The join tables allow multiple users to have multiple skills, and multiple projects to have multiple users with different skills.
 
 ## API Testing & Documentation - 1 (Postman API Collection)
 To help ensure that our API is functioning as expected, we have included a Postman API collection. 
@@ -45,15 +54,6 @@ To access all routes, follow the guide below to add your individual token:
 
 #### 3. Copy the obtained JWT token and paste it in the according field after pressing the "Authorize" button
 ![Swagger Tutorial 3](/docs/swagger-docs/swagger3.png)
-
-## SQL Schema 
-![SQL Schema](/docs/skillmatcher-datascheme.png)
-
-The backend uses a MySQL Mariadb schema that connects project, user, and skill tables in a many-to-many relationship.
-
-The schema manages project information, user information, and skill information. 
-
-The join tables allow multiple users to have multiple skills, and multiple projects to have multiple users with different skills.
 
 
 ## Wireframes
