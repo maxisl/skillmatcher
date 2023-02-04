@@ -465,8 +465,8 @@ fun createUser(
     ctx: Context
 ) {
 
-    addSkillToUser(eMail, selectedSkills as List<Long>)
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
+    addSkillToUser(eMail, selectedSkills as List<Long>)
 }
 
 fun validateEmail(email: String): Boolean {
