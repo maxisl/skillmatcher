@@ -561,7 +561,7 @@ fun leaveProject(
         override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
             Log.d("leaveProject", "Response: $response")
             if (response.code() == 200) {
-                Toast.makeText(ctx, "Left project $projectId", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Left project", Toast.LENGTH_SHORT).show()
                 Log.d("leaveProject", "Response Code ${response.code()}")
             } else {
                 Toast.makeText(ctx, "Failed: Not part of project", Toast.LENGTH_SHORT).show()

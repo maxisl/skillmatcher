@@ -251,5 +251,10 @@ fun checkForImageString(image: String?): Boolean{
 }
 
 fun imageBitmapFromBytes(encodedImageData: ByteArray): ImageBitmap {
-    return BitmapFactory.decodeByteArray(encodedImageData, 0, encodedImageData.size).asImageBitmap()
+    if (encodedImageData.isNotEmpty()) {
+        return BitmapFactory.decodeByteArray(encodedImageData, 0, encodedImageData.size).asImageBitmap()
+    } else {
+        // if decoded String is null, create empty Bitmap
+        return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888).asImageBitmap()
+    }
 }
