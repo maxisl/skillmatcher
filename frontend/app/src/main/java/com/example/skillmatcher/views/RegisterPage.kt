@@ -40,10 +40,12 @@ import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.destinations.LoginPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +70,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill(0, "", 0,false)))
+        mutableStateOf(listOf(Skill(0,"", 0,false)))
     }
 
     val result = remember {
@@ -379,7 +381,9 @@ fun drawSkill(skill: Skill): Skill? {
     }
     var skillValue: String = skillTextField.value.text;
     try {
-        return Skill(skillId, skillName, skillValue.toInt(), selected)
+        if(skillValue.isEmpty())
+            skillValue = "0"
+        return Skill(0,skillName, skillValue.toInt(), selected)
     } catch (e: NumberFormatException) {
         return null;
     }
@@ -408,9 +412,7 @@ fun registerUserButton(
         if (!error) {
             createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
             navigator.navigate(
-                SideBarDestination(
-                    id = 1,
-                )
+                LoginPageDestination()
             )
         }
     }) {
@@ -465,11 +467,41 @@ fun createUser(
     result: MutableState<String>,
     ctx: Context
 ) {
+    registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
+
     val skillIdList: List<Long> = selectedSkills.map { it?.id ?: 0 }
 
-
-    registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
     addSkillToUser(eMail, skillIdList)
+    //User hinzufügen in Stream.io nach dem ein User erstellt wurde
+
+    val client = ChatClient.instance()
+
+    val uname= eMail
+    Log.d("username", uname)
+    val uname2= uname.replace(".", "")
+    Log.d("username2", uname2)
+    //val uname3 =uname2.replace("@", "")
+    val user = io.getstream.chat.android.client.models.User(
+
+        id = uname2,
+        role= "admin",
+        name = eMail,
+        image = "https://bit.ly/321RmWb",
+    )
+
+    client.updateUser(user)
+    val token1= client.devToken(user.id)
+
+    client.connectUser(
+        user = user,
+        token = token1
+    ).enqueue { result ->
+        if (result.isSuccess) {
+            Log.d("Successful", "Successful")
+        } else {
+            Log.d("fail", "fail")
+        }
+    }
 }
 
 fun validateEmail(email: String): Boolean {

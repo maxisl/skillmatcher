@@ -4,14 +4,19 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,15 +39,24 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getAttendees
+import com.example.skillmatcher.api.getUserSkills
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.leaveProject
+import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
+import com.example.skillmatcher.destinations.HomePageDestination
+import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.example.skillmatcher.views.toBitmap
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
 
 
 @Destination
@@ -51,6 +66,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
     val ctx = LocalContext.current
 
     val projectId = project.id
+
 
     var projectAttendeesResponse = remember {
         mutableStateOf(
@@ -62,6 +78,12 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
 
     // transform attendees emails into String List
     val projectAttendeesList = projectAttendees.joinToString(", ") { it.email }
+
+    val getUserSkillsResponse = remember {
+        mutableStateOf(listOf(Skill(0,"", 0, false)))
+    }
+    val userSkillsList = getUserSkillsResponse.value
+    getUserSkills(getUserSkillsResponse)
 
     Column(
         modifier = Modifier
@@ -84,10 +106,11 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 NameSection(project.name)
                 ExpandableCard(title = "Participants", description = projectAttendeesList)
                 DescriptionSection(project.description)
+                requiredSkillsSection(userSkillsList)
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
-                AttendProjectButton(ctx, projectId)
-                LeaveProjectButton(navigator, ctx, projectId)
+                AttendProjectButton(ctx, projectId, project.name)
+                LeaveProjectButton(navigator, ctx, projectId, project.name)
 
             }
             // TODO add required skills of project
@@ -244,16 +267,40 @@ fun ChatButton() {
 fun LeaveProjectButton(
     navigator: DestinationsNavigator?,
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+        getUser(getUserResponse, loadingResponse)
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
+
     Button(
         onClick = {
-            navigator?.navigate(AllProjectsListPageDestination())
+            navigator?.navigate(SideBarDestination(id = 1))
             leaveProject(ctx, projectId)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            Log.d("Projectname", projectName)
+            val nameProject=projectName.replace(" ", "")
+            channelClient.removeMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                    Log.d(" removed", "User is not an attendee anymore. ")
+                } else {
+                    Log.d("not removed", "User is still an attendee. ")
+                }
+            }
+
+                  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+
     ) {
         androidx.compose.material3.Text(
             text = "Leave Project",
@@ -266,11 +313,32 @@ fun LeaveProjectButton(
 @Composable
 fun AttendProjectButton(
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+    getUser(getUserResponse, loadingResponse)
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
     Button(
         onClick = {
             attendProject(ctx, projectId)
+            val nameProject=projectName.replace(" ", "")
+            channelClient.addMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                    Log.d("add", "User is now an attendee of that project.")
+                } else {
+                    Log.d("not add", "User couldn't add to that project. ")
+                }
+            }
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -284,6 +352,57 @@ fun AttendProjectButton(
     }
 }
 
+@Composable
+fun requiredSkillsSection(SkillList: List<Skill>){
+    Column(modifier = Modifier
+        .fillMaxWidth(2f)
+        .padding(10.dp)
+    ){
+        Text(
+            text = "List of requiredSkills",
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(10.dp)
+        )
+        ownProjectSKillCards(SkillList)
+    }
+}
+
+@Composable
+fun ownProjectSKillCards(skillList: List<Skill>){
+    Box {
+        FlowRow(
+            mainAxisSize = SizeMode.Expand,
+            crossAxisSpacing = 10.dp,
+            mainAxisSpacing = 10.dp
+        ) {
+            if (skillList.isNotEmpty()) {
+                for (skill in skillList) {
+                    Surface(
+                        modifier = Modifier.wrapContentSize(),
+                        shape = RoundedCornerShape(5.dp),
+                    ) {
+                        Text(
+                            text = skill.name,
+                            style = TextStyle(fontSize = 20.sp),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+            } else {
+                Surface(
+                    modifier = Modifier.wrapContentSize(),
+                    shape = RoundedCornerShape(5.dp),
+                ) {
+                    Text(
+                        text = "No Skills added so far",
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
 
 //, wer teilnehmer sind, Chat Button
 

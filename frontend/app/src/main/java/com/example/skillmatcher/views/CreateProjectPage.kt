@@ -7,6 +7,8 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -36,20 +38,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.skillmatcher.api.createProject
+import com.example.skillmatcher.api.getLocalUserEmail
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-
-import android.util.Base64
-import android.util.Log
-import com.example.skillmatcher.api.getLocalUserEmail
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Channel
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 @Destination
@@ -63,7 +62,7 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
     val interactions = remember { mutableStateListOf<Interaction>() }
 
     val response = remember {
-        mutableStateOf(listOf(Skill(0, "", 0, false)))
+        mutableStateOf(listOf(Skill(0,"", 0, false)))
     }
 
     //var imageBitmap by rememberSaveable { mutableStateOf(false) }
@@ -354,13 +353,21 @@ fun imagePicker(): String {
             if (Build.VERSION.SDK_INT < 28) {
                 val bitmap = MediaStore.Images
                     .Media.getBitmap(context.contentResolver, it)
-                base64Image = bitmap.toBase64()
+
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG,0, baos)
+                val b = baos.toByteArray()
+                base64Image = Base64.encodeToString(b, Base64.DEFAULT)
 
             } else {
                 val source = ImageDecoder
                     .createSource(context.contentResolver, it)
                 val bitmap = ImageDecoder.decodeBitmap(source)
-                base64Image = bitmap.toBase64()
+
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG,0, baos)
+                val b = baos.toByteArray()
+                base64Image = Base64.encodeToString(b, Base64.DEFAULT)
             }
 
             val borderWidth = 4.dp
@@ -393,7 +400,7 @@ fun saveButton(
     listOfSelectedSkills: MutableList<Skill?>
 ) {
     val ctx = LocalContext.current
-    var error by remember { mutableStateOf(false) }
+     var error by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center
@@ -415,10 +422,7 @@ fun saveButton(
                     //TODO: Image und Skills müssen noch übergeben werden
                     val randomIDs = listOf<Long>(1, 2)
 
-                    /*val stream = ByteArrayOutputStream()
-                    image?.compress(Bitmap.CompressFormat.PNG, 90, stream)
-                    val imageByteArray = stream.toByteArray()
-                    val imageBase64 = Base64.encodeToString(imageByteArray, Base64.DEFAULT)*/
+                    val skillIdList: List<Long> = listOfSelectedSkills.map { it?.id ?: 0 }
 
                     createProject(
                         ctx,
@@ -428,16 +432,17 @@ fun saveButton(
                         startDate,
                         endDate,
                         image,
-                        randomIDs
+                        skillIdList
                     )
 
                     val client= ChatClient.instance()
-                    val channelClient = client.channel(channelType = "messaging", channelId = name)
+                    val channelId= name.replace(" ", "")
+                    val channelClient = client.channel(channelType = "messaging", channelId = channelId)
                     val userID= getLocalUserEmail().toString()
                     Log.d("userId", userID)
                     val uname2= userID.replace(".", "")
-
-                    channelClient.create(memberIds = listOf(uname2), extraData = emptyMap()).enqueue { result ->
+                    Log.d("uname2", uname2)
+                    channelClient.create(memberIds = listOf(uname2), extraData = mutableMapOf("name" to name)).enqueue { result ->
                         if (result.isSuccess) {
                             val newChannel: Channel = result.data()
 
