@@ -439,12 +439,13 @@ fun saveButton(
                     )
 
                     val client= ChatClient.instance()
-                    val channelClient = client.channel(channelType = "messaging", channelId = name)
+                    val channelId= name.replace(" ", "")
+                    val channelClient = client.channel(channelType = "messaging", channelId = channelId)
                     val userID= getLocalUserEmail().toString()
                     Log.d("userId", userID)
                     val uname2= userID.replace(".", "")
-
-                    channelClient.create(memberIds = listOf(uname2), extraData = emptyMap()).enqueue { result ->
+                    Log.d("uname2", uname2)
+                    channelClient.create(memberIds = listOf(uname2), extraData = mutableMapOf("name" to name)).enqueue { result ->
                         if (result.isSuccess) {
                             val newChannel: Channel = result.data()
 

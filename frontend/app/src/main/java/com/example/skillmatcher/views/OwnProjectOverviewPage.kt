@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,6 +40,7 @@ import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getAttendees
 import com.example.skillmatcher.api.getUserSkills
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
@@ -51,6 +53,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.example.skillmatcher.views.toBitmap
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.models.Channel
 
 
 @Destination
@@ -60,6 +64,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
     val ctx = LocalContext.current
 
     val projectId = project.id
+
 
     var projectAttendeesResponse = remember {
         mutableStateOf(
@@ -102,8 +107,8 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 requiredSkillsSection(userSkillsList)
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
-                AttendProjectButton(ctx, projectId)
-                LeaveProjectButton(navigator, ctx, projectId)
+                AttendProjectButton(ctx, projectId, project.name)
+                LeaveProjectButton(navigator, ctx, projectId, project.name)
 
             }
             // TODO add required skills of project
@@ -260,16 +265,40 @@ fun ChatButton() {
 fun LeaveProjectButton(
     navigator: DestinationsNavigator?,
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+        getUser(getUserResponse, loadingResponse)
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
+
     Button(
         onClick = {
             navigator?.navigate(AllProjectsListPageDestination())
             leaveProject(ctx, projectId)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            Log.d("Projectname", projectName)
+            val nameProject=projectName.replace(" ", "")
+            channelClient.removeMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                    Log.d(" removed", "User is not an attendee anymore. ")
+                } else {
+                    Log.d("not removed", "User is still an attendee. ")
+                }
+            }
+
+                  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+
     ) {
         androidx.compose.material3.Text(
             text = "Leave Project",
@@ -282,11 +311,32 @@ fun LeaveProjectButton(
 @Composable
 fun AttendProjectButton(
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+    getUser(getUserResponse, loadingResponse)
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
     Button(
         onClick = {
             attendProject(ctx, projectId)
+            val nameProject=projectName.replace(" ", "")
+            channelClient.addMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                    Log.d("add", "User is now an attendee of that project.")
+                } else {
+                    Log.d("not add", "User couldn't add to that project. ")
+                }
+            }
         },
         modifier = Modifier
             .fillMaxWidth()

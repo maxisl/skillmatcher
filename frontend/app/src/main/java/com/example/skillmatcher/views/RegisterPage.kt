@@ -45,6 +45,7 @@ import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.getstream.chat.android.client.ChatClient
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -371,6 +372,7 @@ fun drawSkill(skill: Skill): Skill? {
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Black),
                     maxLines = 1,
+
                     )
             }
 
@@ -467,13 +469,43 @@ fun createUser(
 
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
     addSkillToUser(eMail, selectedSkills as List<Long>)
+    //User hinzufügen in Stream.io nach dem ein User erstellt wurde
+
+    val client = ChatClient.instance()
+
+    val uname= eMail
+    Log.d("username", uname)
+    val uname2= uname.replace(".", "")
+    Log.d("username2", uname2)
+    //val uname3 =uname2.replace("@", "")
+    val user = io.getstream.chat.android.client.models.User(
+
+        id = uname2,
+        role= "admin",
+        name = eMail,
+        image = "https://bit.ly/321RmWb",
+    )
+
+    client.updateUser(user)
+    val token1= client.devToken(user.id)
+
+    client.connectUser(
+        user = user,
+        token = token1
+    ).enqueue { result ->
+        if (result.isSuccess) {
+            Log.d("Successful", "Successful")
+        } else {
+            Log.d("fail", "fail")
+        }
+    }
+
 }
 
 fun validateEmail(email: String): Boolean {
 
     return !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
-
 
 
 
