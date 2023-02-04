@@ -76,4 +76,6 @@ You can view the Group Overview document by clicking [here.](https://gitlab.lrz.
 -	Kotlin v1.6.21
 -   Java v17 
 -   MariaDB (MySQL) v10.5.15
+- Compose 1.1
+- getStream.io
 
