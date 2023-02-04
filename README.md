@@ -19,8 +19,6 @@ Welcome to Skill Matcher! Skill Matcher is an app that helps you find the perfec
 
 --- 
 
-# ADDITIONAL DOCUMENTATION
-
 # REST API
 
 The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI):
