@@ -48,8 +48,11 @@ To access all routes, follow the guide below to add your individual token:
 
 ## SQL Schema 
 ![SQL Schema](/docs/skillmatcher-datascheme.png)
-The backend uses a MySQL Mariadb schema that connects project, user, and skill tables in a many-to-many relationship. 
+
+The backend uses a MySQL Mariadb schema that connects project, user, and skill tables in a many-to-many relationship.
+
 The schema manages project information, user information, and skill information. 
+
 The join tables allow multiple users to have multiple skills, and multiple projects to have multiple users with different skills.
 
 
