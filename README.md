@@ -18,7 +18,7 @@ Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect 
 3. Start connecting with potential team members via the chat 
 
 
-# Documentation (Wireframes, API, Steckbrief)
+# Documentation (Wireframes, API, Steckbrief, Technologies)
 
 ## API Testing & Documentation - 1 (Postman API Collection)
 To help ensure that our API is functioning as expected, we have included a Postman API collection. 
@@ -58,4 +58,12 @@ We have created comprehensive wireframes in the planning phase of our applicatio
 We have also included a Group Overview document which provides an overview of our project including the goals, approach, and features. 
 
 You can view the Group Overview document by clicking [here.](https://gitlab.lrz.de/mobile-ifi/msp/22WS/gruppe5/-/blob/main/docs/Steckbrief_gruppe5.pdf)
+
+## Technologies 
+-	Android
+    -   minSdk 29
+    -   targetSdk 32 
+-	Spring v5.3.20
+-	Kotlin v1.6.21
+-   Java v17 
 
