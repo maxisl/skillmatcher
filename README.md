@@ -1,4 +1,4 @@
-# Gruppe5 - Skill Matcher
+# Gruppe5 - Skillmatcher
 
 Welcome to Skill Matcher! Skill Matcher is an app that helps you find the perfect team members for your projects.
 
