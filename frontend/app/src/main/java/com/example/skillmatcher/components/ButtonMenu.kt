@@ -76,7 +76,7 @@ fun Navigation(navController: NavHostController){
             // nochmal klären mit dem destinationNavigator
         }
         composable(NavigationItems.Profile.route){
-            LandingPage()
+
         }
     }
 }
