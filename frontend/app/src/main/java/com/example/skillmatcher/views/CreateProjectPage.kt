@@ -438,7 +438,7 @@ fun saveButton(
                     Log.d("userId", userID)
                     val uname2= userID.replace(".", "")
                     Log.d("uname2", uname2)
-                    channelClient.create(memberIds = listOf(uname2), extraData = emptyMap()).enqueue { result ->
+                    channelClient.create(memberIds = listOf(uname2), extraData = mutableMapOf("name" to name)).enqueue { result ->
                         if (result.isSuccess) {
                             val newChannel: Channel = result.data()
 
