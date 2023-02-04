@@ -46,6 +46,12 @@ To access all routes, follow the guide below to add your individual token:
 #### 3. Copy the obtained JWT token and paste it in the according field after pressing the "Authorize" button
 ![Swagger Tutorial 3](/docs/swagger-docs/swagger3.png)
 
+## SQL Schema 
+![SQL Schema](/docs/skillmatcher-datascheme.png)
+The backend uses a MySQL Mariadb schema that connects project, user, and skill tables in a many-to-many relationship. 
+The schema manages project information, user information, and skill information. 
+The join tables allow multiple users to have multiple skills, and multiple projects to have multiple users with different skills.
+
 
 ## Wireframes
 We have created comprehensive wireframes in the planning phase of our application to help illustrate the user flow and key features.
@@ -66,4 +72,5 @@ You can view the Group Overview document by clicking [here.](https://gitlab.lrz.
 -	Spring v5.3.20
 -	Kotlin v1.6.21
 -   Java v17 
+-   MariaDB (MySQL) v10.5.15
 
