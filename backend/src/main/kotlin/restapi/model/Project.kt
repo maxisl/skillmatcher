@@ -1,10 +1,8 @@
 package restapi.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView
 import restapi.jsonView.DataView
-import java.sql.Blob
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -53,12 +51,6 @@ data class Project(
     )
     @JsonBackReference
     var requiredSkills: MutableList<Skill> = mutableListOf(),
-/*
-
-    @OneToMany(mappedBy = "project")
-    @JsonManagedReference
-    var chatMessages: List<ChatMessage> = emptyList()
-*/
 
 )
 

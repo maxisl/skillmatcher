@@ -14,8 +14,6 @@ import restapi.model.User;
 import restapi.repository.UserRepository;
 import restapi.data.AuthRequest;
 import restapi.security.JwtTokenProvider;
-// import gson to convert to JSON
-
 import javax.validation.Valid;
 
 @RestController

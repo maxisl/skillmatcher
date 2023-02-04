@@ -334,6 +334,7 @@ fun drawSkill(skill: Skill): Skill? {
     var selected by remember { mutableStateOf(false) }
     val color = if (selected) LMUGreen else Color.Gray
     val skillName = skill.name
+    val skillId = skill.id
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -466,6 +467,8 @@ fun createUser(
     result: MutableState<String>,
     ctx: Context
 ) {
+
+
 
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
 

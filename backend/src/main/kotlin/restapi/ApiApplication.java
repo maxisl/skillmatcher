@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.SpringVersion;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import restapi.model.Skill;
 import restapi.repository.SkillRepository;
@@ -34,6 +35,7 @@ public class ApiApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
+    System.out.println("version: " + SpringVersion.getVersion());
 
     try {
       List<String> Skills = Arrays.asList("Cloud", "AI", "React", "Java", "Python", "Scrum", "IoT",

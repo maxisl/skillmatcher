@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import restapi.jsonView.DataView
 import restapi.model.Skill
-import restapi.model.User
-import restapi.repository.SkillRepository
 import restapi.service.SkillService
 import java.security.Principal
 
@@ -19,9 +17,9 @@ class SkillController(
     val skillService: SkillService
 ) {
 
-    /*
-    ********************************** GET **********************************
-        */
+/*
+********************************** GET **********************************
+*/
 
     @JsonView(DataView.Skill::class)
     @GetMapping
@@ -55,9 +53,9 @@ class SkillController(
         skillService.create(name)
     }
 
-    /*
-    ********************************** PUT **********************************
-    */
+/*
+********************************** PUT **********************************
+*/
 
     @PutMapping("/{id}")
     fun updateSkill(
@@ -68,9 +66,9 @@ class SkillController(
         return skillService.update(id, name)
     }
 
-    /*
-    ********************************** DELETE **********************************
-    */
+/*
+********************************** DELETE **********************************
+*/
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
