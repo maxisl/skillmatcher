@@ -262,7 +262,9 @@ fun LeaveProjectButton(
         onClick = {
             navigator?.navigate(AllProjectsListPageDestination())
             leaveProject(ctx, projectId)
-            channelClient.removeMembers("messaging", projectName, listOf(uname2), null).enqueue { result ->
+            Log.d("Projectname", projectName)
+            val nameProject=projectName.replace(" ", "")
+            channelClient.removeMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
                 if (result.isSuccess) {
                     val channel: Channel = result.data()
                     Log.d(" removed", "User is not an attendee anymore. ")
@@ -270,6 +272,7 @@ fun LeaveProjectButton(
                     Log.d("not removed", "User is still an attendee. ")
                 }
             }
+
                   },
             modifier = Modifier
                 .fillMaxWidth()
