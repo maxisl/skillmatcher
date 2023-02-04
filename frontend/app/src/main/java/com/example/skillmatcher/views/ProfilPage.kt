@@ -61,7 +61,7 @@ fun LandingPage() {
     }
 
     val getUserSkillsResponse = remember {
-        mutableStateOf(listOf(Skill("", 0, false)))
+        mutableStateOf(listOf(Skill(0, "", 0, false)))
     }
 
     getUser(getUserResponse, loadingResponse)

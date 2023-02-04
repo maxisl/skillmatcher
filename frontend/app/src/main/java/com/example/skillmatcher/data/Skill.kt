@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Skill (
+    var id: Long,
     var name: String,
     var value: Int = 0 ,
     var isSelected: Boolean = false

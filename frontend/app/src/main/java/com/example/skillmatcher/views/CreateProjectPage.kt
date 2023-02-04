@@ -63,7 +63,7 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
     val interactions = remember { mutableStateListOf<Interaction>() }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0, false)))
+        mutableStateOf(listOf(Skill(0, "", 0, false)))
     }
 
     //var imageBitmap by rememberSaveable { mutableStateOf(false) }

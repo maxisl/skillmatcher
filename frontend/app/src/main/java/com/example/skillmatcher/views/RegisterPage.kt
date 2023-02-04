@@ -68,7 +68,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0,false)))
+        mutableStateOf(listOf(Skill(0, "", 0,false)))
     }
 
     val result = remember {
@@ -332,6 +332,7 @@ fun drawSkill(skill: Skill): Skill? {
     var selected by remember { mutableStateOf(false) }
     val color = if (selected) LMUGreen else Color.Gray
     val skillName = skill.name
+    val skillId = skill.id
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -378,7 +379,7 @@ fun drawSkill(skill: Skill): Skill? {
     }
     var skillValue: String = skillTextField.value.text;
     try {
-        return Skill(skillName, skillValue.toInt(), selected)
+        return Skill(skillId, skillName, skillValue.toInt(), selected)
     } catch (e: NumberFormatException) {
         return null;
     }
@@ -464,9 +465,11 @@ fun createUser(
     result: MutableState<String>,
     ctx: Context
 ) {
+    val skillIdList: List<Long> = selectedSkills.map { it?.id ?: 0 }
 
-    addSkillToUser(eMail, selectedSkills as List<Long>)
+
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
+    addSkillToUser(eMail, skillIdList)
 }
 
 fun validateEmail(email: String): Boolean {
