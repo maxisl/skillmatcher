@@ -1,6 +1,6 @@
 # Gruppe5 - Skillmatcher
 
-Welcome to Skill Matcher! Skill Matcher is an app that helps you find the perfect team members for your projects.
+Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect team members for your projects
 
 # How it works
 1. Post your project requirements to our platform
@@ -13,15 +13,12 @@ Welcome to Skill Matcher! Skill Matcher is an app that helps you find the perfec
 * Connect with professionals in your field
 
 # Getting started
-1. Download the app.
+1. Download the app
 2. Create a profile and create a project with your individual requirements or join an existing project based on your skill profile
 3. Start connecting with potential team members via the chat 
 
---- 
 
 # Wireframes and API Documentation
-
----
 
 ## API Testing & Documentation - 1 (Postman API Collection)
 To help ensure that our API is functioning as expected, we have included a Postman API collection. 
@@ -33,6 +30,8 @@ Please find the collection here: TODO insert
 The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI):
 
 http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
+
+![Swagger Tutorial 1](/docs/swagger-docs/swagger1.png)
 
 
 ## Wireframes
