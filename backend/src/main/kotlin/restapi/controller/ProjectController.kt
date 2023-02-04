@@ -93,7 +93,7 @@ class ProjectController(
             if (project.isPresent) {
                 val requiredSkills = project.get().requiredSkills
                 val userSkills = user.skills
-                if (userSkills.containsAll(requiredSkills)) {
+                if (userSkills.any { skill -> requiredSkills.contains(skill) }) {
                     projectService.attendProject(userId, projectId)
                 } else {
                     throw ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not have required skills")
@@ -105,6 +105,7 @@ class ProjectController(
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
         }
     }
+
 
     @PostMapping("/{id}/requiredSkills")
     fun addRequiredSkillsToProject(@PathVariable id: Long, @RequestBody skillIds: List<Long>) {

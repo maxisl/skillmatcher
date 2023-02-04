@@ -534,7 +534,7 @@ fun attendProject(
                 Toast.makeText(ctx, "Attending project", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             } else {
-                Toast.makeText(ctx, "Failed: Already attending project", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Failed: Already attending or not having one of the required skills", Toast.LENGTH_SHORT).show()
                 Log.d("attendProject", "Response Code ${response.code()}")
             }
         }
@@ -564,7 +564,7 @@ fun leaveProject(
                 Toast.makeText(ctx, "Left project $projectId", Toast.LENGTH_SHORT).show()
                 Log.d("leaveProject", "Response Code ${response.code()}")
             } else {
-                Toast.makeText(ctx, "Failed to leave project", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "Failed: Not part of project", Toast.LENGTH_SHORT).show()
                 Log.d("leaveProject", "Response Code ${response.code()}")
             }
         }
