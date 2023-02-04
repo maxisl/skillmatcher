@@ -18,12 +18,14 @@ Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect 
 3. Start connecting with potential team members via the chat 
 
 
-# Wireframes and API Documentation
+# Documentation (Wireframes, API, Steckbrief)
 
 ## API Testing & Documentation - 1 (Postman API Collection)
 To help ensure that our API is functioning as expected, we have included a Postman API collection. 
+
 This collection includes all of the endpoints that are required for our application, as well as example requests and responses. 
-Please find the collection here: TODO insert
+
+Please find the collection available for dowload [here.](https://gitlab.lrz.de/mobile-ifi/msp/22WS/gruppe5/-/blob/main/docs/SkillMatcher_API.postman_collection.json)
 
 ## API Testing & Documentation - 2 (Swagger UI)
 
@@ -31,16 +33,29 @@ The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI)
 
 http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
 
-![Swagger Tutorial 1](/docs/swagger-docs/swagger1.png)
+To test the API via the SwaggerUI, authentication via JWT is required for all routes except /register and /login.
+
+To access all routes, follow the guide below to add your individual token:
+
+#### 1. Register your individual user (in case not already done via the app) - use /auth/register
+![Swagger Tutorial 1](/docs/swagger-docs/swagger2.png)
+
+#### 2. Provide your credentials in order to log in and receive your JWT - use /auth/login
+![Swagger Tutorial 2](/docs/swagger-docs/swagger1.png)
+
+#### 3. Copy the obtained JWT token and paste it in the according field after pressing the "Authorize" button
+![Swagger Tutorial 3](/docs/swagger-docs/swagger3.png)
 
 
 ## Wireframes
 We have created comprehensive wireframes in the planning phase of our application to help illustrate the user flow and key features.
 
-TODO insert images
+![Wireframes 1](/docs/wireframes1.png)
+
+![Wireframes 2](/docs/wireframes2.png)
 
 ## Group Overview (Steckbrief)
 We have also included a Group Overview document which provides an overview of our project including the goals, approach, and features. 
 
-You can view the Group Overview document here: TODO insert [Group Overview PDF](https://example.com/group-overview.pdf)
+You can view the Group Overview document by clicking [here.](https://gitlab.lrz.de/mobile-ifi/msp/22WS/gruppe5/-/blob/main/docs/Steckbrief_gruppe5.pdf)
 
