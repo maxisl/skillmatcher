@@ -40,6 +40,7 @@ import com.example.skillmatcher.api.registerUser
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.destinations.LoginPageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
@@ -370,7 +371,6 @@ fun drawSkill(skill: Skill): Skill? {
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(containerColor = Color.Black),
                     maxLines = 1,
-
                     )
             }
 
@@ -378,6 +378,8 @@ fun drawSkill(skill: Skill): Skill? {
     }
     var skillValue: String = skillTextField.value.text;
     try {
+        if(skillValue.isEmpty())
+            skillValue = "0"
         return Skill(skillName, skillValue.toInt(), selected)
     } catch (e: NumberFormatException) {
         return null;
@@ -407,9 +409,7 @@ fun registerUserButton(
         if (!error) {
             createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
             navigator.navigate(
-                SideBarDestination(
-                    id = 1,
-                )
+                LoginPageDestination()
             )
         }
     }) {

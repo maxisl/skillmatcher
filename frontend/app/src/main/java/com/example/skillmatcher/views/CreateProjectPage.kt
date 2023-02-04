@@ -7,6 +7,8 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.NumberPicker
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -36,20 +38,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.skillmatcher.api.createProject
+import com.example.skillmatcher.api.getLocalUserEmail
 import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.ramcosta.composedestinations.annotation.Destination
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-
-import android.util.Base64
-import android.util.Log
-import com.example.skillmatcher.api.getLocalUserEmail
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Channel
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 @Destination
@@ -354,13 +353,21 @@ fun imagePicker(): String {
             if (Build.VERSION.SDK_INT < 28) {
                 val bitmap = MediaStore.Images
                     .Media.getBitmap(context.contentResolver, it)
-                base64Image = bitmap.toBase64()
+
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG,0, baos)
+                val b = baos.toByteArray()
+                base64Image = Base64.encodeToString(b, Base64.DEFAULT)
 
             } else {
                 val source = ImageDecoder
                     .createSource(context.contentResolver, it)
                 val bitmap = ImageDecoder.decodeBitmap(source)
-                base64Image = bitmap.toBase64()
+
+                val baos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.JPEG,0, baos)
+                val b = baos.toByteArray()
+                base64Image = Base64.encodeToString(b, Base64.DEFAULT)
             }
 
             val borderWidth = 4.dp
@@ -393,7 +400,7 @@ fun saveButton(
     listOfSelectedSkills: MutableList<Skill?>
 ) {
     val ctx = LocalContext.current
-    var error by remember { mutableStateOf(false) }
+     var error by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center

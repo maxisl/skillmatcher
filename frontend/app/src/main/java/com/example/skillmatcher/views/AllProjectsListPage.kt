@@ -21,21 +21,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.Navigator
 import com.example.skillmatcher.api.getAllProjects
 import com.example.skillmatcher.api.getRequiredSkills
 import com.example.skillmatcher.data.Project
+import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
 import com.example.skillmatcher.ui.theme.SkillMatcherTheme
 import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 // TODO projects is empty
 
 
-@Preview
+
 @Destination
 @Composable
-fun AllProjectsListPage(
-) {
+fun AllProjectsListPage(navigator: DestinationsNavigator) {
     val projectListResponse = remember {
         mutableStateOf(listOf(Project(0, "", "", "", "", "", null, listOf())))
     }
@@ -53,7 +55,7 @@ fun AllProjectsListPage(
         ) {
             Column {
                 Row {
-                    ProjectsList(cardIcon = R.drawable.mern_icon, projects)
+                    ProjectsList(cardIcon = R.drawable.mern_icon, projects, navigator)
                 }
             }
         }
@@ -62,7 +64,7 @@ fun AllProjectsListPage(
 
 
 @Composable
-private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
+private fun ProjectsList(cardIcon: Int, projects: List<Project>, navigator: DestinationsNavigator) {
     LazyColumn(
         modifier = Modifier
             // .weight(1f)
@@ -72,33 +74,15 @@ private fun ProjectsList(cardIcon: Int, projects: List<Project>) {
         projects.iterator().forEach { project ->
             item() {
                 if (project.name.isNotEmpty()) {
-                    ProjectCard(cardIcon, project = project)
+                    ProjectCard(cardIcon, project = project, navigator)
                 }
             }
         }
-
-        /* items(1) {
-
-
-
-             projects.forEach { project ->
-                 if (project.name.isNotEmpty()) {
-                     ProjectCard(cardIcon, project = project)
-                     // ProjectCard(cardIcon)
-                 }else{
-                     Column(horizontalAlignment = Alignment.CenterHorizontally,
-                     verticalArrangement = Arrangement.Center) {
-                         Text(
-                             text = "You don't have any projects jet.")
-                     }
-                 }
-             }
-         }*/
     }
 }
 
 @Composable
-fun ProjectCard(cardIcon: Int, project: Project) {
+fun ProjectCard(cardIcon: Int, project: Project, navigator: DestinationsNavigator) {
     val projectName = project.name
     val projectAttendees = project.maxAttendees
     val projectDescription = project.description
@@ -186,8 +170,9 @@ fun ProjectCard(cardIcon: Int, project: Project) {
                         ) {
                             IconButton(onClick = {
                                 // TODO add as soon as navigation is available on this page
-                                /*navigator.navigate(
-                                    OwnProjectOverviewPageDestination(project))*/
+                                navigator.navigate(
+                                    OwnProjectOverviewPageDestination(project)
+                                )
                             }){
                                 Icon(
                                     Icons.Default.Add,

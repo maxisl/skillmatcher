@@ -9,9 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,7 +38,9 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getAttendees
+import com.example.skillmatcher.api.getUserSkills
 import com.example.skillmatcher.api.leaveProject
+import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
 import com.example.skillmatcher.ui.theme.Black
@@ -42,6 +49,8 @@ import com.example.skillmatcher.ui.theme.White
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.example.skillmatcher.views.toBitmap
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 
 
 @Destination
@@ -62,6 +71,12 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
 
     // transform attendees emails into String List
     val projectAttendeesList = projectAttendees.joinToString(", ") { it.email }
+
+    val getUserSkillsResponse = remember {
+        mutableStateOf(listOf(Skill("", 0, false)))
+    }
+    val userSkillsList = getUserSkillsResponse.value
+    getUserSkills(getUserSkillsResponse)
 
     Column(
         modifier = Modifier
@@ -84,6 +99,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 NameSection(project.name)
                 ExpandableCard(title = "Participants", description = projectAttendeesList)
                 DescriptionSection(project.description)
+                requiredSkillsSection(userSkillsList)
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
                 AttendProjectButton(ctx, projectId)
@@ -284,6 +300,57 @@ fun AttendProjectButton(
     }
 }
 
+@Composable
+fun requiredSkillsSection(SkillList: List<Skill>){
+    Column(modifier = Modifier
+        .fillMaxWidth(2f)
+        .padding(10.dp)
+    ){
+        Text(
+            text = "List of requiredSkills",
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(10.dp)
+        )
+        ownProjectSKillCards(SkillList)
+    }
+}
+
+@Composable
+fun ownProjectSKillCards(skillList: List<Skill>){
+    Box {
+        FlowRow(
+            mainAxisSize = SizeMode.Expand,
+            crossAxisSpacing = 10.dp,
+            mainAxisSpacing = 10.dp
+        ) {
+            if (skillList.isNotEmpty()) {
+                for (skill in skillList) {
+                    Surface(
+                        modifier = Modifier.wrapContentSize(),
+                        shape = RoundedCornerShape(5.dp),
+                    ) {
+                        Text(
+                            text = skill.name,
+                            style = TextStyle(fontSize = 20.sp),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                }
+            } else {
+                Surface(
+                    modifier = Modifier.wrapContentSize(),
+                    shape = RoundedCornerShape(5.dp),
+                ) {
+                    Text(
+                        text = "No Skills added so far",
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
 
 //, wer teilnehmer sind, Chat Button
 

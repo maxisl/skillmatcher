@@ -24,7 +24,7 @@ fun NavHost(navController: NavHostController, navigator: DestinationsNavigator
             HomePage(navigator)
         }
         composable(ScreensRoute.SCREEN_ALL_PROJECTS.name) {
-            AllProjectsListPage()
+            AllProjectsListPage(navigator)
         }
         composable(ScreensRoute.SCREEN_PROFILE.name) {
             LandingPage()
