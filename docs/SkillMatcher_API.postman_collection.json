@@ -1,0 +1,1075 @@
+{
+	"info": {
+		"_postman_id": "239d4a04-b07c-4b38-bccc-63874bbbc6f4",
+		"name": "SkillMatcher API VPS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10995240"
+	},
+	"item": [
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "GET All Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA3NDc1NCwiZXhwIjoxNjc2Mjg0MzU0fQ.lPtxalWNT9wuUSyYHWMzazMpbwAXTx3wiJgphHusDO2iBdVJkaGeX11HMIFSOES9m2jYx7HPp2-4tg7dKViJZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User by Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA3NDc1NCwiZXhwIjoxNjc2Mjg0MzU0fQ.lPtxalWNT9wuUSyYHWMzazMpbwAXTx3wiJgphHusDO2iBdVJkaGeX11HMIFSOES9m2jYx7HPp2-4tg7dKViJZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/byMail/test16@test.de",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"byMail",
+								"test16@test.de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/byId/4",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"byId",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Skills by Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA3NDc1NCwiZXhwIjoxNjc2Mjg0MzU0fQ.lPtxalWNT9wuUSyYHWMzazMpbwAXTx3wiJgphHusDO2iBdVJkaGeX11HMIFSOES9m2jYx7HPp2-4tg7dKViJZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/test13@test.de/skills",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"test13@test.de",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Users by SkillId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyMjM5MiwiZXhwIjoxNjc1OTMxOTkyfQ.9eJwt6oCS5gdqYEHHCF8wWM0_gQG3W0Pds35yPKVdtpOSiNr6_cmnRHDMbGkMc8rhyrZPd4gkhiFesGliJlnMw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/skill/",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"skill",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create (Register) User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"test12@test.de\",\n    \"password\":\"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/auth/register",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Login User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"test12@test.de\",\n    \"password\":\"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/auth/login",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Skill to User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[2]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/test14@test.de/skill/",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"test14@test.de",
+								"skill",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE User by Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/user/byMail/test13@test.de",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"user",
+								"byMail",
+								"test13@test.de"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PROJECT",
+			"item": [
+				{
+					"name": "GET All Projects",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NDkyMDk2MywiZXhwIjoxNjc2MTMwNTYzfQ.m8hKcgGwaZlRV9VGl824KWKxlPUSmDzM2OP7dCa86G9MCx7TnCILGEm6SXNWNWuZf2yi7F6D0DuLM0dsohqmsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Project by Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/byName/Test123",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"byName",
+								"Test123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Project By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/2",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Project by UserEmail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA3NDI2OSwiZXhwIjoxNjc2MjgzODY5fQ.Ks5jZunu0cA-AvDSufeF0wIildVnVxM04jpEVhmLBt6x4P2VZ75aOtvsuREI9KluB5v5_Ai2P8_jsDUnI6ClfQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/byUserEmail/test1@test.de",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"byUserEmail",
+								"test1@test.de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Attendees by ProjectId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA4NTEwMCwiZXhwIjoxNjc2Mjk0NzAwfQ.VJKU8d8DGROBaMMYha8UTSMTv0_AFJO2Whf8acRxfGZf1OKoXjGfi6oQeGMNviS4OxYYKFqNBoXIblExEFBZ0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/attendees/3",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"attendees",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Req Skills of Project(Id)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NDk3NTE4NCwiZXhwIjoxNjc2MTg0Nzg0fQ.Czcx9mrftpKn0qFXk7OeRW9GJNSyejJHImB1u38Lw_Gm7WDirWT-Q36L8zgFxV4kcha-716RAc0MYX7ucYWTkg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/3/requiredSkills",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"3",
+								"requiredSkills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTA4NTEwMCwiZXhwIjoxNjc2Mjk0NzAwfQ.VJKU8d8DGROBaMMYha8UTSMTv0_AFJO2Whf8acRxfGZf1OKoXjGfi6oQeGMNviS4OxYYKFqNBoXIblExEFBZ0Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"name\": \"Project A\",\n\"description\": \"A project to improve customer experience\",\n\"maxAttendees\": 10,\n\"startDate\": \"2023-02-01\",\n\"endDate\": \"2023-03-01\",\n\"image\": \"image.jpg\",\n\"requiredSkillsIds\": [1, 2, 3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/test12@test.de",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"test12@test.de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Attend Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTNAdGVzdC5kZSIsImlhdCI6MTY3NDIwNTg3MiwiZXhwIjoxNjc1NDE1NDcyfQ.Xqh09mR9EBO6sNG9oh9TadV7qfX2cPrJlmD3YcwyLEMhPFssOQgCiTBkIeNya6Uorz5WoY4v8ZF-n_ZcYY2v2A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/34/attendees/test13@test.de",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"34",
+								"attendees",
+								"test13@test.de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Required Skills",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[1, 2]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/3/requiredSkills",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"3",
+								"requiredSkills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"updatedName\",\n    \"description\": \"updatedDescription\",\n    \"startDate\": \"updatedStartDate\",\n    \"endDate\": \"updatedEndDate\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/35",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"35"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Leave Project",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NDkyMDk2MywiZXhwIjoxNjc2MTMwNTYzfQ.m8hKcgGwaZlRV9VGl824KWKxlPUSmDzM2OP7dCa86G9MCx7TnCILGEm6SXNWNWuZf2yi7F6D0DuLM0dsohqmsA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/3/attendees/1",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"3",
+								"attendees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEACTIVATED - DELETE Project By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTZAdGVzdC5kZSIsImlhdCI6MTY3NDcyNDc3MSwiZXhwIjoxNjc1OTM0MzcxfQ.BRZzfnsmh_KZ70Xo0qHar4iaUQVS4Y7MmT4Rkd9zyYMq1N3gaKHOZyHu5y88TmGverBug_7A47VR7TvoWr73tA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/projects/35",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"projects",
+								"35"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SKILL",
+			"item": [
+				{
+					"name": "GET All Skills",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTNAdGVzdC5kZSIsImlhdCI6MTY3NDIwNTg3MiwiZXhwIjoxNjc1NDE1NDcyfQ.Xqh09mR9EBO6sNG9oh9TadV7qfX2cPrJlmD3YcwyLEMhPFssOQgCiTBkIeNya6Uorz5WoY4v8ZF-n_ZcYY2v2A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Skill By Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTAyMDkwMywiZXhwIjoxNjc2MjMwNTAzfQ.9yL6ficMD2IHnDE3pjw9T3QikCzlMchmRfftpq4YU5gBpVJ6MHGM_S1ZIA5yHy2afYNLvJhkN4L4kqNeXrOvxQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/byName/Cloud",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								"byName",
+								"Cloud"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Skill By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTAyMDkwMywiZXhwIjoxNjc2MjMwNTAzfQ.9yL6ficMD2IHnDE3pjw9T3QikCzlMchmRfftpq4YU5gBpVJ6MHGM_S1ZIA5yHy2afYNLvJhkN4L4kqNeXrOvxQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/1",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create Skill",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTAyMDkwMywiZXhwIjoxNjc2MjMwNTAzfQ.9yL6ficMD2IHnDE3pjw9T3QikCzlMchmRfftpq4YU5gBpVJ6MHGM_S1ZIA5yHy2afYNLvJhkN4L4kqNeXrOvxQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Databases\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Skill by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTAyMDkwMywiZXhwIjoxNjc2MjMwNTAzfQ.9yL6ficMD2IHnDE3pjw9T3QikCzlMchmRfftpq4YU5gBpVJ6MHGM_S1ZIA5yHy2afYNLvJhkN4L4kqNeXrOvxQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"updated: testskill2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/1",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Skill by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTJAdGVzdC5kZSIsImlhdCI6MTY3NTAyMDkwMywiZXhwIjoxNjc2MjMwNTAzfQ.9yL6ficMD2IHnDE3pjw9T3QikCzlMchmRfftpq4YU5gBpVJ6MHGM_S1ZIA5yHy2afYNLvJhkN4L4kqNeXrOvxQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://msp-ws2223-5.dev.mobile.ifi.lmu.de:80/skill/16",
+							"protocol": "http",
+							"host": [
+								"msp-ws2223-5",
+								"dev",
+								"mobile",
+								"ifi",
+								"lmu",
+								"de"
+							],
+							"port": "80",
+							"path": [
+								"skill",
+								"16"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
