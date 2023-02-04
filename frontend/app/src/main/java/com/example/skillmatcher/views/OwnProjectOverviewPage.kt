@@ -34,6 +34,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.skillmatcher.activity.ChannelListActivity
 import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getAttendees
+import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
@@ -255,9 +256,13 @@ fun LeaveProjectButton(
     val getUserResponse = remember {
         mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
     }
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+        getUser(getUserResponse, loadingResponse)
     val user = getUserResponse.value
     val email= user.email
     val uname2= email.replace(".", "")
+
     Button(
         onClick = {
             navigator?.navigate(AllProjectsListPageDestination())
@@ -297,13 +302,18 @@ fun AttendProjectButton(
     val getUserResponse = remember {
         mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
     }
+
+    val loadingResponse = remember {
+        mutableStateOf(false)}
+    getUser(getUserResponse, loadingResponse)
     val user = getUserResponse.value
     val email= user.email
     val uname2= email.replace(".", "")
     Button(
         onClick = {
             attendProject(ctx, projectId)
-            channelClient.addMembers("messaging", projectName, listOf(uname2), null).enqueue { result ->
+            val nameProject=projectName.replace(" ", "")
+            channelClient.addMembers("messaging", nameProject, listOf(uname2), null).enqueue { result ->
                 if (result.isSuccess) {
                     val channel: Channel = result.data()
                     Log.d("add", "User is now an attendee of that project.")
