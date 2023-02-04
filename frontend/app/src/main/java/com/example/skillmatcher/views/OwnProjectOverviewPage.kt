@@ -91,7 +91,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
                 Divider(color = Color(White.value), thickness = 1.dp)
                 ChatButton()
                 AttendProjectButton(ctx, projectId, project.name)
-                LeaveProjectButton(navigator, ctx, projectId)
+                LeaveProjectButton(navigator, ctx, projectId, project.name)
 
             }
             // TODO add required skills of project
@@ -248,16 +248,33 @@ fun ChatButton() {
 fun LeaveProjectButton(
     navigator: DestinationsNavigator?,
     ctx: Context,
-    projectId: Long
+    projectId: Long,
+    projectName: String
 ) {
+    val channelClient = ChatClient.instance()
+    val getUserResponse = remember {
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), ""))
+    }
+    val user = getUserResponse.value
+    val email= user.email
+    val uname2= email.replace(".", "")
     Button(
         onClick = {
             navigator?.navigate(AllProjectsListPageDestination())
             leaveProject(ctx, projectId)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            channelClient.removeMembers("messaging", projectName, listOf(uname2), null).enqueue { result ->
+                if (result.isSuccess) {
+                    val channel: Channel = result.data()
+                    Log.d(" removed", "User is not an attendee anymore. ")
+                } else {
+                    Log.d("not removed", "User is still an attendee. ")
+                }
+            }
+                  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+
     ) {
         androidx.compose.material3.Text(
             text = "Leave Project",
@@ -286,8 +303,9 @@ fun AttendProjectButton(
             channelClient.addMembers("messaging", projectName, listOf(uname2), null).enqueue { result ->
                 if (result.isSuccess) {
                     val channel: Channel = result.data()
+                    Log.d("add", "User is now an attendee of that project.")
                 } else {
-                    Log.d("add", "Nutzer konnte nicht hinzugefügt werden.")
+                    Log.d("not add", "User couldn't add to that project. ")
                 }
             }
         },
