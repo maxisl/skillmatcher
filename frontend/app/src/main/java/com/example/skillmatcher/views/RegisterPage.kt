@@ -467,6 +467,9 @@ fun createUser(
     result: MutableState<String>,
     ctx: Context
 ) {
+
+
+
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
 
     val skillIdList: List<Long> = selectedSkills.map { it?.id ?: 0 }
@@ -502,6 +505,7 @@ fun createUser(
             Log.d("fail", "fail")
         }
     }
+
 }
 
 fun validateEmail(email: String): Boolean {
