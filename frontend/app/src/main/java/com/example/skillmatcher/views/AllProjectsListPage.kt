@@ -93,7 +93,7 @@ fun ProjectCard(cardIcon: Int, project: Project, navigator: DestinationsNavigato
 
     // get required skills of each project
     val projectSkillsResponse = remember {
-        mutableStateOf(listOf(com.example.skillmatcher.data.Skill("", 0, false)))
+        mutableStateOf(listOf(com.example.skillmatcher.data.Skill(0,"", 0, false)))
     }
     getRequiredSkills(projectSkillsResponse, project.id)
     val requiredSkills = projectSkillsResponse.value

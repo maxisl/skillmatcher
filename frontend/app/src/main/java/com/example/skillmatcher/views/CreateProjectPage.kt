@@ -62,7 +62,7 @@ fun ProjectCreationPage() { //openDrawer: () -> Unit
     val interactions = remember { mutableStateListOf<Interaction>() }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0, false)))
+        mutableStateOf(listOf(Skill(0,"", 0, false)))
     }
 
     //var imageBitmap by rememberSaveable { mutableStateOf(false) }
@@ -422,10 +422,7 @@ fun saveButton(
                     //TODO: Image und Skills müssen noch übergeben werden
                     val randomIDs = listOf<Long>(1, 2)
 
-                    /*val stream = ByteArrayOutputStream()
-                    image?.compress(Bitmap.CompressFormat.PNG, 90, stream)
-                    val imageByteArray = stream.toByteArray()
-                    val imageBase64 = Base64.encodeToString(imageByteArray, Base64.DEFAULT)*/
+                    val skillIdList: List<Long> = listOfSelectedSkills.map { it?.id ?: 0 }
 
                     createProject(
                         ctx,
@@ -435,7 +432,7 @@ fun saveButton(
                         startDate,
                         endDate,
                         image,
-                        randomIDs
+                        skillIdList
                     )
 
                     val client= ChatClient.instance()

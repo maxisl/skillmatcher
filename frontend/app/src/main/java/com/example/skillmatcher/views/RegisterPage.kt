@@ -70,7 +70,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill("", 0,false)))
+        mutableStateOf(listOf(Skill(0,"", 0,false)))
     }
 
     val result = remember {
@@ -382,7 +382,7 @@ fun drawSkill(skill: Skill): Skill? {
     try {
         if(skillValue.isEmpty())
             skillValue = "0"
-        return Skill(skillName, skillValue.toInt(), selected)
+        return Skill(0,skillName, skillValue.toInt(), selected)
     } catch (e: NumberFormatException) {
         return null;
     }
@@ -468,7 +468,10 @@ fun createUser(
 ) {
 
     registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
-    addSkillToUser(eMail, selectedSkills as List<Long>)
+
+    val skillIdList: List<Long> = selectedSkills.map { it?.id ?: 0 }
+
+    addSkillToUser(eMail, skillIdList)
     //User hinzufügen in Stream.io nach dem ein User erstellt wurde
 
     val client = ChatClient.instance()

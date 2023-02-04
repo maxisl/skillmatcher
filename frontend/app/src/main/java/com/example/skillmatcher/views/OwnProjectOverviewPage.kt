@@ -45,6 +45,8 @@ import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.AllProjectsListPageDestination
+import com.example.skillmatcher.destinations.HomePageDestination
+import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
@@ -78,7 +80,7 @@ fun OwnProjectOverviewPage(navigator: DestinationsNavigator, project: Project) {
     val projectAttendeesList = projectAttendees.joinToString(", ") { it.email }
 
     val getUserSkillsResponse = remember {
-        mutableStateOf(listOf(Skill("", 0, false)))
+        mutableStateOf(listOf(Skill(0,"", 0, false)))
     }
     val userSkillsList = getUserSkillsResponse.value
     getUserSkills(getUserSkillsResponse)
@@ -281,7 +283,7 @@ fun LeaveProjectButton(
 
     Button(
         onClick = {
-            navigator?.navigate(AllProjectsListPageDestination())
+            navigator?.navigate(SideBarDestination(id = 1))
             leaveProject(ctx, projectId)
             Log.d("Projectname", projectName)
             val nameProject=projectName.replace(" ", "")
