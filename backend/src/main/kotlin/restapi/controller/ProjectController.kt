@@ -6,9 +6,7 @@ import restapi.service.ProjectService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
-import org.webjars.NotFoundException
 import restapi.jsonView.DataView
 import restapi.model.ProjectRequest
 import restapi.model.ProjectUpdateDto
@@ -28,9 +26,10 @@ class ProjectController(
     val userRepository: UserRepository,
     private val userService: UserService
 ) {
-    /*
-    ********************************** GET **********************************
-     */
+
+/*
+********************************** GET **********************************
+*/
     @JsonView(DataView.Project::class)
     @GetMapping
     fun getAllProjects() = projectService.getAll()
@@ -51,14 +50,6 @@ class ProjectController(
         }
     }
 
-    // DEACTIVATED
-    /*    @JsonView(DataView.Project::class)
-        @GetMapping("/byName/{name}")
-        fun findByNameContaining(@PathVariable name: String): ResponseEntity<List<Project>> {
-            return ResponseEntity.ok(projectService.getAllByName(name))
-        }*/
-
-
     @JsonView(DataView.User::class)
     @GetMapping("/attendees/{projectId}")
     fun getAttendeesById(@PathVariable projectId: Long) = projectService.getAttendeesById(projectId)
@@ -70,9 +61,9 @@ class ProjectController(
         return ResponseEntity.ok(requiredSkills)
     }
 
-    /*
-    ********************************** POST **********************************
-     */
+/*
+********************************** POST **********************************
+*/
 
     @JsonView(DataView.Project::class)
     @PostMapping("/{userEmail}")
@@ -126,9 +117,9 @@ class ProjectController(
         projectService.addRequiredSkillsToProject(id, skillIds)
     }
 
-    /*
-    ********************************** PUT **********************************
-    */
+/*
+********************************** PUT **********************************
+*/
 
     @JsonView(DataView.Project::class)
     @PutMapping("/{id}")
@@ -139,9 +130,9 @@ class ProjectController(
         return projectService.updateProject(id, projectUpdateDto)
     }
 
-    /*
-    ********************************** DELETE **********************************
-    */
+/*
+********************************** DELETE **********************************
+*/
 
     // DEACTIVATED - only enable automatic deletion when everyone has left the project
     /*@DeleteMapping("/{id}")

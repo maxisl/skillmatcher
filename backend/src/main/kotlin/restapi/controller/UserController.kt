@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import restapi.jsonView.DataView
 import restapi.model.SkillDTO
-import restapi.model.User
-import restapi.repository.SkillRepository
 import restapi.service.UserService
 import java.security.Principal
 
@@ -16,11 +14,12 @@ import java.security.Principal
 @RestController
 class UserController(
     val userService: UserService,
-    private val skillRepository: SkillRepository
 ) {
-    /*
-    ********************************** GET **********************************
-     */
+
+/*
+********************************** GET **********************************
+*/
+
     @JsonView(DataView.User::class)
     @GetMapping
     fun getAllUsers() = userService.getAll()
@@ -43,15 +42,6 @@ class UserController(
     fun getUsersBySkillId(@PathVariable skillId: Long) = userService.getUsersBySkillId(skillId)
 
 /*
-********************************** PUT **********************************
- */
-    // TODO: Not working yet - necessary or discard?
-    @JsonView(DataView.User::class)
-    @PutMapping("/byMail/{email}")
-    fun updateUser(@PathVariable email: String, @RequestBody user: User) =
-        userService.update(email, user)
-
-/*
 ********************************** POST **********************************
 */
 
@@ -61,9 +51,9 @@ class UserController(
 
 /*
 ********************************** DELETE **********************************
- */
+*/
 
-    // TODO deactivate? - should not be possible to delete users
+    // DEACTIVATED - not possible to delete users in production
     @DeleteMapping("/byMail/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable email: String): ResponseEntity<String> {
@@ -72,12 +62,4 @@ class UserController(
     }
 }
 
-// TODO can be deleted after testing: test route that is unauthorized - does not require JWT
-/*@RequestMapping("excluded")
-@RestController
-class UserTestController(val service: UserService) {
-    @JsonView(DataView.User::class)
-    @GetMapping()
-    fun getUsers() = service.getAll()
-}*/
 

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Data;
 import restapi.jsonView.DataView;
-import java.sql.Blob
 import javax.persistence.*;
 
 @Entity(name = "users")
@@ -48,12 +46,4 @@ data class User(
     )
     @JsonBackReference
     var skills: MutableList<Skill> = mutableListOf(),
-/*
-
-    @OneToMany(mappedBy = "sender")
-    var messages: List<ChatMessage> = emptyList()
-*/
-
 )
-
-data class UserDTO(val id: Long, val email: String?)

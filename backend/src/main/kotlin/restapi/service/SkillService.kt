@@ -17,7 +17,6 @@ class SkillService(val repository: SkillRepository) {
         return skills
     }
 
-
     fun getById(id: Long): Skill =
         repository.findByIdOrNull(id) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
@@ -29,7 +28,10 @@ class SkillService(val repository: SkillRepository) {
 
     fun create(name: String): Skill {
         if (name.isBlank()) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Skill name cannot be null or blank")
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Skill name cannot be null or blank"
+            )
         }
 
         val skillAvailable: Skill? =
@@ -46,7 +48,6 @@ class SkillService(val repository: SkillRepository) {
 
         return repository.save(skill)
     }
-
 
     fun update(id: Long, name: String): ResponseEntity<String> {
         val skillAvailable: Skill? =
@@ -68,7 +69,6 @@ class SkillService(val repository: SkillRepository) {
         return ResponseEntity.ok("Skill $id updated successfully: New name: \"$name\"")
     }
 
-
     fun remove(id: Long): ResponseEntity<String> {
         val skillAvailable: Skill? =
             repository.findSkillById(id)
@@ -83,7 +83,5 @@ class SkillService(val repository: SkillRepository) {
             "Skill with this id doesn't exist!"
         )
     }
-
-
 }
 

@@ -4,11 +4,9 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import org.webjars.NotFoundException
 import restapi.model.Project
 import restapi.model.Skill
 import restapi.model.User
-import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
 
@@ -16,7 +14,6 @@ import restapi.repository.UserRepository
 @Service
 class UserService(
     val userRepository: UserRepository,
-    private val projectRepository: ProjectRepository,
     private val skillRepository: SkillRepository
 ) {
 
@@ -44,12 +41,6 @@ class UserService(
     fun getUserProjects(userId: Long): MutableList<Project> {
         val user = userRepository.findById(userId)
         return user.map { it.projects }.orElse(mutableListOf())
-    }
-
-    fun update(email: String, user: User): User {
-        val dbUser = this.getByEmail(email);
-        user.id = dbUser.id;
-        return userRepository.save(user);
     }
 
     fun remove(email: String) {
@@ -84,7 +75,5 @@ class UserService(
         val skill = skillRepository.findByIdOrNull(skillId) ?: throw Exception("Skill not found")
         return skill.usersWithSkill
     }
-
-
 }
 

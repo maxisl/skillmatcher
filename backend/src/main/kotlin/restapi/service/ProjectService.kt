@@ -5,14 +5,11 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
-import org.webjars.NotFoundException
 import restapi.model.*
 import restapi.repository.ProjectRepository
 import restapi.repository.SkillRepository
 import restapi.repository.UserRepository
-import java.lang.Exception
 import java.util.*
 
 
@@ -30,16 +27,6 @@ class ProjectService(
         }
         return projects
     }
-
-    // LEGACY - deactivated - name is not unique? does it still make sense? maybe if we enable search function for projects
-    /*    fun getAllByName(name: String): MutableList<Project> {
-            val projects =  projectRepository.findByNameContaining(name)
-            projects.forEach {
-                it.attendees.size
-            }
-            return projects
-        }*/
-
 
     fun getById(id: Long): Project =
         projectRepository.findByIdOrNull(id) ?: throw ResponseStatusException(
