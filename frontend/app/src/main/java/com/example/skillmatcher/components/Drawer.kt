@@ -78,21 +78,21 @@ fun DrawerBody(
         item {
 
             if (user.image != null) {
-                if (user.image.isNotEmpty()) {
+                /*if (user.image.isNotEmpty()) {
                     Image(
                         modifier = Modifier.size(140.dp),
                         bitmap = imageBitmapFromBytes(user.image.toByteArray()),
                         // bitmap = ImageBitmap.imageResource(id = icon),
                         contentDescription = "Project_card"
                     )
-                } else {
+                } else {*/
                     Image(
                         modifier = Modifier
                             .aspectRatio(3.25f),
                         painter = painterResource(id = R.drawable.skillmatcher_logo_removebg),
                         contentDescription = "Profile Image"
                     )
-                }
+                //}
             } else {
                 // user's image
                 Image(

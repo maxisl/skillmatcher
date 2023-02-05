@@ -179,11 +179,14 @@ fun SetImage(user: User) {
             val bitmap = userImage.toBitmap()
             Image(
                 painter = BitmapPainter(bitmap.asImageBitmap()),
-                contentDescription = "Project_card"
+                contentDescription = "Project_card",
+                modifier = Modifier
+                    .height(90.dp)
+                    .width(90.dp)
             )
         } else {
             Image(
-                painter = painterResource(id = R.drawable.mern_icon),
+                painter = painterResource(id = R.drawable.avatar),
                 contentDescription = "Project_card",
                 modifier = Modifier
                     .height(90.dp)
@@ -192,7 +195,7 @@ fun SetImage(user: User) {
         }
     } else {
         Image(
-            painter = painterResource(id = R.drawable.mern_icon),
+            painter = painterResource(id = R.drawable.avatar),
             contentDescription = "Project_card",
             modifier = Modifier
                 .height(90.dp)

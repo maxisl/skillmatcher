@@ -23,7 +23,8 @@ data class User(
     @JsonIgnore // do not show on request
     var password: String? = null,
 
-    @Column(length = 2500)
+    @Lob
+    @Column
     @JsonView(DataView.Project::class)
     var image: String?,
 
