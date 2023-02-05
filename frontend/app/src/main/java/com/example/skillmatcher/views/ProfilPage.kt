@@ -1,21 +1,23 @@
 package com.example.skillmatcher
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,31 +26,37 @@ import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skillmatcher.api.addSkillToUser
 import com.example.skillmatcher.api.getUser
 import com.example.skillmatcher.api.getUserMail
 import com.example.skillmatcher.api.getUserSkills
+import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Project
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
+import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
+import com.example.skillmatcher.views.createSKillCards
 import com.example.skillmatcher.views.toBitmap
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Preview
 @Destination
 @Composable
-fun LandingPage() {
+fun LandingPage(navigator: DestinationsNavigator) {
     // TODO pass all relevant attributes to different sections
     // TODO create co routine to load user info and avoid app crash
 
@@ -82,6 +90,17 @@ fun LandingPage() {
         Log.d("user image", userImage)
     }
 
+    var listOfSelectedSkills = remember { mutableListOf<Skill?>() }
+    val response = remember {
+        mutableStateOf(listOf(Skill(0,"", 0,false)))
+    }
+    val interactionSource = remember { MutableInteractionSource() }
+    val interactions = remember { mutableStateListOf<Interaction>() }
+    getUser(getUserResponse, loadingResponse)
+    val email= user.email
+    val ctx = LocalContext.current
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -102,6 +121,9 @@ fun LandingPage() {
         }
         item {
             ProjectList(userProjectsList)
+        }
+        item{
+            addSkillSection(listOfSelectedSkills = listOfSelectedSkills, ctx = ctx, response = response, navigator, interactionSource, interactions,email)
         }
     }
 }
@@ -345,4 +367,99 @@ fun ProjectList(projectList: List<Project>) {
             }
         }
     }
+}
+
+
+@Composable
+private fun addSkillSection(
+    listOfSelectedSkills: MutableList<Skill?>, ctx: Context,
+    response: MutableState<List<Skill>>, navigator: DestinationsNavigator,
+    interactionSource: MutableInteractionSource,
+    interactions: SnapshotStateList<Interaction>,
+    email: String
+){
+    Text(
+        text = "Add Skills",
+        style = TextStyle(fontSize = 20.sp),
+        modifier = Modifier.padding(10.dp)
+    )
+    createSKillCards(listOfSelectedSkills = listOfSelectedSkills, ctx = ctx, response = response)
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    interactions.add(interaction)
+                }
+            }
+        }
+    }
+
+    val lastInteraction = when (interactions.lastOrNull()) {
+        is PressInteraction.Press -> "Pressed"
+        else -> "No state"
+    }
+    var errorNotifications: InputCheck = checkForSelectedSkills(listOfSelectedSkills)
+    if (lastInteraction.equals("Pressed") and errorNotifications.error) {
+        Text(
+            text = errorNotifications.notifications.joinToString(separator = " "),
+            color = Color.Red,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold, modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center
+        )
+    }
+
+    saveSkillsButton(navigator, interactionSource, listOfSelectedSkills,email)
+
+}
+
+@Composable
+private fun saveSkillsButton(
+    navigator: DestinationsNavigator,
+    interactionSource: MutableInteractionSource,
+    listOfSelectedSkills: MutableList<Skill?>,
+    email: String,){
+    var error by remember { mutableStateOf(false) }
+
+    Button(interactionSource = interactionSource, onClick = {
+        val skillIdList: List<Long> = listOfSelectedSkills.map { it?.id ?: 0 }
+
+        var errorNotifications: InputCheck =
+            checkForSelectedSkills(listOfSelectedSkills)
+        error = errorNotifications.error
+        if (!error) {
+            addSkillToUser(email,skillIdList)
+            navigator.navigate(
+                SideBarDestination(1)
+            )
+        }
+    }) {
+        Text(text = "save")
+        if (error) {
+            Icon(Icons.Filled.Warning, "error", tint = Color.Red)
+        }
+    }
+
+}
+
+private fun checkForSelectedSkills(selectedSkills: MutableList<Skill?>): InputCheck {
+    var error: Boolean = false
+    val notifications = mutableListOf<String>()
+    var errorNotifications: InputCheck
+
+    if (selectedSkills.size < 1) {
+        error = true
+        notifications.add("Please ad at least one Skill to your profile")
+    }
+
+    if (error) {
+        errorNotifications = InputCheck(error, notifications)
+    } else {
+        errorNotifications = InputCheck(false, notifications)
+    }
+
+    return errorNotifications
 }
