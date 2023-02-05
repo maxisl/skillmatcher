@@ -20,23 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.skillmatcher.api.attendProject
 import com.example.skillmatcher.api.getProjectsByUserEmail
-import com.example.skillmatcher.api.getUser
-import com.example.skillmatcher.api.leaveProject
 import com.example.skillmatcher.data.Project
-import com.example.skillmatcher.data.User
 import com.example.skillmatcher.destinations.OwnProjectOverviewPageDestination
-import com.example.skillmatcher.views.formatStringToDate
 import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.io.ByteArrayOutputStream
 
 
 @Destination
@@ -47,7 +41,7 @@ fun HomePage(
     // TODO loading icon until getProjects succeeded
 
     val projectResponse = remember {
-        mutableStateOf(listOf(Project(0,"", "", "", "", "", null, listOf())))
+        mutableStateOf(listOf(Project(0, "", "", "", "", "", null, listOf())))
     }
 
     var userProjects: List<Project> = emptyList()
@@ -69,7 +63,7 @@ fun HomePage(
             drawYourProjectsHeadline()
         }
         item {
-            drawYourProjects(userProjects,navigator)
+            drawYourProjects(userProjects, navigator)
         }
         item {
             drawNewestProjectsHeadline()
@@ -77,14 +71,14 @@ fun HomePage(
         item {
             //val sortedByDateList = userProjects.sortedWith(compareBy { formatStringToDate(it.startDate) })
             val sortedByDateList = userProjects.reversed()
-            drawYourProjects(sortedByDateList,navigator)
+            drawYourProjects(sortedByDateList, navigator)
         }
         item {
             drawBiggestProjectsHeadline()
         }
         item {
             val sortedBySizeList = userProjects.sortedWith(compareBy { it.maxAttendees })
-            drawYourProjects(sortedBySizeList,navigator)
+            drawYourProjects(sortedBySizeList, navigator)
         }
     }
 }
@@ -156,7 +150,11 @@ fun drawYourProjects(userProjects: List<Project>, navigator: DestinationsNavigat
 }
 
 @Composable
-fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavigator) { //Project: Projects
+fun projectCard(
+    cardIcon: Int,
+    userProject: Project,
+    navigator: DestinationsNavigator
+) { //Project: Projects
 
     Card(
         shape = RoundedCornerShape(14.dp),
@@ -169,39 +167,23 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-            //val projectImage = userProject.image?.toBitmap()
-            /*if (checkForImageString(userProject.image)) {
-                *//*val bos = ByteArrayOutputStream()
-                projectImage?.compress(
-                    Bitmap.CompressFormat.PNG,
-                    25,
-                    bos
-                ) // YOU can also save it in JPEG
-                val imageProfilByteArray = bos.toByteArray()
-
-                val bitmapImage: Bitmap? = projectImage
-                bitmapImage?.let { btm ->
-                    Image(
-                        bitmap = btm.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(140.dp)
-                    )
-                }*//*
+            if (checkForImageString(userProject.image)) {
+                val bitmap = userProject.image!!.toBitmap()
                 Image(
-                    modifier = Modifier.size(140.dp),
-                    bitmap = imageBitmapFromBytes(userProject.image!!.toByteArray()),
-                    // bitmap = ImageBitmap.imageResource(id = icon),
-                    contentDescription = "Project_card"
+                    // bitmap = imageBitmapFromBytes(project.image!!.toByteArray()),
+                    painter = BitmapPainter(bitmap!!.asImageBitmap()),
+                    contentDescription = "Project_card",
+                    modifier = Modifier.size(140.dp)
                 )
-            } else {*/
+            } else {
                 Image(
-                    modifier = Modifier.size(140.dp),
                     painter = painterResource(id = cardIcon),
-                    // bitmap = ImageBitmap.imageResource(id = icon),
-                    contentDescription = "Project_card"
+                    contentDescription = "Project_card",
+                    // adjust image size to fit card
+                    modifier = Modifier.size(140.dp)
+
                 )
-            //}
+            }
         }
         Row(modifier = Modifier.padding(top = 20.dp)) {
             Column(modifier = Modifier.weight(1f)) {
@@ -223,8 +205,9 @@ fun projectCard(cardIcon: Int, userProject: Project, navigator: DestinationsNavi
             ) {
                 IconButton(onClick = {
                     navigator.navigate(
-                        OwnProjectOverviewPageDestination(userProject))
-                }){
+                        OwnProjectOverviewPageDestination(userProject)
+                    )
+                }) {
                     Icon(
                         Icons.Default.Add,
                         tint = Color.White,
@@ -241,9 +224,9 @@ fun checkForImage(image: Bitmap?): Boolean {
     return image != null
 }
 
-fun checkForImageString(image: String?): Boolean{
-    if(image != null){
-        if(image.isNotEmpty()) {
+fun checkForImageString(image: String?): Boolean {
+    if (image != null) {
+        if (image.isNotEmpty()) {
             return true
         }
     }
@@ -252,7 +235,8 @@ fun checkForImageString(image: String?): Boolean{
 
 fun imageBitmapFromBytes(encodedImageData: ByteArray): ImageBitmap {
     if (encodedImageData.isNotEmpty()) {
-        return BitmapFactory.decodeByteArray(encodedImageData, 0, encodedImageData.size).asImageBitmap()
+        return BitmapFactory.decodeByteArray(encodedImageData, 0, encodedImageData.size)
+            .asImageBitmap()
     } else {
         // if decoded String is null, create empty Bitmap
         return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888).asImageBitmap()

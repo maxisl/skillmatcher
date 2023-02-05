@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -47,6 +49,7 @@ import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
 import com.example.skillmatcher.views.createSKillCards
+import com.example.skillmatcher.views.toBitmap
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.google.accompanist.flowlayout.FlowRow
@@ -151,23 +154,23 @@ fun LogoSection(image: String?) {
 fun ProjectLogo(
     image: String?,
 ) {
-    /*if (checkForImageString(image)) {
-       // val bitmapImage: Bitmap? = image
+    if (checkForImageString(image)) {
+        val bitmap = image!!.toBitmap()
         Image(
-            modifier = Modifier.size(20.dp),
-            bitmap = imageBitmapFromBytes(image!!.toByteArray()),
-            // bitmap = ImageBitmap.imageResource(id = icon),
-            contentDescription = "Project_card"
+            // bitmap = imageBitmapFromBytes(project.image!!.toByteArray()),
+            painter = BitmapPainter(bitmap!!.asImageBitmap()),
+            contentDescription = "Project_card",
+            modifier = Modifier.size(140.dp)
         )
-    } else {*/
-    Image(
-        painter = painterResource(id = R.drawable.mern_icon),
-        contentDescription = null,
-        modifier = Modifier
-            .clip(CircleShape)
-            .border(BorderStroke(4.dp, Color.White), CircleShape)
-    )
-    //}
+    } else {
+        Image(
+            painter = painterResource(R.drawable.mern_icon),
+            contentDescription = "Project_card",
+            // adjust image size to fit card
+            modifier = Modifier.size(140.dp)
+
+        )
+    }
 }
 
 @Composable
