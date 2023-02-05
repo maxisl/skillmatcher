@@ -56,6 +56,10 @@ To access all routes, follow the guide below to add your individual token:
 ![Swagger Tutorial 3](/docs/swagger-docs/swagger3.png)
 
 
+## API Testing & Documentation - 3 (Chat)
+
+The getStream.io API was utilized for chat. It's a free SDK for a month, valid until February 16th.
+
 ## Wireframes
 We have created comprehensive wireframes in the planning phase of our application to help illustrate the user flow and key features.
 
