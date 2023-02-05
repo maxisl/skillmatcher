@@ -1,31 +1,32 @@
 package com.example.skillmatcher
 
 import android.content.Context
-import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,22 +38,17 @@ import androidx.compose.ui.unit.sp
 import com.example.skillmatcher.data.Project
 import androidx.core.content.ContextCompat.startActivity
 import com.example.skillmatcher.activity.ChannelListActivity
-import com.example.skillmatcher.api.attendProject
-import com.example.skillmatcher.api.getAttendees
-import com.example.skillmatcher.api.getUserSkills
-import com.example.skillmatcher.api.getUser
-import com.example.skillmatcher.api.leaveProject
+import com.example.skillmatcher.api.*
+import com.example.skillmatcher.data.InputCheck
 import com.example.skillmatcher.data.Skill
 import com.example.skillmatcher.data.User
-import com.example.skillmatcher.destinations.AllProjectsListPageDestination
-import com.example.skillmatcher.destinations.HomePageDestination
 import com.example.skillmatcher.destinations.SideBarDestination
 import com.example.skillmatcher.ui.theme.Black
 import com.example.skillmatcher.ui.theme.LMUGreen
 import com.example.skillmatcher.ui.theme.White
+import com.example.skillmatcher.views.createSKillCards
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.example.skillmatcher.views.toBitmap
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import io.getstream.chat.android.client.ChatClient
@@ -403,10 +399,3 @@ fun ownProjectSKillCards(skillList: List<Skill>){
         }
     }
 }
-
-//, wer teilnehmer sind, Chat Button
-
-
-
-
-
