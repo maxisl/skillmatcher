@@ -20,15 +20,10 @@ interface BackendAPI {
     /*************************************************** USER *******************************************/
 
     @POST("auth/login")
-    // add "suspend" in front of "fun" to run in co-routine instead of main thread?
     fun loginUser(@Body userLoginModel: UserLoginModel): Call<String>?
 
     @POST("auth/register")
     fun registerUser(@Body userRegisterModel: UserRegisterModel): Call<User>
-
-    // DEACTIVATED - TEST ONLY
-    //@GET("excluded")
-    //fun getAllUsers(): Call<List<ApiUser>>
 
     @GET("user")
     fun getAllUsers(@Header("Authorization") jwt: String): Call<List<ApiUser>>
@@ -82,15 +77,6 @@ interface BackendAPI {
         @Path("projectId") projectId: Long,
         @Path("email") email: String,
     ): Call<Unit>
-
-
-    // LEGACY
-    /*@POST("/projects/{projectId}/requiredSkills")
-    fun addRequiredSkillsToProject(
-        @Header("Authorization") jwt: String,
-        @Path("projectId") projectId: Long,
-        @Body id: List<Long>
-    ): Call<Project>*/
 
     /*************************************************** SKILL *******************************************/
 
@@ -230,6 +216,7 @@ fun registerUser(
                     result.value = resp
                 }
                 Log.d("registerUser", response.body().toString())
+                preferencesManager.deleteSharedPreferences()
             }
 
             // error handling
@@ -453,38 +440,6 @@ fun getProjectsByUserEmail(result: MutableState<List<Project>>) {
         }
     })
 }
-
-// LEGACY: required skills are automatically added to project upon creation
-/*fun addRequiredSkillsToProject(
-    skillIds: List<Long>
-) {
-    Log.d("addRequiredSkillsToProject", "Executed")
-    Log.d("addRequiredSkillsToProject", "Skills to add: $skillIds")
-    val retrofitAPI = createRetrofitInstance()
-
-    val call: Call<Project> = retrofitAPI.addRequiredSkillsToProject(
-        "Bearer ${preferencesManager.getJWT()}",
-        projectId,
-        skillIds
-    )
-    Log.d("addRequiredSkillsToProject", "Email: ${preferencesManager.getMail()}")
-    call!!.enqueue(object : Callback<Project> {
-        override fun onResponse(call: Call<Project>, response: Response<Project>) {
-            Log.d("addRequiredSkillsToProject", "Created $response")
-            if (response.code() == 201) {
-                Log.d("addRequiredSkillsToProject", "Response Code ${response.code()}")
-            } else {
-                Log.d("addRequiredSkillsToProject", "Failed: Response Code ${response.code()}")
-            }
-        }
-
-        // TODO Error: End of input at line 1 column 1 path $ (works though)
-        override fun onFailure(call: Call<Project>, t: Throwable) {
-            t.message?.let { Log.d("addRequiredSkillsToProject", "Error: $it") }
-        }
-
-    })
-}*/
 
 fun getRequiredSkills(result: MutableState<List<Skill>>, projectId: Long) {
     Log.d("getRequiredSkills: ", "Executed")

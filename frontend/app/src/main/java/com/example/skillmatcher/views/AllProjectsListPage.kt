@@ -115,14 +115,17 @@ fun ProjectCard(cardIcon: Int, project: Project, navigator: DestinationsNavigato
                 .padding(10.dp),
         ) {
             Row {
-                /*if (checkForImageString(project.image)) {
+                if (checkForImageString(project.image)) {
                     val bitmap = project.image!!.toBitmap()
                     Image(
                        // bitmap = imageBitmapFromBytes(project.image!!.toByteArray()),
                         painter = BitmapPainter(bitmap!!.asImageBitmap()),
-                        contentDescription = "Project_card"
+                        contentDescription = "Project_card",
+                        modifier = Modifier
+                            .height(90.dp)
+                            .width(90.dp)
                     )
-                } else {*/
+                } else {
                 Image(
                     painter = painterResource(id = cardIcon),
                     contentDescription = "Project_card",
@@ -131,7 +134,7 @@ fun ProjectCard(cardIcon: Int, project: Project, navigator: DestinationsNavigato
                         .height(90.dp)
                         .width(90.dp)
                 )
-                //}
+                }
 
                 Row(modifier = Modifier.padding(top = 2.dp, start = 10.dp)) {
                     Column(modifier = Modifier.weight(1f)) {

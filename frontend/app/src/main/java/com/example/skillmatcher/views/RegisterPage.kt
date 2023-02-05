@@ -70,7 +70,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 
     val response = remember {
-        mutableStateOf(listOf(Skill(0,"", 0,false)))
+        mutableStateOf(listOf(Skill(0, "", 0, false)))
     }
 
     val result = remember {
@@ -188,15 +188,17 @@ fun RegisterPage(navigator: DestinationsNavigator) {
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
 
-                        val description = if (passwordSecondVisibility) "Hide password" else "Show password"
+                        val description =
+                            if (passwordSecondVisibility) "Hide password" else "Show password"
 
                         IconButton(onClick = {
-                            passwordSecondVisibility = !passwordSecondVisibility}){
-                            Icon(imageVector  = image, description)
+                            passwordSecondVisibility = !passwordSecondVisibility
+                        }) {
+                            Icon(imageVector = image, description)
                         }
                     },
 
-                )
+                    )
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -204,7 +206,7 @@ fun RegisterPage(navigator: DestinationsNavigator) {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                createSKillCards(listOfSelectedSkills = listOfSelectedSkills,ctx, response)
+                createSKillCards(listOfSelectedSkills = listOfSelectedSkills, ctx, response)
 
                 registerUserButton(
                     interactionSource = interactionSource,
@@ -254,7 +256,6 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 }
 
-
 @Composable
 fun createSKillCards(
     listOfSelectedSkills: MutableList<Skill?>,
@@ -262,28 +263,28 @@ fun createSKillCards(
     response: MutableState<List<Skill>>
 ): MutableList<Skill?> {
 
-    var selectedSkill: Skill?
-    val listOfSkills = getSkills(ctx,response)
+    val listOfSkills = getSkills(ctx, response)
+    Log.d("CreateProjectPage", "List of skills: $listOfSkills")
     Column() {
         LazyRow() {
             listOfSkills.iterator().forEach { skill ->
                 item() {
-                    selectedSkill = drawSkill(skill)
+                    var selectedSkill = drawSkill(skill)
                     if (selectedSkill != null) {
-                        if (selectedSkill!!.isSelected and !isSkillAlreadySelected(
-                                listOfSelectedSkills, selectedSkill!!
+                        if (selectedSkill.isSelected and !isSkillAlreadySelected(
+                                listOfSelectedSkills, selectedSkill
                             )
                         ) {
                             listOfSelectedSkills.add(selectedSkill)
-                        } else if (!selectedSkill!!.isSelected and isSkillAlreadySelected(
+                        } else if (!selectedSkill.isSelected and isSkillAlreadySelected(
                                 listOfSelectedSkills,
-                                selectedSkill!!
+                                selectedSkill
                             )
                         ) {
                             listOfSelectedSkills.removeAt(
                                 returnSelectedSkillPosition(
                                     listOfSelectedSkills,
-                                    selectedSkill!!
+                                    selectedSkill
                                 )
                             )
                         }
@@ -292,8 +293,10 @@ fun createSKillCards(
             }
         }
     }
+    Log.d("CreateProjectPage", "Current List of Skills: $listOfSelectedSkills")
     return listOfSelectedSkills
 }
+
 
 fun isSkillAlreadySelected(listOfSkills: MutableList<Skill?>, selectedSkill: Skill): Boolean {
     for (i in listOfSkills.indices) {
@@ -321,8 +324,6 @@ fun getSkills(ctx: Context, response: MutableState<List<Skill>>): List<Skill> {
     //do API call and give list of skills back
     getAvailableSkills(ctx, response)
     val skills = response.value
-
-
     return skills
 }
 
@@ -335,7 +336,6 @@ fun drawSkill(skill: Skill): Skill? {
     val color = if (selected) LMUGreen else Color.Gray
     val skillName = skill.name
     val skillId = skill.id
-
     Card(
         shape = RoundedCornerShape(14.dp),
         modifier = Modifier
@@ -381,9 +381,9 @@ fun drawSkill(skill: Skill): Skill? {
     }
     var skillValue: String = skillTextField.value.text;
     try {
-        if(skillValue.isEmpty())
+        if (skillValue.isEmpty())
             skillValue = "0"
-        return Skill(0,skillName, skillValue.toInt(), selected)
+        return Skill(skillId, skillName, skillValue.toInt(), selected)
     } catch (e: NumberFormatException) {
         return null;
     }
@@ -402,7 +402,8 @@ fun registerUserButton(
 ) {
     var error by remember { mutableStateOf(false) }
     val userResponse = remember {
-        mutableStateOf(User(0,"", mutableListOf(),mutableListOf(),null))}
+        mutableStateOf(User(0, "", mutableListOf(), mutableListOf(), null))
+    }
 
     Button(interactionSource = interactionSource, onClick = {
 
@@ -410,7 +411,7 @@ fun registerUserButton(
             checkIfInputIsCorrect(eMail, pw, pwSecond, selectedSkills)
         error = errorNotifications.error
         if (!error) {
-            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result,ctx)
+            createUser(eMail, pw, profileDescription, selectedSkills, profileImage, result, ctx)
             navigator.navigate(
                 LoginPageDestination()
             )
@@ -469,8 +470,7 @@ fun createUser(
 ) {
 
 
-
-    registerUser(ctx,eMail,pw,profileImage,result) //Todo: restliche values hinzufügen
+    registerUser(ctx, eMail, pw, profileImage, result) //Todo: restliche values hinzufügen
 
     val skillIdList: List<Long> = selectedSkills.map { it?.id ?: 0 }
 
@@ -479,21 +479,21 @@ fun createUser(
 
     val client = ChatClient.instance()
 
-    val uname= eMail
+    val uname = eMail
     Log.d("username", uname)
-    val uname2= uname.replace(".", "")
+    val uname2 = uname.replace(".", "")
     Log.d("username2", uname2)
     //val uname3 =uname2.replace("@", "")
     val user = io.getstream.chat.android.client.models.User(
 
         id = uname2,
-        role= "admin",
+        role = "admin",
         name = eMail,
         image = "https://bit.ly/321RmWb",
     )
 
     client.updateUser(user)
-    val token1= client.devToken(user.id)
+    val token1 = client.devToken(user.id)
 
     client.connectUser(
         user = user,

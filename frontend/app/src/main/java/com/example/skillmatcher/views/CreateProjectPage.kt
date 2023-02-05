@@ -423,6 +423,7 @@ fun saveButton(
                     val randomIDs = listOf<Long>(1, 2)
 
                     val skillIdList: List<Long> = listOfSelectedSkills.map { it?.id ?: 0 }
+                    Log.d("CreateProjectPage", "SkillIdList: $skillIdList")
 
                     createProject(
                         ctx,
