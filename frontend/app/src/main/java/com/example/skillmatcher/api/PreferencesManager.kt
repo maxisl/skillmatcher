@@ -41,4 +41,11 @@ class PreferencesManager(context: Context) {
     fun getMail(): String? {
         return sharedPreferences.getString("mail", null)
     }
+
+    // flushes the shared preferences file
+    fun deleteSharedPreferences() {
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+    }
 }
