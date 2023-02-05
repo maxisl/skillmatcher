@@ -256,48 +256,6 @@ fun RegisterPage(navigator: DestinationsNavigator) {
     }
 }
 
-
-/*@Composable
-fun createSKillCards(
-    listOfSelectedSkills: MutableList<Skill?>,
-    ctx: Context,
-    response: MutableState<List<Skill>>
-): MutableList<Skill?> {
-
-    var selectedSkill: Skill?
-    val listOfSkills = getSkills(ctx,response)
-    Column() {
-        LazyRow() {
-            listOfSkills.iterator().forEach { skill ->
-                item() {
-                    selectedSkill = drawSkill(skill)
-                    if (selectedSkill != null) {
-                        if (selectedSkill!!.isSelected and !isSkillAlreadySelected(
-                                listOfSelectedSkills, selectedSkill!!
-                            )
-                        ) {
-                            listOfSelectedSkills.add(selectedSkill)
-                        } else if (!selectedSkill!!.isSelected and isSkillAlreadySelected(
-                                listOfSelectedSkills,
-                                selectedSkill!!
-                            )
-                        ) {
-                            listOfSelectedSkills.removeAt(
-                                returnSelectedSkillPosition(
-                                    listOfSelectedSkills,
-                                    selectedSkill!!
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-    Log.d("CreateProjectPage", "Current List of Skills: $listOfSelectedSkills")
-    return listOfSelectedSkills
-}*/
-
 @Composable
 fun createSKillCards(
     listOfSelectedSkills: MutableList<Skill?>,
