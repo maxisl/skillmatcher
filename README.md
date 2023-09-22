@@ -1,4 +1,4 @@
-# Skillmatcher Android App
+# Skillmatcher Project Management Android App
 
 Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect team members for your projects
 
@@ -34,8 +34,6 @@ To help ensure that our API is functioning as expected, we have included a Postm
 
 This collection includes all of the endpoints that are required for our application, as well as example requests and responses. 
 
-Please find the collection available for dowload [here.](https://gitlab.lrz.de/mobile-ifi/msp/22WS/gruppe5/-/blob/main/docs/SkillMatcher_API.postman_collection.json)
-
 ## API Testing & Documentation - 2 (Swagger UI)
 
 The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI):
@@ -66,11 +64,6 @@ We have created comprehensive wireframes in the planning phase of our applicatio
 ![Wireframes 1](/docs/wireframes1.png)
 
 ![Wireframes 2](/docs/wireframes2.png)
-
-## Group Overview (Steckbrief)
-We have also included a Group Overview document which provides an overview of our project including the goals, approach, and features. 
-
-You can view the Group Overview document by clicking [here.](https://gitlab.lrz.de/mobile-ifi/msp/22WS/gruppe5/-/blob/main/docs/Steckbrief_gruppe5.pdf)
 
 ## Technologies 
 -	Android
