@@ -1,4 +1,4 @@
-# Gruppe5 - Skillmatcher
+# Skillmatcher Android App
 
 Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect team members for your projects
 
