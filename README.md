@@ -18,7 +18,7 @@ Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect 
 3. Start connecting with potential team members via the chat 
 
 
-# Documentation (SQL Schema, Wireframes, API, Steckbrief, Technologies)
+# Documentation (SQL Schema, Wireframes, API, Technologies)
 
 ## SQL Schema 
 ![SQL Schema](/docs/skillmatcher-datascheme.png)
