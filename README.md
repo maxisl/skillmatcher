@@ -29,34 +29,10 @@ The schema manages project information, user information, and skill information.
 
 The join tables allow multiple users to have multiple skills, and multiple projects to have multiple users with different skills.
 
-## API Testing & Documentation - 1 (Postman API Collection)
+## API Testing & Documentation (Postman API Collection)
 To help ensure that our API is functioning as expected, we have included a Postman API collection. 
 
 This collection includes all of the endpoints that are required for our application, as well as example requests and responses. 
-
-## API Testing & Documentation - 2 (Swagger UI)
-
-The documentation of the Spring (Kotlin) REST API can be found here (Swagger-UI):
-
-http://msp-ws2223-5.dev.mobile.ifi.lmu.de/swagger-ui.html
-
-To test the API via the SwaggerUI, authentication via JWT is required for all routes except /register and /login.
-
-To access all routes, follow the guide below to add your individual token:
-
-#### 1. Register your individual user (in case not already done via the app) - use /auth/register
-![Swagger Tutorial 1](/docs/swagger-docs/swagger2.png)
-
-#### 2. Provide your credentials in order to log in and receive your JWT - use /auth/login
-![Swagger Tutorial 2](/docs/swagger-docs/swagger1.png)
-
-#### 3. Copy the obtained JWT token and paste it in the according field after pressing the "Authorize" button
-![Swagger Tutorial 3](/docs/swagger-docs/swagger3.png)
-
-
-## API Testing & Documentation - 3 (Chat)
-
-The getStream.io API was utilized for chat. It's a free SDK for a month, valid until February 16th.
 
 ## Wireframes
 We have created comprehensive wireframes in the planning phase of our application to help illustrate the user flow and key features.
