@@ -41,7 +41,7 @@ We have created comprehensive wireframes in the planning phase of our applicatio
 
 ![Wireframes 2](/docs/wireframes2.png)
 
-## Technologies 🛠
+## Technologies 
 -	Android
     -   minSdk 29
     -   targetSdk 32 
