@@ -1,6 +1,6 @@
 # Skillmatcher Project Management Android App 💼📱
 
-Welcome to Skillmatcher! Skillmatcher is an app that helps you find the perfect team members for your projects
+Skillmatcher is an app that helps you find the perfect team members for your projects
 
 # How it works💡
 1. Post your project requirements to our platform
