@@ -18,7 +18,7 @@ Skillmatcher is an app that helps you find the perfect team members for your pro
 3. Start connecting with potential team members via the chat 
 
 
-# Documentation (SQL Schema, Wireframes, API, Technologies) 📚🖼🛠
+# Documentation 📚🖼🛠
 
 ## SQL Schema 
 ![SQL Schema](/docs/skillmatcher-datascheme.png)
