@@ -9,7 +9,7 @@ Skillmatcher is an app that helps you find the perfect team members for your pro
 
 ## Features 🌟
 * Easy to use interface for posting and finding projects
-* Advanced matching algorithm to find the best team members
+* Skill-based matching to find the best team members
 * Connect with professionals in your field
 
 ## Getting started 🚀
